@@ -10,14 +10,14 @@ type Auth struct {
 	endpoint           string
 	enableRegistration bool
 
-	// successRedirectEndpoint the endpoint to return to on success
-	successRedirectEndpoint string
-	funcUserLogin           func(username string, password string) (userID string, err error)
-	funcUserStoreToken      func(sessionID string, userID string) error
-	funcUserFindByToken     func(sessionID string) (userID string, err error)
-	funcUserRegister        func(username string, password string, first_name string, last_name string) (err error)
-	useCookies              bool
-	useLocalStorage         bool
+	// urlRedirectOnSuccess the endpoint to return to on success
+	urlRedirectOnSuccess string
+	funcUserLogin        func(username string, password string) (userID string, err error)
+	funcUserStoreToken   func(sessionID string, userID string) error
+	funcUserFindByToken  func(sessionID string) (userID string, err error)
+	funcUserRegister     func(username string, password string, first_name string, last_name string) (err error)
+	useCookies           bool
+	useLocalStorage      bool
 }
 
 func (a Auth) GetCurrentUserID(r *http.Request) string {
@@ -58,6 +58,10 @@ func (a Auth) LinkPasswordReset() string {
 
 func (a Auth) LinkRegister() string {
 	return link(a.endpoint, pathRegister)
+}
+
+func (a Auth) LinkRedirectOnSuccess() string {
+	return a.urlRedirectOnSuccess
 }
 
 func link(endpoint, uri string) string {

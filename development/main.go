@@ -1,6 +1,7 @@
-package development
+package main
 
 import (
+	"auth"
 	"database/sql"
 	"errors"
 	"log"
@@ -8,13 +9,28 @@ import (
 	"time"
 
 	"github.com/gouniverse/cms"
-	"github.com/gouniverse/hb"
 	"github.com/gouniverse/utils"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
 	_ "modernc.org/sqlite"
 )
+
+func userRegister(username string, password string, first_name string, last_name string) error {
+	return nil
+}
+
+func userLogin(username string, password string) (userID string, err error) {
+	return "exampleUserId", nil
+}
+
+func userStoreToken(token string, userID string) error {
+	return nil
+}
+
+func userFindByToken(token string) (userID string, err error) {
+	return "exampleUserId", nil
+}
 
 func main() {
 	log.Println("1. Initializing environment variables...")
@@ -31,6 +47,19 @@ func main() {
 	if db == nil {
 		log.Panic("Database is NIL")
 		return
+	}
+
+	auth, err := auth.NewAuth(auth.Config{
+		Endpoint:             "/",
+		UrlRedirectOnSuccess: "/user/success",
+		FuncUserLogin:        userLogin,
+		FuncUserRegister:     userRegister,
+		FuncUserStoreToken:   userStoreToken,
+		FuncUserFindByToken:  userFindByToken,
+	})
+
+	if err != nil {
+		log.Panicln(err.Error())
 	}
 
 	log.Println("3. Initializing CMS...")
@@ -60,9 +89,8 @@ func main() {
 	log.Println("4. Starting server on http://" + utils.Env("SERVER_HOST") + ":" + utils.Env("SERVER_PORT") + " ...")
 	log.Println("URL: http://" + utils.Env("APP_URL") + " ...")
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", myCms.Router)
+	mux.HandleFunc("/", auth.Router)
 	mux.HandleFunc("/cms", myCms.Router)
-	mux.HandleFunc("/embeddedcms", pageDashboardWithEmbeddedCms)
 
 	srv := &http.Server{
 		Handler: mux,
@@ -75,14 +103,6 @@ func main() {
 	}
 
 	log.Fatal(srv.ListenAndServe())
-}
-
-func pageDashboardWithEmbeddedCms(w http.ResponseWriter, r *http.Request) {
-	leftMenu := hb.NewHTML("<a href='/embeddedcms'>Embedded CMS</a>")
-	iframe := hb.NewHTML("<iframe src=\"/\" style='width:100%;height:2000px;border:none;' scrolling='no'></iframe>")
-	layout := hb.NewHTML("<table style='width:100%;height:100%;'><tr><td style='width:300px;vertical-align:top;'>" + leftMenu.ToHTML() + "</td><td style='vertical-align:top;'>" + iframe.ToHTML() + "</td></tr></table>")
-	webpage := hb.NewWebpage().AddChild(layout)
-	w.Write([]byte(webpage.ToHTML()))
 }
 
 func mainDb(driverName string, dbHost string, dbPort string, dbName string, dbUser string, dbPass string) (*sql.DB, error) {

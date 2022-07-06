@@ -9,8 +9,8 @@ func NewAuth(config Config) (*Auth, error) {
 		return nil, errors.New("auth: endpoint is required")
 	}
 
-	if config.SuccessRedirectEndpoint == "" {
-		return nil, errors.New("auth: success endpoint is required")
+	if config.UrlRedirectOnSuccess == "" {
+		return nil, errors.New("auth: url to redirect to on success is required")
 	}
 
 	if config.FuncUserLogin == nil {
@@ -25,13 +25,14 @@ func NewAuth(config Config) (*Auth, error) {
 		return nil, errors.New("auth: FuncUserFindByToken function is required")
 	}
 
-	if config.EnableRegistration && config.FuncUserRegister == nil {
+	if config.FuncUserRegister == nil {
+		config.EnableRegistration = true
 		return nil, errors.New("auth: FuncUserRegister function is required")
 	}
 
 	auth.enableRegistration = config.EnableRegistration
 	auth.endpoint = config.Endpoint
-	auth.successRedirectEndpoint = config.SuccessRedirectEndpoint
+	auth.urlRedirectOnSuccess = config.UrlRedirectOnSuccess
 	auth.useCookies = config.UseCookies
 	auth.useLocalStorage = config.UseLocalStorage
 	auth.funcUserLogin = config.FuncUserLogin

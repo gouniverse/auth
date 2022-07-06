@@ -6,8 +6,12 @@ require github.com/gouniverse/cms v0.27.0
 
 require (
 	github.com/google/uuid v1.3.0 // indirect
+	github.com/howeyc/fsnotify v0.9.0 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
+	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
+	github.com/pilu/config v0.0.0-20131214182432-3eb99e6c0b9a // indirect
+	github.com/pilu/fresh v0.0.0-20190826141211-0fa698148017 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/sys v0.0.0-20220702020025-31831981b65f // indirect
@@ -38,6 +42,7 @@ require (
 	github.com/gouniverse/settingstore v0.9.0 // indirect
 	github.com/gouniverse/uid v1.4.0 // indirect
 	github.com/gouniverse/utils v1.15.0
+	github.com/gouniverse/validator v0.11.0
 	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible // indirect
 	github.com/lib/pq v1.10.6
