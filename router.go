@@ -50,7 +50,6 @@ func (a Auth) Router(w http.ResponseWriter, r *http.Request) {
 func (a Auth) getRoute(route string) func(w http.ResponseWriter, r *http.Request) {
 	routes := map[string]func(w http.ResponseWriter, r *http.Request){
 		pathLogin:              a.pageLogin,
-		pathRegister:           a.pageRegister,
 		pathPasswordReset:      a.pagePasswordReset,
 		pathPasswordRestore:    a.pagePasswordRestore,
 		pathApiLogin:           a.apiLogin,
@@ -58,9 +57,18 @@ func (a Auth) getRoute(route string) func(w http.ResponseWriter, r *http.Request
 		pathApiResetPassword:   a.apiPaswordReset,
 		pathApiRestorePassword: a.apiPaswordRestore,
 	}
+
+	if a.enableRegistration {
+		routes[pathRegister] = a.pageRegister
+	}
+
 	if val, ok := routes[route]; ok {
 		return val
 	}
 
-	return routes[pathLogin]
+	return a.notFoundHandler
+}
+
+func (a Auth) notFoundHandler(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, a.LinkLogin(), http.StatusTemporaryRedirect)
 }

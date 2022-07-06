@@ -25,9 +25,9 @@ func NewAuth(config Config) (*Auth, error) {
 		return nil, errors.New("auth: FuncUserFindByToken function is required")
 	}
 
-	if config.FuncUserRegister == nil {
+	if config.FuncUserRegister != nil {
 		config.EnableRegistration = true
-		return nil, errors.New("auth: FuncUserRegister function is required")
+		//return nil, errors.New("auth: FuncUserRegister function is required")
 	}
 
 	auth.enableRegistration = config.EnableRegistration

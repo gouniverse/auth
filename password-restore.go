@@ -82,7 +82,7 @@ func (a Auth) pagePasswordRestore(w http.ResponseWriter, r *http.Request) {
 	emailFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(emailLabel).AddChild(emailInput)
 	buttonContinue := hb.NewButton().Attr("class", "btn btn-lg btn-success btn-block w-100").HTML("Email Password Reset Link").Attr("onclick", "registerFormValidate()")
 	buttonContinueFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(buttonContinue)
-	buttonLogin := hb.NewHyperlink().Attr("class", "btn btn-lg btn-info float-start").HTML("Login").Attr("href", a.LinkRegister())
+	buttonLogin := hb.NewHyperlink().Attr("class", "btn btn-lg btn-info float-start").HTML("Login").Attr("href", a.LinkLogin())
 	buttonRegister := hb.NewHyperlink().Attr("class", "btn btn-lg btn-warning float-end").HTML("Register").Attr("href", a.LinkRegister())
 	//form := hb.NewForm().Attr("method", "POST")
 

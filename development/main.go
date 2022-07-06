@@ -50,8 +50,8 @@ func main() {
 	}
 
 	auth, err := auth.NewAuth(auth.Config{
-		Endpoint:             "/",
-		UrlRedirectOnSuccess: "/user/success",
+		Endpoint:             "/auth",
+		UrlRedirectOnSuccess: "/user/dashboard",
 		FuncUserLogin:        userLogin,
 		FuncUserRegister:     userRegister,
 		FuncUserStoreToken:   userStoreToken,
