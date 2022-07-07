@@ -3,7 +3,6 @@ package auth
 import (
 	"net/http"
 	"strings"
-	"time"
 
 	"github.com/gouniverse/api"
 	"github.com/gouniverse/hb"
@@ -14,6 +13,18 @@ import (
 func (a Auth) apiRegister(w http.ResponseWriter, r *http.Request) {
 	email := strings.Trim(utils.Req(r, "email", ""), " ")
 	password := strings.Trim(utils.Req(r, "password", ""), " ")
+	first_name := strings.Trim(utils.Req(r, "first_name", ""), " ")
+	last_name := strings.Trim(utils.Req(r, "last_name", ""), " ")
+
+	if first_name == "" {
+		api.Respond(w, r, api.Error("First name is required field"))
+		return
+	}
+
+	if last_name == "" {
+		api.Respond(w, r, api.Error("Last name is required field"))
+		return
+	}
 
 	if email == "" {
 		api.Respond(w, r, api.Error("Email is required field"))
@@ -30,38 +41,14 @@ func (a Auth) apiRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userID, err := a.funcUserLogin(email, password)
+	err := a.funcUserRegister(email, password, first_name, last_name)
 
 	if err != nil {
-		api.Respond(w, r, api.Error("authentication failed. "+err.Error()))
+		api.Respond(w, r, api.Error("registration failed. "+err.Error()))
 		return
 	}
 
-	token := utils.RandStr(32)
-
-	errSession := a.funcUserStoreToken(token, userID)
-
-	if errSession != nil {
-		api.Respond(w, r, api.Error("token store failed. "+errSession.Error()))
-		return
-	}
-
-	if a.useCookies {
-		expiration := time.Now().Add(365 * 24 * time.Hour)
-		cookie := http.Cookie{
-			Name:     "authtoken",
-			Value:    token,
-			Expires:  expiration,
-			HttpOnly: false,
-			Secure:   true,
-			Path:     "/",
-		}
-		http.SetCookie(w, &cookie)
-	}
-
-	api.Respond(w, r, api.SuccessWithData("login success", map[string]interface{}{
-		"token": token,
-	}))
+	api.Respond(w, r, api.SuccessWithData("registration success", map[string]interface{}{}))
 }
 
 func (a Auth) pageRegister(w http.ResponseWriter, r *http.Request) {
