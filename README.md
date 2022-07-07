@@ -27,6 +27,7 @@ func userFindByToken(token string) (userID string, err error) {
 }
 ```
 
+- Setup the auth settings
 
 ```golang
 auth, err := auth.NewAuth(auth.Config{
@@ -37,4 +38,18 @@ auth, err := auth.NewAuth(auth.Config{
 	FuncUserStoreToken:   userStoreToken,
 	FuncUserFindByToken:  userFindByToken,
 })
+```
+
+- Attach to router
+
+```golang
+mux := http.NewServeMux()
+mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Index page. Login at: " + auth.LinkLogin()))
+})
+
+mux.HandleFunc("/auth/", auth.Router)
+
+// Put your auth routes after the Auth middleware
+mux.Handle("/user/dashboard", auth.AuthMiddleware(dashboardHandler("IN AUTHENTICATED DASHBOARD")))
 ```
