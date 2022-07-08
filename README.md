@@ -16,6 +16,11 @@ func userLogin(username string, password string) (userID string, err error) {
 	return "exampleUserId", nil
 }
 
+func userLogout(username string) (err error) {
+    // your code here
+	return nil
+}
+
 func userStoreToken(token string, userID string) error {
     // your code here
 	return nil
@@ -34,7 +39,8 @@ auth, err := auth.NewAuth(auth.Config{
 	Endpoint:             "/",
 	UrlRedirectOnSuccess: "/user/success",
 	FuncUserLogin:        userLogin,
-	FuncUserRegister:     userRegister, // not providing this will disable registration
+	FuncUserLogout:       userLogout,
+	FuncUserRegister:     userRegister, // not providing it will disable registration
 	FuncUserStoreToken:   userStoreToken,
 	FuncUserFindByToken:  userFindByToken,
 })
