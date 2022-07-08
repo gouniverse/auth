@@ -22,6 +22,8 @@ func (a Auth) Router(w http.ResponseWriter, r *http.Request) {
 
 	if strings.HasSuffix(uri, pathApiLogin) {
 		path = pathApiLogin
+	} else if strings.HasSuffix(uri, pathApiLogout) {
+		path = pathApiLogout
 	} else if strings.HasSuffix(uri, pathApiResetPassword) {
 		path = pathApiResetPassword
 	} else if strings.HasSuffix(uri, pathApiRestorePassword) {
@@ -49,13 +51,15 @@ func (a Auth) Router(w http.ResponseWriter, r *http.Request) {
 // getRoute finds a route
 func (a Auth) getRoute(route string) func(w http.ResponseWriter, r *http.Request) {
 	routes := map[string]func(w http.ResponseWriter, r *http.Request){
-		pathLogin:              a.pageLogin,
-		pathPasswordReset:      a.pagePasswordReset,
-		pathPasswordRestore:    a.pagePasswordRestore,
 		pathApiLogin:           a.apiLogin,
+		pathApiLogout:          a.apiLogout,
 		pathApiRegister:        a.apiRegister,
 		pathApiResetPassword:   a.apiPaswordReset,
 		pathApiRestorePassword: a.apiPaswordRestore,
+		pathLogin:              a.pageLogin,
+		pathLogout:             a.pageLogout,
+		pathPasswordReset:      a.pagePasswordReset,
+		pathPasswordRestore:    a.pagePasswordRestore,
 	}
 
 	if a.enableRegistration {

@@ -9,6 +9,7 @@ type Config struct {
 	FuncUserLogin        func(username string, password string) (userID string, err error)
 	FuncUserRegister     func(username string, password string, first_name string, last_name string) (err error)
 	FuncUserStoreToken   func(sessionID string, userID string) error
+	FuncUserLogout       func(username string) (err error)
 	UseCookies           bool
 	UseLocalStorage      bool
 }

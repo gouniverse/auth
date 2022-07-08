@@ -14,6 +14,9 @@ const (
 	// PathApiLogin contains the path to api login endpoint
 	pathApiLogin string = "api/login"
 
+	// PathApiLogout contains the path to api logout endpoint
+	pathApiLogout string = "api/logout"
+
 	// PathApiRegister contains the path to api register endpoint
 	pathApiRegister string = "api/register"
 

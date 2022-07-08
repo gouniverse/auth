@@ -25,6 +25,10 @@ func NewAuth(config Config) (*Auth, error) {
 		return nil, errors.New("auth: FuncUserFindByToken function is required")
 	}
 
+	if config.FuncUserLogout == nil {
+		return nil, errors.New("auth: FuncUserLogout function is required")
+	}
+
 	if config.FuncUserRegister != nil {
 		config.EnableRegistration = true
 		//return nil, errors.New("auth: FuncUserRegister function is required")
@@ -36,6 +40,7 @@ func NewAuth(config Config) (*Auth, error) {
 	auth.useCookies = config.UseCookies
 	auth.useLocalStorage = config.UseLocalStorage
 	auth.funcUserLogin = config.FuncUserLogin
+	auth.funcUserLogout = config.FuncUserLogout
 	auth.funcUserRegister = config.FuncUserRegister
 	auth.funcUserFindByToken = config.FuncUserFindByToken
 	auth.funcUserStoreToken = config.FuncUserStoreToken

@@ -70,6 +70,22 @@ func userLogin(username string, password string) (userID string, err error) {
 	return "password mismatch", errors.New("password mismatch")
 }
 
+func userLogout(username string) error {
+	// slug := utils.Slugify(token, rune('_'))
+	// err := jsonStore.Write("tokens", slug, userID)
+	// if err != nil {
+	// 	return err
+	// }
+	// isOk, err := myCms.SessionStore.Set(token, userID, 600)
+	// if err != nil {
+	// 	return err
+	// }
+	// if !isOk {
+	// 	return errors.New("unable to store token")
+	// }
+	return nil
+}
+
 func userStoreToken(token string, userID string) error {
 	slug := utils.Slugify(token, rune('_'))
 	err := jsonStore.Write("tokens", slug, userID)
@@ -126,6 +142,7 @@ func main() {
 		Endpoint:             "/auth",
 		UrlRedirectOnSuccess: "/user/dashboard",
 		FuncUserLogin:        userLogin,
+		FuncUserLogout:       userLogout,
 		FuncUserRegister:     userRegister,
 		FuncUserStoreToken:   userStoreToken,
 		FuncUserFindByToken:  userFindByToken,
@@ -164,7 +181,7 @@ func main() {
 	log.Println("URL: http://" + utils.Env("APP_URL") + " ...")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Index page. Login at: " + auth.LinkLogin()))
+		w.Write([]byte("<html>Index page. Login at: <a href='" + auth.LinkLogin() + "'>" + auth.LinkLogin() + "</a>"))
 	})
 	mux.HandleFunc("/auth/", auth.Router)
 	// mux.HandleFunc("/cms", myCms.Router)
@@ -172,7 +189,7 @@ func main() {
 	// 	auth.AuthMiddleware(Middleware)
 	// 	w.Write([]byte("User dashboard"))
 	// })
-	mux.Handle("/user/dashboard", auth.AuthMiddleware(messageHandler("INSIDE MIDDLEWARE")))
+	mux.Handle("/user/dashboard", auth.AuthMiddleware(messageHandler("<html>User page. Logout at: <a href='"+auth.LinkLogout()+"'>"+auth.LinkLogout()+"</a>")))
 
 	srv := &http.Server{
 		Handler: mux,
