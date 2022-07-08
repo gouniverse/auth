@@ -13,22 +13,22 @@ func userRegister(username string, password string, first_name string, last_name
 
 func userLogin(username string, password string) (userID string, err error) {
     // your code here
-	return "exampleUserId", nil
+	return "yourUserId", nil
 }
 
 func userLogout(username string) (err error) {
-    // your code here
+    // your code here (remove token from session or cache store)
 	return nil
 }
 
 func userStoreToken(token string, userID string) error {
-    // your code here
+    // your code here (store in session or cache store with desired timeout)
 	return nil
 }
 
 func userFindByToken(token string) (userID string, err error) {
     // your code here
-	return "exampleUserId", nil
+	return "yourUserId", nil
 }
 ```
 
