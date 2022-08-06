@@ -7,7 +7,7 @@ require github.com/jcelliott/lumber v0.0.0-20160324203708-dd349441af25
 require (
 	github.com/darkoatanasovski/htmltags v1.0.0 // indirect
 	github.com/gouniverse/api v1.5.0
-	github.com/gouniverse/hb v1.34.0
+	github.com/gouniverse/hb v1.35.0
 	github.com/gouniverse/utils v1.21.0
 	github.com/gouniverse/validator v0.11.0
 	github.com/joho/godotenv v1.4.0 // indirect
