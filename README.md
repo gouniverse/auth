@@ -59,3 +59,8 @@ mux.HandleFunc("/auth/", auth.Router)
 // Put your auth routes after the Auth middleware
 mux.Handle("/user/dashboard", auth.AuthMiddleware(dashboardHandler("IN AUTHENTICATED DASHBOARD")))
 ```
+
+
+## Other Projects
+
+- https://github.com/authorizerdev/authorizer
