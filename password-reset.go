@@ -70,7 +70,7 @@ func (a Auth) pagePasswordReset(w http.ResponseWriter, r *http.Request) {
 	alertDanger := hb.NewDiv().Attr("class", "alert alert-danger").Attr("style", "display:none")
 	alertGroup := hb.NewDiv().Attr("class", "alert-group").AddChild(alertSuccess).AddChild(alertDanger)
 
-	header := hb.NewHeading3().HTML("Please sign up").Attr("style", "margin:0px;")
+	header := hb.NewHeading3().HTML("Please fill the form bellow").Attr("style", "margin:0px;")
 	passwordLabel := hb.NewLabel().HTML("New Password")
 	passwordInput := hb.NewInput().Attr("class", "form-control").Attr("name", "password").Attr("placeholder", "Enter new password")
 	passwordFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(passwordLabel).AddChild(passwordInput)
