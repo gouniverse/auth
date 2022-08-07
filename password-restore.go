@@ -13,55 +13,69 @@ import (
 
 func (a Auth) apiPaswordRestore(w http.ResponseWriter, r *http.Request) {
 	email := strings.Trim(utils.Req(r, "email", ""), " ")
-	password := strings.Trim(utils.Req(r, "password", ""), " ")
+	firstName := strings.Trim(utils.Req(r, "first_name", ""), " ")
+	lastName := strings.Trim(utils.Req(r, "last_name", ""), " ")
 
 	if email == "" {
 		api.Respond(w, r, api.Error("Email is required field"))
 		return
 	}
-
-	if password == "" {
-		api.Respond(w, r, api.Error("Password is required field"))
+	
+	if firstName == "" {
+		api.Respond(w, r, api.Error("First name is required field"))
 		return
 	}
 
-	if !validator.IsEmail(email) {
-		api.Respond(w, r, api.Error("This is not a valid email: "+email))
+	if lastName == "" {
+		api.Respond(w, r, api.Error("Last name is required field"))
 		return
 	}
 
-	userID, err := a.funcUserLogin(email, password)
+	user, err := a.funcUserFindByEmail(email)
 
 	if err != nil {
-		api.Respond(w, r, api.Error("authentication failed. "+err.Error()))
+		log.Println(err.Error())
+		api.Respond(w, r, api.Error("Internal server error"))
 		return
 	}
 
+	if user == nil {
+		api.Respond(w, r, api.Error("E-mail not registered"))
+		return
+	}
+
+	if strings.ToLower(user.FirstName) != strings.ToLower(firstName) {
+		api.Respond(w, r, api.Error("First or last name not matching"))
+		return
+	}
+	
+	
+	if strings.ToLower(user.LastName) != strings.ToLower(lastName) {
+		api.Respond(w, r, api.Error("First or last name not matching"))
+		return
+	}
+	
 	token := utils.RandStr(32)
 
-	errSession := a.funcUserStoreToken(token, userID)
+	errTempTokenSave := a.funcStoreTempToken(token, user.Email, 3600)
 
-	if errSession != nil {
+	if errTempTokenSave != nil {
 		api.Respond(w, r, api.Error("token store failed. "+errSession.Error()))
 		return
 	}
+	
+	emailContent := helpers.EmailPasswordChangeTemplate(user.Email, helpers.LinkAuthPasswordChange(emailPasswordChangeToken))
 
-	if a.useCookies {
-		expiration := time.Now().Add(365 * 24 * time.Hour)
-		cookie := http.Cookie{
-			Name:     "authtoken",
-			Value:    token,
-			Expires:  expiration,
-			HttpOnly: false,
-			Secure:   true,
-			Path:     "/",
-		}
-		http.SetCookie(w, &cookie)
+	isSent, err := a.funcEmailSend(a.EmailFromAddress, user.Email, "Password Restore", emailContent)
+
+	log.Println(err)
+
+	if isSent {
+		api.Respond(w, r, api.Success("Password reset link was sent to your e-mail"))
+		return
 	}
 
-	api.Respond(w, r, api.SuccessWithData("login success", map[string]interface{}{
-		"token": token,
-	}))
+	api.Respond(w, r, api.Error("Password reset link failed to be sent. Please try again later"))
 }
 
 func (a Auth) pagePasswordRestore(w http.ResponseWriter, r *http.Request) {
