@@ -12,13 +12,18 @@ type Auth struct {
 
 	// urlRedirectOnSuccess the endpoint to return to on success
 	urlRedirectOnSuccess string
-	funcUserLogin        func(username string, password string) (userID string, err error)
-	funcUserLogout       func(username string) (err error)
-	funcUserStoreToken   func(token string, userID string) error
-	funcUserFindByToken  func(token string) (userID string, err error)
-	funcUserRegister     func(username string, password string, first_name string, last_name string) (err error)
-	useCookies           bool
-	useLocalStorage      bool
+
+	funcEmailTemplatePasswordRestore func(userID string, passwordRestoreLink string) string // optional
+	funcEmailSend                    func(userID string, emailSubject string, emailBody string) (err error)
+	funcStoreTemporaryKey            func(key string, value string, expiresSeconds int) (err error)
+	funcUserLogin                    func(username string, password string) (userID string, err error)
+	funcUserLogout                   func(username string) (err error)
+	funcUserStoreToken               func(token string, userID string) error
+	funcUserFindByToken              func(token string) (userID string, err error)
+	funcUserRegister                 func(username string, password string, first_name string, last_name string) (err error)
+	funcUserFindByUsername           func(username string, first_name string, last_name string) (userID string, err error)
+	useCookies                       bool
+	useLocalStorage                  bool
 }
 
 func (a Auth) GetCurrentUserID(r *http.Request) string {
@@ -61,8 +66,8 @@ func (a Auth) LinkPasswordRestore() string {
 	return link(a.endpoint, pathPasswordRestore)
 }
 
-func (a Auth) LinkPasswordReset() string {
-	return link(a.endpoint, pathPasswordReset)
+func (a Auth) LinkPasswordReset(token string) string {
+	return link(a.endpoint, pathPasswordReset) + "?t=" + token
 }
 
 func (a Auth) LinkRegister() string {

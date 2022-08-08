@@ -19,6 +19,9 @@ func (a Auth) Handler() http.Handler {
 func (a Auth) Router(w http.ResponseWriter, r *http.Request) {
 	path := utils.Req(r, "path", "home")
 	uri := r.RequestURI
+	if strings.Contains(uri, "?") {
+		uri = utils.StrLeftFrom(uri, "?")
+	}
 
 	if strings.HasSuffix(uri, pathApiLogin) {
 		path = pathApiLogin
@@ -38,6 +41,8 @@ func (a Auth) Router(w http.ResponseWriter, r *http.Request) {
 		path = pathRegister
 	} else if strings.HasSuffix(uri, pathPasswordRestore) {
 		path = pathPasswordRestore
+	} else if strings.HasSuffix(uri, pathPasswordReset) {
+		path = pathPasswordReset
 	}
 
 	log.Println("Path: " + path)

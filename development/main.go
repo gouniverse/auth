@@ -4,10 +4,13 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"net/smtp"
 	"os"
 	"time"
 
+	"github.com/darkoatanasovski/htmltags"
 	"github.com/gouniverse/auth/development/scribble"
+	"github.com/jordan-wright/email"
 
 	"github.com/gouniverse/auth"
 
@@ -16,9 +19,15 @@ import (
 
 var jsonStore *scribble.Driver
 
+func emailSend(userID string, subject string, body string) error {
+	emailSendTo("info@sinevia.com", []string{"info@sinevia.com"}, subject, body)
+	return nil
+}
+
 func userRegister(username string, password string, first_name string, last_name string) error {
-	slug := utils.Slugify(username, rune('_'))
+	slug := utils.StrSlugify(username, rune('_'))
 	err := jsonStore.Write("users", slug, map[string]string{
+		"id":         utils.StrRandomFromGamma(16, "abcdef0123456789"),
 		"username":   username,
 		"password":   password,
 		"first_name": first_name,
@@ -31,7 +40,7 @@ func userRegister(username string, password string, first_name string, last_name
 }
 
 func userLogin(username string, password string) (userID string, err error) {
-	slug := utils.Slugify(username, rune('_'))
+	slug := utils.StrSlugify(username, rune('_'))
 	var user map[string]string
 	err = jsonStore.Read("users", slug, &user)
 	if err != nil {
@@ -54,7 +63,7 @@ func userLogout(username string) error {
 }
 
 func userStoreToken(token string, userID string) error {
-	slug := utils.Slugify(token, rune('_'))
+	slug := utils.StrSlugify(token, rune('_'))
 	err := jsonStore.Write("tokens", slug, userID)
 	if err != nil {
 		return err
@@ -63,12 +72,42 @@ func userStoreToken(token string, userID string) error {
 }
 
 func userFindByToken(token string) (userID string, err error) {
-	slug := utils.Slugify(token, rune('_'))
+	slug := utils.StrSlugify(token, rune('_'))
 	err = jsonStore.Read("tokens", slug, &userID)
 	if err != nil {
 		return "not found err", err
 	}
 	return userID, nil
+}
+
+func userFindByUsername(username string, firstName string, lastName string) (userID string, err error) {
+	slug := utils.StrSlugify(username, rune('_'))
+	var user map[string]string
+	err = jsonStore.Read("users", slug, &user)
+	if err != nil {
+		return "not found err", err
+	}
+
+	if user == nil {
+		return "not found", errors.New("unable to find user")
+	}
+
+	return user["id"], nil
+}
+
+func temporaryKeySet(key string, value string, expiresSeconds int) (err error) {
+	slug := utils.StrSlugify(key, rune('_'))
+	expiresAt := time.Now().Add(time.Duration(expiresSeconds))
+	err = jsonStore.Write("temp", slug, map[string]string{
+		"id":           utils.StrRandomFromGamma(16, "abcdef0123456789"),
+		"value":        value,
+		"expires":      utils.ToString(expiresSeconds),
+		"expires_time": utils.ToString(expiresAt),
+	})
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func main() {
@@ -85,14 +124,17 @@ func main() {
 	}
 
 	auth, err := auth.NewAuth(auth.Config{
-		Endpoint:             "/auth",
-		UrlRedirectOnSuccess: "/user/dashboard",
-		FuncUserLogin:        userLogin,
-		FuncUserLogout:       userLogout,
-		FuncUserRegister:     userRegister,
-		FuncUserStoreToken:   userStoreToken,
-		FuncUserFindByToken:  userFindByToken,
-		UseCookies:           true,
+		Endpoint:               "/auth",
+		UrlRedirectOnSuccess:   "/user/dashboard",
+		FuncEmailSend:          emailSend,
+		FuncStoreTemporaryKey:  temporaryKeySet,
+		FuncUserLogin:          userLogin,
+		FuncUserLogout:         userLogout,
+		FuncUserRegister:       userRegister,
+		FuncUserStoreToken:     userStoreToken,
+		FuncUserFindByToken:    userFindByToken,
+		FuncUserFindByUsername: userFindByUsername,
+		UseCookies:             true,
 	})
 
 	if err != nil {
@@ -161,3 +203,36 @@ func messageHandler(message string) http.Handler {
 
 // 	return db, nil
 // }
+
+// EmailSend sends an email
+func emailSendTo(from string, to []string, subject string, htmlMessage string) (bool, error) {
+	//drvr := os.Getenv("MAIL_DRIVER")
+	host := utils.Env("MAIL_HOST")
+	port := utils.Env("MAIL_PORT")
+	user := utils.Env("MAIL_USERNAME")
+	pass := utils.Env("MAIL_PASSWORD")
+	addr := host + ":" + port
+
+	nodes, errStripped := htmltags.Strip(htmlMessage, []string{}, true)
+
+	textMessage := ""
+
+	if errStripped == nil {
+		//nodes.Elements   //HTML nodes structure of type *html.Node
+		textMessage = nodes.ToString() //returns stripped HTML string
+	}
+
+	e := email.NewEmail()
+	e.From = from
+	e.To = to
+	e.Subject = subject
+	e.Text = []byte(textMessage)
+	e.HTML = []byte(htmlMessage)
+	err := e.Send(addr, smtp.PlainAuth("", user, pass, host))
+
+	if err != nil {
+		log.Fatal(err)
+		return false, err
+	}
+	return true, nil
+}
