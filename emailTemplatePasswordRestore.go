@@ -33,7 +33,7 @@ func emailTemplatePasswordChange(name string, url string) string {
 	<hr />
 	<p>
 		If you are having trouble clicking the "Reset Password" link,
-		copy and paste the URL above into your web browser:
+		copy and paste the URL below into your web browser:
 		{{.URL}}
 	</p>
 </body>
