@@ -1,3 +1,13 @@
+package auth
+
+import (
+	"net/http"
+	"strings"
+
+	"github.com/gouniverse/api"
+	"github.com/gouniverse/utils"
+	validator "github.com/gouniverse/validator"
+)
 
 func (a Auth) apiRegister(w http.ResponseWriter, r *http.Request) {
 	email := strings.Trim(utils.Req(r, "email", ""), " ")
