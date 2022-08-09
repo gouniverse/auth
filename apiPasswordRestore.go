@@ -54,7 +54,7 @@ func (a Auth) apiPaswordRestore(w http.ResponseWriter, r *http.Request) {
 
 	token := utils.StrRandomFromGamma(32, "BCDFGHJKLMNPQRSTVXYZ")
 
-	errTempTokenSave := a.funcStoreTemporaryKey(token, userID, 3600)
+	errTempTokenSave := a.funcTemporaryKeySet(token, userID, 3600)
 
 	if errTempTokenSave != nil {
 		api.Respond(w, r, api.Error("token store failed. "+errTempTokenSave.Error()))

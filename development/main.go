@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"log"
 	"net/http"
@@ -21,21 +22,6 @@ var jsonStore *scribble.Driver
 
 func emailSend(userID string, subject string, body string) error {
 	emailSendTo("info@sinevia.com", []string{"info@sinevia.com"}, subject, body)
-	return nil
-}
-
-func userRegister(username string, password string, first_name string, last_name string) error {
-	slug := utils.StrSlugify(username, rune('_'))
-	err := jsonStore.Write("users", slug, map[string]string{
-		"id":         utils.StrRandomFromGamma(16, "abcdef0123456789"),
-		"username":   username,
-		"password":   password,
-		"first_name": first_name,
-		"last_name":  last_name,
-	})
-	if err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -62,15 +48,6 @@ func userLogout(username string) error {
 	return nil
 }
 
-func userStoreToken(token string, userID string) error {
-	slug := utils.StrSlugify(token, rune('_'))
-	err := jsonStore.Write("tokens", slug, userID)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func userFindByToken(token string) (userID string, err error) {
 	slug := utils.StrSlugify(token, rune('_'))
 	err = jsonStore.Read("tokens", slug, &userID)
@@ -93,6 +70,77 @@ func userFindByUsername(username string, firstName string, lastName string) (use
 	}
 
 	return user["id"], nil
+}
+
+func userPasswordChange(userID string, password string) error {
+	user, err := userFindByID(userID)
+	if err != nil {
+		return err
+	}
+
+	user["password"] = password
+
+	slug := utils.StrSlugify(user["username"], rune('_'))
+	errSave := jsonStore.Write("users", slug, user)
+	if errSave != nil {
+		return errSave
+	}
+
+	jsonStore.Delete("users", slug)
+
+	return nil
+}
+
+func userFindByID(userID string) (user map[string]string, err error) {
+	users, errReadAll := jsonStore.ReadAll("users")
+	if errReadAll != nil {
+		return nil, errReadAll
+	}
+
+	for _, userJson := range users {
+		json.Unmarshal(userJson, &user)
+		log.Println(userID)
+		log.Println(user)
+		if user["id"] == userID {
+			return user, nil
+		}
+	}
+
+	return nil, errors.New("user not found")
+}
+
+func userStoreToken(token string, userID string) error {
+	slug := utils.StrSlugify(token, rune('_'))
+	err := jsonStore.Write("tokens", slug, userID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func userRegister(username string, password string, first_name string, last_name string) error {
+	slug := utils.StrSlugify(username, rune('_'))
+	err := jsonStore.Write("users", slug, map[string]string{
+		"id":         utils.StrRandomFromGamma(16, "abcdef0123456789"),
+		"username":   username,
+		"password":   password,
+		"first_name": first_name,
+		"last_name":  last_name,
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func temporaryKeyGet(key string) (value string, err error) {
+	slug := utils.StrSlugify(key, rune('_'))
+	var record map[string]string
+	err = jsonStore.Read("temp", slug, &record)
+	if err != nil {
+		return "", err
+	}
+	return record["value"], nil
 }
 
 func temporaryKeySet(key string, value string, expiresSeconds int) (err error) {
@@ -124,17 +172,20 @@ func main() {
 	}
 
 	auth, err := auth.NewAuth(auth.Config{
-		Endpoint:               "/auth",
+		Endpoint:               utils.Env("APP_URL") + "/auth",
 		UrlRedirectOnSuccess:   "/user/dashboard",
 		FuncEmailSend:          emailSend,
-		FuncStoreTemporaryKey:  temporaryKeySet,
-		FuncUserLogin:          userLogin,
-		FuncUserLogout:         userLogout,
-		FuncUserRegister:       userRegister,
-		FuncUserStoreToken:     userStoreToken,
 		FuncUserFindByToken:    userFindByToken,
 		FuncUserFindByUsername: userFindByUsername,
-		UseCookies:             true,
+		FuncUserLogin:          userLogin,
+		FuncUserLogout:         userLogout,
+		FuncUserPasswordChange: userPasswordChange,
+		FuncUserRegister:       userRegister,
+		FuncUserStoreToken:     userStoreToken,
+		FuncTemporaryKeyGet:    temporaryKeyGet,
+		FuncTemporaryKeySet:    temporaryKeySet,
+
+		UseCookies: true,
 	})
 
 	if err != nil {
