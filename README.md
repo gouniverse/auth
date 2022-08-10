@@ -61,6 +61,7 @@ mux.Handle("/user/dashboard", auth.AuthMiddleware(dashboardHandler("IN AUTHENTIC
 ```
 
 
-## Other Projects
+## Other Noteable Auth Projects
 
 - https://github.com/authorizerdev/authorizer
+- https://github.com/markbates/goth

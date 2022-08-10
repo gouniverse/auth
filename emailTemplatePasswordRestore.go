@@ -49,14 +49,16 @@ func emailTemplatePasswordChange(name string, url string) string {
 
 	t, err := template.New("template").Parse(msg)
 	if err != nil {
-		log.Panic(err.Error())
+		log.Println(err)
+		return ""
 	}
 
 	var doc bytes.Buffer
 	errExecute := t.Execute(&doc, data)
 
 	if errExecute != nil {
-		log.Panic(errExecute.Error())
+		log.Println(errExecute)
+		return ""
 	}
 
 	s := doc.String()

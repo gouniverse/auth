@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gouniverse/hb"
@@ -65,7 +64,6 @@ func (a Auth) pageLogin(w http.ResponseWriter, r *http.Request) {
 func (a Auth) pageLoginScripts() string {
 	urlApiLogin := a.LinkApiLogin()
 	urlSuccess := a.LinkRedirectOnSuccess()
-	log.Println(urlApiLogin)
 
 	return `
 	var urlApiLogin = "` + urlApiLogin + `";

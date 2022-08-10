@@ -37,6 +37,10 @@ func NewAuth(config Config) (*Auth, error) {
 		return nil, errors.New("auth: FuncUserLogout function is required")
 	}
 
+	if config.EnableRegistration && config.FuncUserRegister == nil {
+		return nil, errors.New("auth: FuncUserRegister function is required")
+	}
+
 	if config.FuncUserStoreToken == nil {
 		return nil, errors.New("auth: FuncUserStoreToken function is required")
 	}

@@ -196,7 +196,7 @@ func main() {
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("<html>Index page. Login at: <a href='" + auth.LinkLogin() + "'>" + auth.LinkLogin() + "</a>"))
 	})
-	mux.HandleFunc("/auth/", auth.Router)
+	mux.HandleFunc("/auth/", auth.AuthHandler)
 	mux.Handle("/user/dashboard", auth.AuthMiddleware(messageHandler("<html>User page. Logout at: <a href='"+auth.LinkLogout()+"'>"+auth.LinkLogout()+"</a>")))
 
 	log.Println("4. Starting server on http://" + utils.Env("SERVER_HOST") + ":" + utils.Env("SERVER_PORT") + " ...")

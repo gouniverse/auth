@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"strings"
 
@@ -11,14 +10,27 @@ import (
 
 func (a Auth) Handler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		a.Router(w, r)
+		a.AuthHandler(w, r)
 	})
 }
 
+func (a Auth) Router() *http.ServeMux {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", a.AuthHandler)
+	return mux
+}
+
 // Router routes the requests
-func (a Auth) Router(w http.ResponseWriter, r *http.Request) {
+func (a Auth) AuthHandler(w http.ResponseWriter, r *http.Request) {
 	path := utils.Req(r, "path", "home")
 	uri := r.RequestURI
+
+	if r.RequestURI == "" && r.URL.Path != "" {
+		uri = r.URL.Path // Attempt to take from URL path (empty RequestURI occurs during testing)
+	}
+
+	// log.Println(uri)
+
 	if strings.Contains(uri, "?") {
 		uri = utils.StrLeftFrom(uri, "?")
 	}
@@ -45,7 +57,7 @@ func (a Auth) Router(w http.ResponseWriter, r *http.Request) {
 		path = pathPasswordReset
 	}
 
-	log.Println("Path: " + path)
+	// log.Println("Path: " + path)
 
 	ctx := context.WithValue(r.Context(), keyEndpoint, r.URL.Path)
 

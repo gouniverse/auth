@@ -36,7 +36,7 @@ func (a Auth) apiLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token := utils.RandStr(32)
+	token := utils.StrRandom(32)
 
 	errSession := a.funcUserStoreToken(token, userID)
 

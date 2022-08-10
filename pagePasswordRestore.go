@@ -59,14 +59,14 @@ func (a Auth) pagePasswordRestore(w http.ResponseWriter, r *http.Request) {
 	card.AddChild(cardHeader).AddChild(cardBody).AddChild(cardFooter)
 
 	container := hb.NewDiv().Attr("class", "container")
-	heading := hb.NewHeading1().Attr("class", "text-center").HTML("Forgot Password")
+	heading := hb.NewHeading1().Attr("class", "text-center").HTML("Restore Forgotten Password")
 
 	container.AddChild(heading)
 	container.AddChild(card)
 
 	h := container.ToHTML()
 
-	webpage := webpage("Fogotten Password", h, a.pagePasswordRestoreScripts())
+	webpage := webpage("Restore Forgotten Password", h, a.pagePasswordRestoreScripts())
 	w.WriteHeader(200)
 	w.Header().Set("Content-Type", "text/html")
 	w.Write([]byte(webpage.ToHTML()))

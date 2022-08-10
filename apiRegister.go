@@ -40,6 +40,11 @@ func (a Auth) apiRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if a.funcUserRegister == nil {
+		api.Respond(w, r, api.Error("registration failed. FuncUserRegister finction not defined"))
+		return
+	}
+
 	err := a.funcUserRegister(email, password, first_name, last_name)
 
 	if err != nil {
