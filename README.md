@@ -6,27 +6,50 @@ Authentication library for Golang
 - Implement your functions
 
 ```golang
+// userRegister registers the user
+//
+// save the user to your databases
+// note that the username can be an email (if you wish)
+//
 func userRegister(username string, password string, first_name string, last_name string) error {
     // your code here
 	return nil
 }
 
+// userLogin logs the user in
+//
+// find the user by the specified username and password, 
+// note that the username can be an email (if you wish)
+//
 func userLogin(username string, password string) (userID string, err error) {
     // your code here
 	return "yourUserId", nil
 }
 
+// userLogout logs the user out
+//
+// remove the auth token from wherever you have stored it (i.e. session store or the cache store)
+//
 func userLogout(username string) (err error) {
     // your code here (remove token from session or cache store)
 	return nil
 }
 
-func userStoreToken(token string, userID string) error {
+// userStoreAuthToken stores the auth token with the provided user ID
+//
+// save the auth token to your selected store it (i.e. session store or the cache store)
+// make sure you set an expiration time (i.e. 2 hours)
+//
+func userStoreAuthToken(token string, userID string) error {
     // your code here (store in session or cache store with desired timeout)
 	return nil
 }
 
-func userFindByToken(token string) (userID string, err error) {
+// userFindByAuthToken find the user by the provided token, and returns the user ID
+//
+// retrieve the userID from your selected store  (i.e. session store or the cache store)
+//
+func userFindByAuthToken(token string) (userID string, err error) {
     // your code here
 	return "yourUserId", nil
 }
@@ -39,12 +62,12 @@ auth, err := auth.NewAuth(auth.Config{
 	EnableRegistration:   true,
 	Endpoint:                "/",
 	UrlRedirectOnSuccess:   "http://localhost/user/dashboard",
-	FuncUserFindByToken:     userFindByToken,
+	FuncUserFindByAuthToken: userFindByAuthToken,
 	FuncUserFindByUsername:  userFindByUsername,
 	FuncUserLogin:           userLogin,
 	FuncUserLogout:          userLogout,
 	FuncUserRegister:        userRegister, // optional, required only if registration is enabled
-	FuncUserStoreToken:      userStoreToken,
+	FuncUserStoreAuthToken:  userStoreAuthToken,
 	FuncEmailSend:           emailSend,
 	FuncTemporaryKeyGet:     tempKeyGet,
 	FuncTemporaryKeySet:     tempKeySet,
