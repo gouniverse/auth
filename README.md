@@ -1,4 +1,7 @@
 # Auth
+
+![tests](https://github.com/gouniverse/auth/workflows/tests/badge.svg)
+
 Authentication library for Golang
 
 ## Usage
