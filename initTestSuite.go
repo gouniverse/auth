@@ -67,11 +67,11 @@ func (suite *initTestSuite) TestFuncUserFindByTokenIsRequired() {
 
 func (suite *initTestSuite) TestFuncUserFindByUsernameIsRequired() {
 	_, err := NewAuth(Config{
-		Endpoint:             "http://localhost/auth",
-		UrlRedirectOnSuccess: "http://localhost/dashboard",
-		FuncTemporaryKeyGet:  func(key string) (value string, err error) { return "", nil },
-		FuncTemporaryKeySet:  func(key string, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByToken:  func(token string) (userID string, err error) { return "", nil },
+		Endpoint:                "http://localhost/auth",
+		UrlRedirectOnSuccess:    "http://localhost/dashboard",
+		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
+		FuncTemporaryKeySet:     func(key string, value string, expiresSeconds int) (err error) { return nil },
+		FuncUserFindByAuthToken: func(token string) (userID string, err error) { return "", nil },
 	})
 	assert.NotNil(suite.T(), err)
 	assert.Equal(suite.T(), "auth: FuncUserFindByUsername function is required", err.Error())
@@ -79,16 +79,16 @@ func (suite *initTestSuite) TestFuncUserFindByUsernameIsRequired() {
 
 func (suite *initTestSuite) TestInitializationSuccess() {
 	auth, err := NewAuth(Config{
-		Endpoint:               "http://localhost/auth",
-		UrlRedirectOnSuccess:   "http://localhost/dashboard",
-		FuncTemporaryKeyGet:    func(key string) (value string, err error) { return "", nil },
-		FuncTemporaryKeySet:    func(key string, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByToken:    func(token string) (userID string, err error) { return "", nil },
-		FuncUserFindByUsername: func(username string, firstName string, lastName string) (userID string, err error) { return "", nil },
-		FuncUserLogin:          func(username string, password string) (userID string, err error) { return "", nil },
-		FuncUserLogout:         func(userID string) (err error) { return nil },
-		FuncUserStoreToken:     func(sessionID string, userID string) (err error) { return nil },
-		FuncEmailSend:          func(userID string, emailSubject string, emailBody string) (err error) { return nil },
+		Endpoint:                "http://localhost/auth",
+		UrlRedirectOnSuccess:    "http://localhost/dashboard",
+		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
+		FuncTemporaryKeySet:     func(key string, value string, expiresSeconds int) (err error) { return nil },
+		FuncUserFindByAuthToken: func(token string) (userID string, err error) { return "", nil },
+		FuncUserFindByUsername:  func(username string, firstName string, lastName string) (userID string, err error) { return "", nil },
+		FuncUserLogin:           func(username string, password string) (userID string, err error) { return "", nil },
+		FuncUserLogout:          func(userID string) (err error) { return nil },
+		FuncUserStoreAuthToken:  func(sessionID string, userID string) (err error) { return nil },
+		FuncEmailSend:           func(userID string, emailSubject string, emailBody string) (err error) { return nil },
 	})
 	assert.Nil(suite.T(), err)
 	assert.NotNil(suite.T(), auth)
@@ -97,16 +97,16 @@ func (suite *initTestSuite) TestInitializationSuccess() {
 func (suite *initTestSuite) TestLinks() {
 	endpoint := "http://localhost/auth"
 	auth, err := NewAuth(Config{
-		Endpoint:               endpoint,
-		UrlRedirectOnSuccess:   "http://localhost/dashboard",
-		FuncTemporaryKeyGet:    func(key string) (value string, err error) { return "", nil },
-		FuncTemporaryKeySet:    func(key string, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByToken:    func(token string) (userID string, err error) { return "", nil },
-		FuncUserFindByUsername: func(username string, firstName string, lastName string) (userID string, err error) { return "", nil },
-		FuncUserLogin:          func(username string, password string) (userID string, err error) { return "", nil },
-		FuncUserLogout:         func(userID string) (err error) { return nil },
-		FuncUserStoreToken:     func(sessionID string, userID string) (err error) { return nil },
-		FuncEmailSend:          func(userID string, emailSubject string, emailBody string) (err error) { return nil },
+		Endpoint:                endpoint,
+		UrlRedirectOnSuccess:    "http://localhost/dashboard",
+		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
+		FuncTemporaryKeySet:     func(key string, value string, expiresSeconds int) (err error) { return nil },
+		FuncUserFindByAuthToken: func(token string) (userID string, err error) { return "", nil },
+		FuncUserFindByUsername:  func(username string, firstName string, lastName string) (userID string, err error) { return "", nil },
+		FuncUserLogin:           func(username string, password string) (userID string, err error) { return "", nil },
+		FuncUserLogout:          func(userID string) (err error) { return nil },
+		FuncUserStoreAuthToken:  func(sessionID string, userID string) (err error) { return nil },
+		FuncEmailSend:           func(userID string, emailSubject string, emailBody string) (err error) { return nil },
 	})
 	assert.Nil(suite.T(), err)
 	assert.NotNil(suite.T(), auth)

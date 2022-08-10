@@ -38,7 +38,7 @@ func (a Auth) apiLogin(w http.ResponseWriter, r *http.Request) {
 
 	token := utils.StrRandom(32)
 
-	errSession := a.funcUserStoreToken(token, userID)
+	errSession := a.funcUserStoreAuthToken(token, userID)
 
 	if errSession != nil {
 		api.Respond(w, r, api.Error("token store failed. "+errSession.Error()))

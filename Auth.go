@@ -7,7 +7,9 @@ import (
 
 // Auth defines the structure for the authentication
 type Auth struct {
-	endpoint           string
+	endpoint string
+
+	// enableRegistration enables the registration page and endpoint
 	enableRegistration bool
 
 	// urlRedirectOnSuccess the endpoint to return to on success
@@ -19,13 +21,14 @@ type Auth struct {
 	funcTemporaryKeySet              func(key string, value string, expiresSeconds int) (err error)
 	funcUserLogin                    func(username string, password string) (userID string, err error)
 	funcUserLogout                   func(username string) (err error)
-	funcUserStoreToken               func(token string, userID string) error
-	funcUserFindByToken              func(token string) (userID string, err error)
+	funcUserStoreAuthToken           func(token string, userID string) error
+	funcUserFindByAuthToken          func(token string) (userID string, err error)
 	funcUserPasswordChange           func(username string, newPassword string) (err error)
 	funcUserRegister                 func(username string, password string, first_name string, last_name string) (err error)
 	funcUserFindByUsername           func(username string, first_name string, last_name string) (userID string, err error)
-	useCookies                       bool
-	useLocalStorage                  bool
+
+	useCookies      bool
+	useLocalStorage bool
 }
 
 func (a Auth) GetCurrentUserID(r *http.Request) string {

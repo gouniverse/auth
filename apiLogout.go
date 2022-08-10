@@ -14,7 +14,7 @@ func (a Auth) apiLogout(w http.ResponseWriter, r *http.Request) {
 		api.Respond(w, r, api.Success("logout success"))
 	}
 
-	userID, errToken := a.funcUserFindByToken(authToken)
+	userID, errToken := a.funcUserFindByAuthToken(authToken)
 
 	if errToken != nil {
 		api.Respond(w, r, api.Error("logout failed"))

@@ -21,7 +21,7 @@ func NewAuth(config Config) (*Auth, error) {
 		return nil, errors.New("auth: FuncTemporaryKeySet function is required")
 	}
 
-	if config.FuncUserFindByToken == nil {
+	if config.FuncUserFindByAuthToken == nil {
 		return nil, errors.New("auth: FuncUserFindByToken function is required")
 	}
 
@@ -41,7 +41,7 @@ func NewAuth(config Config) (*Auth, error) {
 		return nil, errors.New("auth: FuncUserRegister function is required")
 	}
 
-	if config.FuncUserStoreToken == nil {
+	if config.FuncUserStoreAuthToken == nil {
 		return nil, errors.New("auth: FuncUserStoreToken function is required")
 	}
 
@@ -66,9 +66,9 @@ func NewAuth(config Config) (*Auth, error) {
 	auth.funcUserLogout = config.FuncUserLogout
 	auth.funcUserPasswordChange = config.FuncUserPasswordChange
 	auth.funcUserRegister = config.FuncUserRegister
-	auth.funcUserFindByToken = config.FuncUserFindByToken
+	auth.funcUserFindByAuthToken = config.FuncUserFindByAuthToken
 	auth.funcUserFindByUsername = config.FuncUserFindByUsername
-	auth.funcUserStoreToken = config.FuncUserStoreToken
+	auth.funcUserStoreAuthToken = config.FuncUserStoreAuthToken
 
 	// If no user defined email template is set, use default
 	if auth.funcEmailTemplatePasswordRestore == nil {
