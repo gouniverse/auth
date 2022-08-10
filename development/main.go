@@ -48,7 +48,7 @@ func userLogout(username string) error {
 	return nil
 }
 
-func userFindByToken(token string) (userID string, err error) {
+func userFindByAuthToken(token string) (userID string, err error) {
 	slug := utils.StrSlugify(token, rune('_'))
 	err = jsonStore.Read("tokens", slug, &userID)
 	if err != nil {
@@ -109,7 +109,7 @@ func userFindByID(userID string) (user map[string]string, err error) {
 	return nil, errors.New("user not found")
 }
 
-func userStoreToken(token string, userID string) error {
+func userStoreAuthToken(token string, userID string) error {
 	slug := utils.StrSlugify(token, rune('_'))
 	err := jsonStore.Write("tokens", slug, userID)
 	if err != nil {
@@ -172,18 +172,18 @@ func main() {
 	}
 
 	auth, err := auth.NewAuth(auth.Config{
-		Endpoint:               utils.Env("APP_URL") + "/auth",
-		UrlRedirectOnSuccess:   "/user/dashboard",
-		FuncEmailSend:          emailSend,
-		FuncUserFindByToken:    userFindByToken,
-		FuncUserFindByUsername: userFindByUsername,
-		FuncUserLogin:          userLogin,
-		FuncUserLogout:         userLogout,
-		FuncUserPasswordChange: userPasswordChange,
-		FuncUserRegister:       userRegister,
-		FuncUserStoreToken:     userStoreToken,
-		FuncTemporaryKeyGet:    temporaryKeyGet,
-		FuncTemporaryKeySet:    temporaryKeySet,
+		Endpoint:                utils.Env("APP_URL") + "/auth",
+		UrlRedirectOnSuccess:    "/user/dashboard",
+		FuncEmailSend:           emailSend,
+		FuncUserFindByAuthToken: userFindByAuthToken,
+		FuncUserFindByUsername:  userFindByUsername,
+		FuncUserLogin:           userLogin,
+		FuncUserLogout:          userLogout,
+		FuncUserPasswordChange:  userPasswordChange,
+		FuncUserRegister:        userRegister,
+		FuncUserStoreAuthToken:  userStoreAuthToken,
+		FuncTemporaryKeyGet:     temporaryKeyGet,
+		FuncTemporaryKeySet:     temporaryKeySet,
 
 		UseCookies: true,
 	})
