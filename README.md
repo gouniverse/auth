@@ -36,13 +36,18 @@ func userFindByToken(token string) (userID string, err error) {
 
 ```golang
 auth, err := auth.NewAuth(auth.Config{
-	Endpoint:             "/",
-	UrlRedirectOnSuccess: "/user/success",
-	FuncUserLogin:        userLogin,
-	FuncUserLogout:       userLogout,
-	FuncUserRegister:     userRegister, // not providing it will disable registration
-	FuncUserStoreToken:   userStoreToken,
-	FuncUserFindByToken:  userFindByToken,
+	EnableRegistration:   true,
+	Endpoint:                "/",
+	UrlRedirectOnSuccess:   "http://localhost/user/dashboard",
+	FuncUserFindByToken:     userFindByToken,
+	FuncUserFindByUsername:  userFindByUsername,
+	FuncUserLogin:           userLogin,
+	FuncUserLogout:          userLogout,
+	FuncUserRegister:        userRegister, // optional, required only if registration is enabled
+	FuncUserStoreToken:      userStoreToken,
+	FuncEmailSend:           emailSend,
+	FuncTemporaryKeyGet:     tempKeyGet,
+	FuncTemporaryKeySet:     tempKeySet,
 })
 ```
 
@@ -55,7 +60,11 @@ mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 })
 
 mux.HandleFunc("/auth/", auth.Router)
+```
 
+- Used the AuthMiddleware to protect the authenticated routes
+
+```golang
 // Put your auth routes after the Auth middleware
 mux.Handle("/user/dashboard", auth.AuthMiddleware(dashboardHandler("IN AUTHENTICATED DASHBOARD")))
 ```
