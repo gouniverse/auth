@@ -102,7 +102,7 @@ func (suite *uiTestSuite) TestPagePasswordRestore() {
 
 	assert.Nil(suite.T(), err)
 	assert.NotNil(suite.T(), auth)
-	expected := `<title>Restore Forgotten Password</title>`
+	expected := `<title>Restore Password</title>`
 	assert.HTTPBodyContainsf(suite.T(), auth.Router().ServeHTTP, "POST", auth.LinkPasswordRestore(), url.Values{}, expected, "%")
 }
 
