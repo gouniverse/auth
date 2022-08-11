@@ -43,7 +43,7 @@ func (a Auth) pagePasswordResetContent(token string, errorMessage string) string
 	}
 	alertGroup := hb.NewDiv().Attr("class", "alert-group").AddChild(alertSuccess).AddChild(alertDanger)
 
-	header := hb.NewHeading3().HTML("Please fill the form bellow").Attr("style", "margin:0px;")
+	header := hb.NewHeading5().HTML("Reset Password").Attr("style", "margin:0px;")
 	tokenInput := hb.NewInput().Attr("name", "token").Attr("value", token)
 	passwordLabel := hb.NewLabel().HTML("New Password")
 	passwordInput := hb.NewInput().Attr("class", "form-control").Attr("name", "password").Attr("placeholder", "Enter new password")
@@ -53,8 +53,8 @@ func (a Auth) pagePasswordResetContent(token string, errorMessage string) string
 	passwordConfirmFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(passwordConfirmLabel).AddChild(passwordConfirmInput)
 	buttonContinue := hb.NewButton().Attr("class", "ButtonContinue btn btn-lg btn-success btn-block w-100").HTML("Reset Password").Attr("onclick", "resetFormValidate()")
 	buttonContinueFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(buttonContinue)
-	buttonLogin := hb.NewHyperlink().Attr("class", "btn btn-lg btn-info float-start").HTML("Login").Attr("href", a.LinkLogin())
-	buttonRegister := hb.NewHyperlink().Attr("class", "btn btn-lg btn-warning float-end").HTML("Register").Attr("href", a.LinkRegister())
+	buttonLogin := hb.NewHyperlink().Attr("class", "btn btn-info float-start").HTML("Login").Attr("href", a.LinkLogin())
+	buttonRegister := hb.NewHyperlink().Attr("class", "btn btn-warning float-end").HTML("Register").Attr("href", a.LinkRegister())
 	//form := hb.NewForm().Attr("method", "POST")
 
 	// Add elements in a card
@@ -90,9 +90,9 @@ func (a Auth) pagePasswordResetContent(token string, errorMessage string) string
 	card.AddChild(cardHeader).AddChild(cardBody).AddChild(cardFooter)
 
 	container := hb.NewDiv().Attr("class", "container")
-	heading := hb.NewHeading1().Attr("class", "text-center").HTML("Change Password")
+	// heading := hb.NewHeading1().Attr("class", "text-center").HTML("Change Password")
 
-	container.AddChild(heading)
+	// container.AddChild(heading)
 	container.AddChild(card)
 
 	return container.ToHTML()

@@ -53,6 +53,10 @@ func NewAuth(config Config) (*Auth, error) {
 		config.EnableRegistration = true
 	}
 
+	if config.FuncLayout == nil {
+		config.FuncLayout = auth.layout
+	}
+
 	auth.enableRegistration = config.EnableRegistration
 	auth.endpoint = config.Endpoint
 	auth.urlRedirectOnSuccess = config.UrlRedirectOnSuccess
@@ -60,6 +64,7 @@ func NewAuth(config Config) (*Auth, error) {
 	auth.useLocalStorage = config.UseLocalStorage
 	auth.funcEmailSend = config.FuncEmailSend
 	auth.funcEmailTemplatePasswordRestore = config.FuncEmailTemplatePasswordRestore
+	auth.funcLayout = config.FuncLayout
 	auth.funcTemporaryKeyGet = config.FuncTemporaryKeyGet
 	auth.funcTemporaryKeySet = config.FuncTemporaryKeySet
 	auth.funcUserLogin = config.FuncUserLogin

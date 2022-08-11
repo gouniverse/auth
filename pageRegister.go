@@ -7,12 +7,20 @@ import (
 )
 
 func (a Auth) pageRegister(w http.ResponseWriter, r *http.Request) {
+
+	webpage := webpage("Register", a.pageRegisterContent(), a.pageRegisterScripts())
+	w.WriteHeader(200)
+	w.Header().Set("Content-Type", "text/html")
+	w.Write([]byte(webpage.ToHTML()))
+}
+
+func (a Auth) pageRegisterContent() string {
 	// Elements for the form
 	alertSuccess := hb.NewDiv().Attr("class", "alert alert-success").Attr("style", "display:none")
 	alertDanger := hb.NewDiv().Attr("class", "alert alert-danger").Attr("style", "display:none")
 	alertGroup := hb.NewDiv().Attr("class", "alert-group").AddChild(alertSuccess).AddChild(alertDanger)
 
-	header := hb.NewHeading3().HTML("Please sign up").Attr("style", "margin:0px;")
+	header := hb.NewHeading5().HTML("Register").Attr("style", "margin:0px;")
 	firstNameLabel := hb.NewLabel().HTML("First Name")
 	firstNameInput := hb.NewInput().Attr("class", "form-control").Attr("name", "first_name").Attr("placeholder", "Enter first name")
 	firstNameFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(firstNameLabel).AddChild(firstNameInput)
@@ -26,10 +34,9 @@ func (a Auth) pageRegister(w http.ResponseWriter, r *http.Request) {
 	passwordInput := hb.NewInput().Attr("class", "form-control").Attr("name", "password").Attr("type", "password").Attr("placeholder", "Enter password")
 	passwordFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(passwordLabel).AddChild(passwordInput)
 	buttonRegister := hb.NewButton().Attr("class", "btn btn-lg btn-success btn-block w-100").HTML("Register").Attr("onclick", "registerFormValidate()")
-	buttonRegisterFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(buttonRegister)
-	buttonLogin := hb.NewHyperlink().Attr("class", "btn btn-lg btn-info float-start").HTML("Login").Attr("href", a.LinkLogin())
-	buttonForgotPassword := hb.NewHyperlink().Attr("class", "btn btn-lg btn-warning float-end").HTML("Forgot password?").Attr("href", a.LinkPasswordRestore())
-	//form := hb.NewForm().Attr("method", "POST")
+	buttonRegisterFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").AddChild(buttonRegister)
+	buttonLogin := hb.NewHyperlink().Attr("class", "btn btn-info float-start").HTML("Login").Attr("href", a.LinkLogin())
+	buttonForgotPassword := hb.NewHyperlink().Attr("class", "btn btn-warning float-end").HTML("Forgot password?").Attr("href", a.LinkPasswordRestore())
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Attr("class", "card-header").AddChild(header)
@@ -49,17 +56,12 @@ func (a Auth) pageRegister(w http.ResponseWriter, r *http.Request) {
 	card.AddChild(cardHeader).AddChild(cardBody).AddChild(cardFooter)
 
 	container := hb.NewDiv().Attr("class", "container")
-	heading := hb.NewHeading1().Attr("class", "text-center").HTML("Register")
+	// heading := hb.NewHeading1().Attr("class", "text-center").HTML("Register")
 
-	container.AddChild(heading)
+	// container.AddChild(heading)
 	container.AddChild(card)
 
-	h := container.ToHTML()
-
-	webpage := webpage("Register", h, a.pageRegisterScripts())
-	w.WriteHeader(200)
-	w.Header().Set("Content-Type", "text/html")
-	w.Write([]byte(webpage.ToHTML()))
+	return container.ToHTML()
 }
 
 func (a Auth) pageRegisterScripts() string {

@@ -7,14 +7,22 @@ import (
 )
 
 func (a Auth) pagePasswordRestore(w http.ResponseWriter, r *http.Request) {
+
+	webpage := webpage("Restore Password", a.pagePasswordRestoreContent(), a.pagePasswordRestoreScripts())
+	w.WriteHeader(200)
+	w.Header().Set("Content-Type", "text/html")
+	w.Write([]byte(webpage.ToHTML()))
+}
+
+func (a Auth) pagePasswordRestoreContent() string {
 	// Elements for the form
 	alertSuccess := hb.NewDiv().Attr("class", "alert alert-success").Attr("style", "display:none")
 	alertDanger := hb.NewDiv().Attr("class", "alert alert-danger").Attr("style", "display:none")
 	alertGroup := hb.NewDiv().Attr("class", "alert-group").AddChild(alertSuccess).AddChild(alertDanger)
 
-	header := hb.NewHeading3().
+	header := hb.NewHeading5().
 		Attr("style", "margin:0px;").
-		HTML("Please sign up")
+		HTML("Restore password")
 	firstNameLabel := hb.NewLabel().HTML("First Name")
 	firstNameInput := hb.NewInput().Attr("class", "form-control").Attr("name", "first_name").Attr("placeholder", "Enter first name")
 	firstNameFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(firstNameLabel).AddChild(firstNameInput)
@@ -27,15 +35,19 @@ func (a Auth) pagePasswordRestore(w http.ResponseWriter, r *http.Request) {
 	buttonContinue := hb.NewButton().
 		Attr("class", "ButtonContinue btn btn-lg btn-success btn-block w-100").
 		Attr("onclick", "passwordRestoreFormValidate()").
-		HTML("Email Password Reset Link")
+		HTML("Send Password Reset Link")
 	buttonContinueFormGroup := hb.NewDiv().
-		Attr("class", "form-group mt-3").
+		Attr("class", "form-group mt-3 mb-3").
 		AddChild(buttonContinue)
 	buttonLogin := hb.NewHyperlink().
-		Attr("class", "btn btn-lg btn-info float-start").
+		Attr("class", "btn btn-info float-start").
 		Attr("href", a.LinkLogin()).
 		HTML("Login")
-	buttonRegister := hb.NewHyperlink().Attr("class", "btn btn-lg btn-warning float-end").HTML("Register").Attr("href", a.LinkRegister())
+	buttonRegister := hb.NewHyperlink().
+		Attr("class", "btn btn-warning float-end").
+		Attr("href", a.LinkRegister()).
+		HTML("Register")
+
 	//form := hb.NewForm().Attr("method", "POST")
 
 	// Add elements in a card
@@ -58,18 +70,10 @@ func (a Auth) pagePasswordRestore(w http.ResponseWriter, r *http.Request) {
 	card := hb.NewDiv().Attr("class", "card card-default").Attr("style", "margin:0 auto;max-width: 360px;")
 	card.AddChild(cardHeader).AddChild(cardBody).AddChild(cardFooter)
 
-	container := hb.NewDiv().Attr("class", "container")
-	heading := hb.NewHeading1().Attr("class", "text-center").HTML("Restore Forgotten Password")
+	container := hb.NewDiv().Attr("class", "container").
+		AddChild(card)
 
-	container.AddChild(heading)
-	container.AddChild(card)
-
-	h := container.ToHTML()
-
-	webpage := webpage("Restore Forgotten Password", h, a.pagePasswordRestoreScripts())
-	w.WriteHeader(200)
-	w.Header().Set("Content-Type", "text/html")
-	w.Write([]byte(webpage.ToHTML()))
+	return container.ToHTML()
 }
 
 func (a Auth) pagePasswordRestoreScripts() string {

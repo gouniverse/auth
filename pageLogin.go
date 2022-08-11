@@ -10,12 +10,20 @@ func (a Auth) pageLogin(w http.ResponseWriter, r *http.Request) {
 	//endpoint := r.Context().Value(keyEndpoint).(string)
 	// log.Println(endpoint)
 
+	webpage := webpage("Login", a.funcLayout(a.pageLoginContent()), a.pageLoginScripts())
+	w.WriteHeader(200)
+	w.Header().Set("Content-Type", "text/html")
+	w.Write([]byte(webpage.ToHTML()))
+}
+
+func (a Auth) pageLoginContent() string {
+
 	// Elements for the form
 	alertSuccess := hb.NewDiv().Attr("class", "alert alert-success").Attr("style", "display:none")
 	alertDanger := hb.NewDiv().Attr("class", "alert alert-danger").Attr("style", "display:none")
 	alertGroup := hb.NewDiv().Attr("class", "alert-group").AddChild(alertSuccess).AddChild(alertDanger)
 
-	header := hb.NewHeading3().HTML("Please sign in").Attr("style", "margin:0px;")
+	header := hb.NewHeading5().HTML("Login").Attr("style", "margin:0px;")
 	emailLabel := hb.NewLabel().HTML("E-mail Address")
 	emailInput := hb.NewInput().Attr("class", "form-control").Attr("name", "email").Attr("placeholder", "Enter e-mail address")
 	emailFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(emailLabel).AddChild(emailInput)
@@ -23,19 +31,20 @@ func (a Auth) pageLogin(w http.ResponseWriter, r *http.Request) {
 	passwordInput := hb.NewInput().Attr("class", "form-control").Attr("name", "password").Attr("type", "password").Attr("placeholder", "Enter password")
 	passwordFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(passwordLabel).AddChild(passwordInput)
 	buttonLogin := hb.NewButton().Attr("class", "btn btn-lg btn-success btn-block w-100").HTML("Login").Attr("onclick", "loginFormValidate()")
-	buttonLoginFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(buttonLogin)
-	buttonRegister := hb.NewHyperlink().Attr("class", "btn btn-lg btn-info float-start").HTML("Register").Attr("href", a.LinkRegister())
-	buttonForgotPassword := hb.NewHyperlink().Attr("class", "btn btn-lg btn-warning float-end").HTML("Forgot password?").Attr("href", a.LinkPasswordRestore())
-	//form := hb.NewForm().Attr("method", "POST")
+	buttonLoginFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").AddChild(buttonLogin)
+	buttonRegister := hb.NewHyperlink().Attr("class", "btn btn-info float-start").HTML("Register").Attr("href", a.LinkRegister())
+	buttonForgotPassword := hb.NewHyperlink().Attr("class", "btn btn-warning float-end").HTML("Forgot password?").Attr("href", a.LinkPasswordRestore())
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Attr("class", "card-header").AddChild(header)
-	cardBody := hb.NewDiv().Attr("class", "card-body").AddChildren([]*hb.Tag{
-		alertGroup,
-		emailFormGroup,
-		passwordFormGroup,
-		buttonLoginFormGroup,
-	})
+	cardBody := hb.NewDiv().Attr("class", "card-body").
+		// Attr("style", "margin-bottom:20px;").
+		AddChildren([]*hb.Tag{
+			alertGroup,
+			emailFormGroup,
+			passwordFormGroup,
+			buttonLoginFormGroup,
+		})
 	cardFooter := hb.NewDiv().Attr("class", "card-footer").AddChildren([]*hb.Tag{
 		buttonForgotPassword,
 	})
@@ -44,21 +53,16 @@ func (a Auth) pageLogin(w http.ResponseWriter, r *http.Request) {
 		cardFooter.AddChild(buttonRegister)
 	}
 
-	card := hb.NewDiv().Attr("class", "card card-default").Attr("style", "margin:0 auto;max-width: 360px;")
-	card.AddChild(cardHeader).AddChild(cardBody).AddChild(cardFooter)
+	card := hb.NewDiv().Attr("class", "card card-default").
+		Attr("style", "margin:0 auto;max-width: 360px;").
+		AddChild(cardHeader).
+		AddChild(cardBody).
+		AddChild(cardFooter)
 
-	container := hb.NewDiv().Attr("class", "container")
-	heading := hb.NewHeading1().Attr("class", "text-center").HTML("Login")
+	container := hb.NewDiv().Attr("class", "container").
+		AddChild(card)
 
-	container.AddChild(heading)
-	container.AddChild(card)
-
-	h := container.ToHTML()
-
-	webpage := webpage("Login", h, a.pageLoginScripts())
-	w.WriteHeader(200)
-	w.Header().Set("Content-Type", "text/html")
-	w.Write([]byte(webpage.ToHTML()))
+	return container.ToHTML()
 }
 
 func (a Auth) pageLoginScripts() string {
