@@ -8,37 +8,37 @@ import (
 )
 
 func (a Auth) pageLogout(w http.ResponseWriter, r *http.Request) {
-	// Elements for the form
-	alertSuccess := hb.NewDiv().Attr("class", "alert alert-success").Attr("style", "display:none")
-	alertDanger := hb.NewDiv().Attr("class", "alert alert-danger").Attr("style", "display:none")
-	alertGroup := hb.NewDiv().Attr("class", "alert-group").AddChild(alertSuccess).AddChild(alertDanger)
+	webpage := webpage("Logout", a.funcLayout(a.pageLogoutContent()), a.pageLogoutScripts())
+	w.WriteHeader(200)
+	w.Header().Set("Content-Type", "text/html")
+	w.Write([]byte(webpage.ToHTML()))
+}
 
-	header := hb.NewHeading3().HTML("Please sign out").Attr("style", "margin:0px;")
-	buttonContinue := hb.NewButton().Attr("class", "btn btn-lg btn-success btn-block w-100").HTML("Logout").Attr("onclick", "logoutFormValidate()")
+func (a Auth) pageLogoutContent() string {
+	// Elements for the form
+	alertSuccess := hb.NewDiv().Class("alert alert-success").Style("display:none")
+	alertDanger := hb.NewDiv().Class("alert alert-danger").Style("display:none")
+	alertGroup := hb.NewDiv().Class("alert-group").AddChild(alertSuccess).AddChild(alertDanger)
+
+	header := hb.NewHeading5().HTML("Sign out").Style("margin:0px;")
+	buttonContinue := hb.NewButton().Class("btn btn-lg btn-success btn-block w-100").HTML("Logout").Attr("onclick", "logoutFormValidate()")
 	buttonContinueFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(buttonContinue)
 
 	// Add elements in a card
-	cardHeader := hb.NewDiv().Attr("class", "card-header").AddChild(header)
-	cardBody := hb.NewDiv().Attr("class", "card-body").AddChildren([]*hb.Tag{
+	cardHeader := hb.NewDiv().Class("card-header").AddChild(header)
+	cardBody := hb.NewDiv().Class("card-body").AddChildren([]*hb.Tag{
 		alertGroup,
 		buttonContinueFormGroup,
 	})
 
-	card := hb.NewDiv().Attr("class", "card card-default").Attr("style", "margin:0 auto;max-width: 360px;")
-	card.AddChild(cardHeader).AddChild(cardBody)
+	card := hb.NewDiv().Class("card card-default").
+		Style("margin:0 auto;max-width: 360px;").
+		AddChild(cardHeader).
+		AddChild(cardBody)
 
-	container := hb.NewDiv().Attr("class", "container")
-	heading := hb.NewHeading1().Attr("class", "text-center").HTML("Logout")
+	container := hb.NewDiv().Class("container").AddChild(card)
 
-	container.AddChild(heading)
-	container.AddChild(card)
-
-	h := container.ToHTML()
-
-	webpage := webpage("Logout", h, a.pageLogoutScripts())
-	w.WriteHeader(200)
-	w.Header().Set("Content-Type", "text/html")
-	w.Write([]byte(webpage.ToHTML()))
+	return container.ToHTML()
 }
 
 func (a Auth) pageLogoutScripts() string {

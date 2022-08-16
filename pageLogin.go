@@ -8,7 +8,7 @@ import (
 
 func (a Auth) pageLogin(w http.ResponseWriter, r *http.Request) {
 	webpage := webpage("Login", a.funcLayout(a.pageLoginContent()), a.pageLoginScripts())
-	
+
 	w.WriteHeader(200)
 	w.Header().Set("Content-Type", "text/html")
 	w.Write([]byte(webpage.ToHTML()))
@@ -16,9 +16,9 @@ func (a Auth) pageLogin(w http.ResponseWriter, r *http.Request) {
 
 func (a Auth) pageLoginContent() string {
 	// Elements for the form
-	alertSuccess := hb.NewDiv().Attr("class", "alert alert-success").Attr("style", "display:none")
-	alertDanger := hb.NewDiv().Attr("class", "alert alert-danger").Attr("style", "display:none")
-	alertGroup := hb.NewDiv().Attr("class", "alert-group").AddChild(alertSuccess).AddChild(alertDanger)
+	alertSuccess := hb.NewDiv().Class("alert alert-success").Style("display:none")
+	alertDanger := hb.NewDiv().Class("alert alert-danger").Style("display:none")
+	alertGroup := hb.NewDiv().Class("alert-group").AddChild(alertSuccess).AddChild(alertDanger)
 
 	header := hb.NewHeading5().HTML("Login").Attr("style", "margin:0px;")
 	emailLabel := hb.NewLabel().HTML("E-mail Address")
@@ -33,8 +33,8 @@ func (a Auth) pageLoginContent() string {
 	buttonForgotPassword := hb.NewHyperlink().Attr("class", "btn btn-warning float-end").HTML("Forgot password?").Attr("href", a.LinkPasswordRestore())
 
 	// Add elements in a card
-	cardHeader := hb.NewDiv().Attr("class", "card-header").AddChild(header)
-	cardBody := hb.NewDiv().Attr("class", "card-body").
+	cardHeader := hb.NewDiv().Class("card-header").AddChild(header)
+	cardBody := hb.NewDiv().Class("card-body").
 		// Attr("style", "margin-bottom:20px;").
 		AddChildren([]*hb.Tag{
 			alertGroup,
@@ -42,7 +42,7 @@ func (a Auth) pageLoginContent() string {
 			passwordFormGroup,
 			buttonLoginFormGroup,
 		})
-	cardFooter := hb.NewDiv().Attr("class", "card-footer").AddChildren([]*hb.Tag{
+	cardFooter := hb.NewDiv().Class("card-footer").AddChildren([]*hb.Tag{
 		buttonForgotPassword,
 	})
 
@@ -50,14 +50,13 @@ func (a Auth) pageLoginContent() string {
 		cardFooter.AddChild(buttonRegister)
 	}
 
-	card := hb.NewDiv().Attr("class", "card card-default").
-		Attr("style", "margin:0 auto;max-width: 360px;").
+	card := hb.NewDiv().Class("card card-default").
+		Style("margin:0 auto;max-width: 360px;").
 		AddChild(cardHeader).
 		AddChild(cardBody).
 		AddChild(cardFooter)
 
-	container := hb.NewDiv().Attr("class", "container").
-		AddChild(card)
+	container := hb.NewDiv().Class("container").AddChild(card)
 
 	return container.ToHTML()
 }
