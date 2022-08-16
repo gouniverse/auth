@@ -7,17 +7,14 @@ import (
 )
 
 func (a Auth) pageLogin(w http.ResponseWriter, r *http.Request) {
-	//endpoint := r.Context().Value(keyEndpoint).(string)
-	// log.Println(endpoint)
-
 	webpage := webpage("Login", a.funcLayout(a.pageLoginContent()), a.pageLoginScripts())
+	
 	w.WriteHeader(200)
 	w.Header().Set("Content-Type", "text/html")
 	w.Write([]byte(webpage.ToHTML()))
 }
 
 func (a Auth) pageLoginContent() string {
-
 	// Elements for the form
 	alertSuccess := hb.NewDiv().Attr("class", "alert alert-success").Attr("style", "display:none")
 	alertDanger := hb.NewDiv().Attr("class", "alert alert-danger").Attr("style", "display:none")
