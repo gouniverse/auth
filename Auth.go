@@ -99,12 +99,12 @@ func link(endpoint, uri string) string {
 }
 
 // RegistrationEnable - enables registration
-func (a Auth) RegistrationEnable() string {
-	return a.enableRegistration = true
+func (a Auth) RegistrationEnable() {
+	a.enableRegistration = true
 }
 
 
 // RegistrationDisable - disables registration
-func (a Auth) RegistrationDisable() string {
-	return a.enableRegistration = false
+func (a Auth) RegistrationDisable() {
+	a.enableRegistration = false
 }
