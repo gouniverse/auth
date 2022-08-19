@@ -49,9 +49,9 @@ func NewAuth(config Config) (*Auth, error) {
 		return nil, errors.New("auth: FuncEmailSend function is required")
 	}
 
-	if config.FuncUserRegister != nil {
-		config.EnableRegistration = true
-	}
+	//if config.FuncUserRegister != nil {
+	//	config.EnableRegistration = true
+	//}
 
 	if config.FuncLayout == nil {
 		config.FuncLayout = auth.layout
