@@ -74,22 +74,37 @@ func (a Auth) LinkPasswordRestore() string {
 	return link(a.endpoint, pathPasswordRestore)
 }
 
+// LinkPasswordReset - returns the password reset URL
 func (a Auth) LinkPasswordReset(token string) string {
 	return link(a.endpoint, pathPasswordReset) + "?t=" + token
 }
 
+// LinkRegister - returns the regsitration URL
 func (a Auth) LinkRegister() string {
 	return link(a.endpoint, pathRegister)
 }
 
+// LinkRedirectOnSuccess - returns the URL to where the user will be redirected after successful registration
 func (a Auth) LinkRedirectOnSuccess() string {
 	return a.urlRedirectOnSuccess
 }
 
+// link - creates the final URL by combining the provided endpoint with the provided URL
 func link(endpoint, uri string) string {
 	if strings.HasSuffix(endpoint, "/") {
 		return endpoint + uri
 	} else {
 		return endpoint + "/" + uri
 	}
+}
+
+// RegistrationEnable - enables registration
+func (a Auth) RegistrationEnable() string {
+	return a.enableRegistration = true
+}
+
+
+// RegistrationDisable - disables registration
+func (a Auth) RegistrationDisable() string {
+	return a.enableRegistration = false
 }
