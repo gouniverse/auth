@@ -28,6 +28,8 @@ func (a Auth) AuthHandler(w http.ResponseWriter, r *http.Request) {
 	if r.RequestURI == "" && r.URL.Path != "" {
 		uri = r.URL.Path // Attempt to take from URL path (empty RequestURI occurs during testing)
 	}
+	
+	uri = strings.TrimSuffix(uri, "/") // Remove trailing slash
 
 	// log.Println(uri)
 
