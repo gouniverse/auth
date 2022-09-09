@@ -4,6 +4,12 @@
 
 Authentication library for Golang
 
+## Installation
+
+```sh
+go get github.com/gouniverse/auth
+```
+
 ## Usage
 
 - Implement your functions
