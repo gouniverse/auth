@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"strings"
 
@@ -28,7 +29,7 @@ func (a Auth) AuthHandler(w http.ResponseWriter, r *http.Request) {
 	if r.RequestURI == "" && r.URL.Path != "" {
 		uri = r.URL.Path // Attempt to take from URL path (empty RequestURI occurs during testing)
 	}
-	
+
 	uri = strings.TrimSuffix(uri, "/") // Remove trailing slash
 
 	// log.Println(uri)
@@ -39,6 +40,8 @@ func (a Auth) AuthHandler(w http.ResponseWriter, r *http.Request) {
 
 	if strings.HasSuffix(uri, pathApiLogin) {
 		path = pathApiLogin
+	} else if strings.HasSuffix(uri, pathApiLoginCodeVerify) {
+		path = pathApiLoginCodeVerify
 	} else if strings.HasSuffix(uri, pathApiLogout) {
 		path = pathApiLogout
 	} else if strings.HasSuffix(uri, pathApiResetPassword) {
@@ -49,6 +52,8 @@ func (a Auth) AuthHandler(w http.ResponseWriter, r *http.Request) {
 		path = pathApiRegister
 	} else if strings.HasSuffix(uri, pathLogin) {
 		path = pathLogin
+	} else if strings.HasSuffix(uri, pathLoginCodeVerify) {
+		path = pathLoginCodeVerify
 	} else if strings.HasSuffix(uri, pathLogout) {
 		path = pathLogout
 	} else if strings.HasSuffix(uri, pathRegister) {
@@ -71,11 +76,13 @@ func (a Auth) AuthHandler(w http.ResponseWriter, r *http.Request) {
 func (a Auth) getRoute(route string) func(w http.ResponseWriter, r *http.Request) {
 	routes := map[string]func(w http.ResponseWriter, r *http.Request){
 		pathApiLogin:           a.apiLogin,
+		pathApiLoginCodeVerify: a.apiLoginCodeVerify,
 		pathApiLogout:          a.apiLogout,
 		pathApiRegister:        a.apiRegister,
 		pathApiResetPassword:   a.apiPaswordReset,
 		pathApiRestorePassword: a.apiPaswordRestore,
 		pathLogin:              a.pageLogin,
+		pathLoginCodeVerify:    a.pageLoginCodeVerify,
 		pathLogout:             a.pageLogout,
 		pathPasswordReset:      a.pagePasswordReset,
 		pathPasswordRestore:    a.pagePasswordRestore,
@@ -88,6 +95,8 @@ func (a Auth) getRoute(route string) func(w http.ResponseWriter, r *http.Request
 	if val, ok := routes[route]; ok {
 		return val
 	}
+
+	log.Println("Not foind: " + route)
 
 	return a.notFoundHandler
 }

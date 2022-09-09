@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/smtp"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/darkoatanasovski/htmltags"
@@ -172,8 +173,11 @@ func main() {
 	}
 
 	auth, err := auth.NewAuth(auth.Config{
-		Endpoint:                utils.Env("APP_URL") + "/auth",
-		UrlRedirectOnSuccess:    "/user/dashboard",
+		Endpoint:             utils.Env("APP_URL") + "/auth",
+		UrlRedirectOnSuccess: "/user/dashboard",
+		Passwordless:         true,
+
+		// EmailAndPassword
 		FuncEmailSend:           emailSend,
 		FuncUserFindByAuthToken: userFindByAuthToken,
 		FuncUserFindByUsername:  userFindByUsername,
@@ -184,6 +188,8 @@ func main() {
 		FuncUserStoreAuthToken:  userStoreAuthToken,
 		FuncTemporaryKeyGet:     temporaryKeyGet,
 		FuncTemporaryKeySet:     temporaryKeySet,
+
+		// Passwordless
 
 		UseCookies: true,
 	})
@@ -200,7 +206,11 @@ func main() {
 	mux.Handle("/user/dashboard", auth.AuthMiddleware(messageHandler("<html>User page. Logout at: <a href='"+auth.LinkLogout()+"'>"+auth.LinkLogout()+"</a>")))
 
 	log.Println("4. Starting server on http://" + utils.Env("SERVER_HOST") + ":" + utils.Env("SERVER_PORT") + " ...")
-	log.Println("URL: http://" + utils.Env("APP_URL") + " ...")
+	if strings.HasPrefix(utils.Env("APP_URL"), "https://") {
+		log.Println(utils.Env("APP_URL") + " ...")
+	} else {
+		log.Println("URL: http://" + utils.Env("APP_URL") + " ...")
+	}
 
 	srv := &http.Server{
 		Handler: mux,

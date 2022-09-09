@@ -14,6 +14,9 @@ const (
 	// PathApiLogin contains the path to api login endpoint
 	pathApiLogin string = "api/login"
 
+	// PathApiLogin contains the path to api login endpoint
+	pathApiLoginCodeVerify string = "api/login-code-verify"
+
 	// PathApiLogout contains the path to api logout endpoint
 	pathApiLogout string = "api/logout"
 
@@ -28,6 +31,9 @@ const (
 
 	// PathLogin contains the path to login page
 	pathLogin string = "login"
+
+	// PathLogin contains the path to login page
+	pathLoginCodeVerify string = "login-code-verify"
 
 	// PathLogout contains the path to logout page
 	pathLogout string = "logout"

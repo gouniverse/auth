@@ -9,6 +9,8 @@ import (
 type Auth struct {
 	endpoint string
 
+	Passwordless bool
+
 	// enableRegistration enables the registration page and endpoint
 	enableRegistration bool
 
@@ -46,6 +48,10 @@ func (a Auth) LinkApiLogin() string {
 	return link(a.endpoint, pathApiLogin)
 }
 
+func (a Auth) LinkApiLoginCodeVerify() string {
+	return link(a.endpoint, pathApiLoginCodeVerify)
+}
+
 func (a Auth) LinkApiLogout() string {
 	return link(a.endpoint, pathApiLogout)
 }
@@ -64,6 +70,10 @@ func (a Auth) LinkApiPasswordReset() string {
 
 func (a Auth) LinkLogin() string {
 	return link(a.endpoint, pathLogin)
+}
+
+func (a Auth) LinkLoginCodeVerify() string {
+	return link(a.endpoint, pathLoginCodeVerify)
 }
 
 func (a Auth) LinkLogout() string {
@@ -102,7 +112,6 @@ func link(endpoint, uri string) string {
 func (a Auth) RegistrationEnable() {
 	a.enableRegistration = true
 }
-
 
 // RegistrationDisable - disables registration
 func (a Auth) RegistrationDisable() {

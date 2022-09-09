@@ -9,21 +9,22 @@ require (
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/gouniverse/uncdn v0.1.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
+	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
 require (
 	github.com/darkoatanasovski/htmltags v1.0.0
 	github.com/gouniverse/api v1.5.0
-	github.com/gouniverse/hb v1.38.0
-	github.com/gouniverse/utils v1.24.0
+	github.com/gouniverse/hb v1.42.0
+	github.com/gouniverse/utils v1.26.0
 	github.com/gouniverse/validator v0.11.0
 	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
-	github.com/tdewolff/minify/v2 v2.12.0 // indirect
-	github.com/tdewolff/parse/v2 v2.6.2 // indirect
-	golang.org/x/net v0.0.0-20220812174116-3211cb980234 // indirect
+	github.com/tdewolff/minify/v2 v2.12.1 // indirect
+	github.com/tdewolff/parse/v2 v2.6.3 // indirect
+	golang.org/x/net v0.0.0-20220909164309-bea034e7d591 // indirect
 	golang.org/x/text v0.3.7 // indirect
 )

@@ -59,6 +59,7 @@ func NewAuth(config Config) (*Auth, error) {
 
 	auth.enableRegistration = config.EnableRegistration
 	auth.endpoint = config.Endpoint
+	auth.Passwordless = config.Passwordless
 	auth.urlRedirectOnSuccess = config.UrlRedirectOnSuccess
 	auth.useCookies = config.UseCookies
 	auth.useLocalStorage = config.UseLocalStorage

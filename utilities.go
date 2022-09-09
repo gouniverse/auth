@@ -1,6 +1,9 @@
 package auth
 
-import "github.com/gouniverse/hb"
+import (
+	"github.com/gouniverse/hb"
+	"github.com/gouniverse/uncdn"
+)
 
 // webpage returns the webpage template for the website
 func webpage(title, content, scripts string) *hb.Webpage {
@@ -10,17 +13,23 @@ func webpage(title, content, scripts string) *hb.Webpage {
 	webpage.SetTitle(title)
 	webpage.SetFavicon(faviconImgCms)
 
-	webpage.AddStyleURLs([]string{
-		"https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css",
+	// webpage.AddStyleURLs([]string{
+	// 	 "https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css",
+	// })
+	webpage.AddStyles([]string{
+		uncdn.BootstrapCss521(),
 	})
+
 	webpage.AddScriptURLs([]string{
-		"https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js",
-		"https://code.jquery.com/jquery-3.6.0.min.js",
-		"https://unpkg.com/vue@next",
-		"https://cdn.jsdelivr.net/npm/sweetalert2@9",
+		// "https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js",
+		// "https://code.jquery.com/jquery-3.6.0.min.js",
+		// "https://unpkg.com/vue@next",
+		// "https://cdn.jsdelivr.net/npm/sweetalert2@9",
 		"https://cdn.jsdelivr.net/gh/lesichkovm/web@2.6.2/web.js",
 	})
 	webpage.AddScripts([]string{
+		uncdn.Jquery360(),
+		uncdn.BootstrapJs521(),
 		app,
 		scripts,
 	})
