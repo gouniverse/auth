@@ -22,7 +22,7 @@ func (a Auth) apiLoginCodeVerify(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !strCotainsOnlyCharacters(verificationCode, LoginCodeGamma) {
+	if !utils.StrContainsOnlySpecifiedCharacters(verificationCode, LoginCodeGamma) {
 		api.Respond(w, r, api.Error("Verification code contains invalid characters"))
 		return
 	}
@@ -34,6 +34,11 @@ func (a Auth) apiLoginCodeVerify(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	a.authenticateViaEmail(w, r, email)
+}
+
+// authenticateViaEmail used for passwordless login and registration
+func (a Auth) authenticateViaEmail(w http.ResponseWriter, r *http.Request, email string) {
 	userID, errUser := a.passwordlessFuncUserFindByEmail(email)
 
 	if errUser != nil {
@@ -66,10 +71,4 @@ func (a Auth) apiLoginCodeVerify(w http.ResponseWriter, r *http.Request) {
 	api.Respond(w, r, api.SuccessWithData("login success", map[string]interface{}{
 		"token": token,
 	}))
-}
-
-func strCotainsOnlyCharacters(str string, chars string) bool {
-	nonCharacter := func(c rune) bool { return !strings.ContainsAny(chars, string(c)) }
-	words := strings.FieldsFunc(str, nonCharacter)
-	return str == strings.Join(words, "")
 }

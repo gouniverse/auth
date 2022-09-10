@@ -15,11 +15,46 @@ func (a Auth) apiLogin(w http.ResponseWriter, r *http.Request) {
 	if a.passwordless {
 		a.apiLoginPasswordless(w, r)
 	} else {
-		a.apiLoginEmailAndPassword(w, r)
+		a.apiLoginUsernameAndPassword(w, r)
 	}
 }
 
-func (a Auth) apiLoginEmailAndPassword(w http.ResponseWriter, r *http.Request) {
+func (a Auth) apiLoginPasswordless(w http.ResponseWriter, r *http.Request) {
+	email := strings.Trim(utils.Req(r, "email", ""), " ")
+
+	if email == "" {
+		api.Respond(w, r, api.Error("Email is required field"))
+		return
+	}
+
+	if !validator.IsEmail(email) {
+		api.Respond(w, r, api.Error("This is not a valid email: "+email))
+		return
+	}
+
+	verificationCode := utils.StrRandomFromGamma(LoginCodeLength, LoginCodeGamma)
+
+	errTempTokenSave := a.funcTemporaryKeySet(verificationCode, email, 3600)
+
+	if errTempTokenSave != nil {
+		api.Respond(w, r, api.Error("token store failed. "+errTempTokenSave.Error()))
+		return
+	}
+
+	emailContent := a.passwordlessFuncEmailTemplateLoginCode(email, verificationCode)
+
+	errEmailSent := a.passwordlessFuncEmailSend(email, "Login Code", emailContent)
+
+	if errEmailSent != nil {
+		log.Println(errEmailSent)
+		api.Respond(w, r, api.Error("Login code failed to be send. Please try again later"))
+		return
+	}
+
+	api.Respond(w, r, api.Success("Login code was sent successfully"))
+}
+
+func (a Auth) apiLoginUsernameAndPassword(w http.ResponseWriter, r *http.Request) {
 	email := strings.Trim(utils.Req(r, "email", ""), " ")
 	password := strings.Trim(utils.Req(r, "password", ""), " ")
 
@@ -70,39 +105,4 @@ func (a Auth) apiLoginEmailAndPassword(w http.ResponseWriter, r *http.Request) {
 	api.Respond(w, r, api.SuccessWithData("login success", map[string]interface{}{
 		"token": token,
 	}))
-}
-
-func (a Auth) apiLoginPasswordless(w http.ResponseWriter, r *http.Request) {
-	email := strings.Trim(utils.Req(r, "email", ""), " ")
-
-	if email == "" {
-		api.Respond(w, r, api.Error("Email is required field"))
-		return
-	}
-
-	if !validator.IsEmail(email) {
-		api.Respond(w, r, api.Error("This is not a valid email: "+email))
-		return
-	}
-
-	verificationCode := utils.StrRandomFromGamma(LoginCodeLength, LoginCodeGamma)
-
-	errTempTokenSave := a.funcTemporaryKeySet(verificationCode, email, 3600)
-
-	if errTempTokenSave != nil {
-		api.Respond(w, r, api.Error("token store failed. "+errTempTokenSave.Error()))
-		return
-	}
-
-	emailContent := a.passwordlessFuncEmailTemplateLoginCode(email, verificationCode)
-
-	errEmailSent := a.passwordlessFuncEmailSend(email, "Login Code", emailContent)
-
-	if errEmailSent != nil {
-		log.Println(errEmailSent)
-		api.Respond(w, r, api.Error("Login code failed to be send. Please try again later"))
-		return
-	}
-
-	api.Respond(w, r, api.Success("Login code was sent successfully"))
 }

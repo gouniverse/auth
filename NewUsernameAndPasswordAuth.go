@@ -22,7 +22,7 @@ func NewUsernameAndPasswordAuth(config ConfigUsernameAndPassword) (*Auth, error)
 	}
 
 	if config.FuncUserFindByAuthToken == nil {
-		return nil, errors.New("auth: FuncUserFindByToken function is required")
+		return nil, errors.New("auth: FuncUserFindByAuthToken function is required")
 	}
 
 	if config.FuncUserFindByUsername == nil {

@@ -21,33 +21,29 @@ func NewPasswordlessAuth(config ConfigPasswordless) (*Auth, error) {
 		return nil, errors.New("auth: FuncTemporaryKeySet function is required")
 	}
 
-	// if config.FuncUserFindByAuthToken == nil {
-	// 	return nil, errors.New("auth: FuncUserFindByToken function is required")
-	// }
+	if config.FuncUserFindByAuthToken == nil {
+		return nil, errors.New("auth: FuncUserFindByAuthToken function is required")
+	}
 
 	if config.FuncUserFindByEmail == nil {
 		return nil, errors.New("auth: FuncUserFindByEmail function is required")
 	}
 
-	// if config.FuncUserLogout == nil {
-	// 	return nil, errors.New("auth: FuncUserLogout function is required")
-	// }
+	if config.FuncUserLogout == nil {
+		return nil, errors.New("auth: FuncUserLogout function is required")
+	}
 
 	if config.EnableRegistration && config.FuncUserRegister == nil {
 		return nil, errors.New("auth: FuncUserRegister function is required")
 	}
 
-	// if config.FuncUserStoreAuthToken == nil {
-	// 	return nil, errors.New("auth: FuncUserStoreToken function is required")
-	// }
+	if config.FuncUserStoreAuthToken == nil {
+		return nil, errors.New("auth: FuncUserStoreToken function is required")
+	}
 
 	if config.FuncEmailSend == nil {
 		return nil, errors.New("auth: FuncEmailSend function is required")
 	}
-
-	//if config.FuncUserRegister != nil {
-	//	config.EnableRegistration = true
-	//}
 
 	if config.FuncLayout == nil {
 		config.FuncLayout = auth.layout
@@ -62,10 +58,9 @@ func NewPasswordlessAuth(config ConfigPasswordless) (*Auth, error) {
 	auth.funcLayout = config.FuncLayout
 	auth.funcTemporaryKeyGet = config.FuncTemporaryKeyGet
 	auth.funcTemporaryKeySet = config.FuncTemporaryKeySet
-	// auth.funcUserLogin = config.FuncUserLogin
-	// auth.funcUserLogout = config.FuncUserLogout
-	// auth.funcUserFindByAuthToken = config.FuncUserFindByAuthToken
-	// auth.funcUserStoreAuthToken = config.FuncUserStoreAuthToken
+	auth.funcUserLogout = config.FuncUserLogout
+	auth.funcUserFindByAuthToken = config.FuncUserFindByAuthToken
+	auth.funcUserStoreAuthToken = config.FuncUserStoreAuthToken
 	auth.passwordlessFuncEmailTemplateLoginCode = config.FuncEmailTemplateLoginCode
 	auth.passwordlessFuncEmailSend = config.FuncEmailSend
 	auth.passwordlessFuncUserFindByEmail = config.FuncUserFindByEmail

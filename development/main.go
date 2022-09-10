@@ -56,11 +56,14 @@ func main() {
 
 		EnableRegistration: true,
 
-		FuncEmailSend:       emailSend,
-		FuncTemporaryKeyGet: temporaryKeyGet,
-		FuncTemporaryKeySet: temporaryKeySet,
-		FuncUserFindByEmail: passwordlessUserFindByEmail,
-		FuncUserRegister:    passwordlessUserRegister,
+		FuncEmailSend:           emailSend,
+		FuncTemporaryKeyGet:     temporaryKeyGet,
+		FuncTemporaryKeySet:     temporaryKeySet,
+		FuncUserFindByEmail:     passwordlessUserFindByEmail,
+		FuncUserFindByAuthToken: userFindByAuthToken,
+		FuncUserLogout:          userLogout,
+		FuncUserRegister:        passwordlessUserRegister,
+		FuncUserStoreAuthToken:  userStoreAuthToken,
 
 		UseCookies: true,
 	})

@@ -49,39 +49,39 @@ func userFindByAuthToken(token string) (userID string, err error) {
 	return userID, nil
 }
 
-func userFindByUsername(username string, firstName string, lastName string) (userID string, err error) {
-	slug := utils.StrSlugify(username, rune('_'))
-	var user map[string]string
-	err = jsonStore.Read("users", slug, &user)
-	if err != nil {
-		return "not found err", err
-	}
+// func userFindByUsername(username string, firstName string, lastName string) (userID string, err error) {
+// 	slug := utils.StrSlugify(username, rune('_'))
+// 	var user map[string]string
+// 	err = jsonStore.Read("users", slug, &user)
+// 	if err != nil {
+// 		return "not found err", err
+// 	}
 
-	if user == nil {
-		return "not found", errors.New("unable to find user")
-	}
+// 	if user == nil {
+// 		return "not found", errors.New("unable to find user")
+// 	}
 
-	return user["id"], nil
-}
+// 	return user["id"], nil
+// }
 
-func userPasswordChange(userID string, password string) error {
-	user, err := userFindByID(userID)
-	if err != nil {
-		return err
-	}
+// func userPasswordChange(userID string, password string) error {
+// 	user, err := userFindByID(userID)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	user["password"] = password
+// 	user["password"] = password
 
-	slug := utils.StrSlugify(user["username"], rune('_'))
-	errSave := jsonStore.Write("users", slug, user)
-	if errSave != nil {
-		return errSave
-	}
+// 	slug := utils.StrSlugify(user["username"], rune('_'))
+// 	errSave := jsonStore.Write("users", slug, user)
+// 	if errSave != nil {
+// 		return errSave
+// 	}
 
-	jsonStore.Delete("users", slug)
+// 	jsonStore.Delete("users", slug)
 
-	return nil
-}
+// 	return nil
+// }
 
 func userFindByID(userID string) (user map[string]string, err error) {
 	users, errReadAll := jsonStore.ReadAll("users")
@@ -110,20 +110,20 @@ func userStoreAuthToken(token string, userID string) error {
 	return nil
 }
 
-func userRegister(username string, password string, first_name string, last_name string) error {
-	slug := utils.StrSlugify(username, rune('_'))
-	err := jsonStore.Write("users", slug, map[string]string{
-		"id":         utils.StrRandomFromGamma(16, "abcdef0123456789"),
-		"username":   username,
-		"password":   password,
-		"first_name": first_name,
-		"last_name":  last_name,
-	})
-	if err != nil {
-		return err
-	}
-	return nil
-}
+// func userRegister(username string, password string, first_name string, last_name string) error {
+// 	slug := utils.StrSlugify(username, rune('_'))
+// 	err := jsonStore.Write("users", slug, map[string]string{
+// 		"id":         utils.StrRandomFromGamma(16, "abcdef0123456789"),
+// 		"username":   username,
+// 		"password":   password,
+// 		"first_name": first_name,
+// 		"last_name":  last_name,
+// 	})
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
 
 func temporaryKeyGet(key string) (value string, err error) {
 	slug := utils.StrSlugify(key, rune('_'))

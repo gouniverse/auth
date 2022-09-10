@@ -49,6 +49,8 @@ func (a Auth) AuthHandler(w http.ResponseWriter, r *http.Request) {
 		path = PathApiRestorePassword
 	} else if strings.HasSuffix(uri, PathApiRegister) {
 		path = PathApiRegister
+	} else if strings.HasSuffix(uri, PathApiRegisterCodeVerify) {
+		path = PathApiRegisterCodeVerify
 	} else if strings.HasSuffix(uri, PathLogin) {
 		path = PathLogin
 	} else if strings.HasSuffix(uri, PathLoginCodeVerify) {
@@ -57,6 +59,8 @@ func (a Auth) AuthHandler(w http.ResponseWriter, r *http.Request) {
 		path = PathLogout
 	} else if strings.HasSuffix(uri, PathRegister) {
 		path = PathRegister
+	} else if strings.HasSuffix(uri, PathRegisterCodeVerify) {
+		path = PathRegisterCodeVerify
 	} else if strings.HasSuffix(uri, PathPasswordRestore) {
 		path = PathPasswordRestore
 	} else if strings.HasSuffix(uri, PathPasswordReset) {
@@ -74,28 +78,30 @@ func (a Auth) AuthHandler(w http.ResponseWriter, r *http.Request) {
 // getRoute finds a route
 func (a Auth) getRoute(route string) func(w http.ResponseWriter, r *http.Request) {
 	routes := map[string]func(w http.ResponseWriter, r *http.Request){
-		PathApiLogin:           a.apiLogin,
-		PathApiLoginCodeVerify: a.apiLoginCodeVerify,
-		PathApiLogout:          a.apiLogout,
-		PathApiRegister:        a.apiRegister,
-		PathApiResetPassword:   a.apiPaswordReset,
-		PathApiRestorePassword: a.apiPaswordRestore,
-		PathLogin:              a.pageLogin,
-		PathLoginCodeVerify:    a.pageLoginCodeVerify,
-		PathLogout:             a.pageLogout,
-		PathPasswordReset:      a.pagePasswordReset,
-		PathPasswordRestore:    a.pagePasswordRestore,
+		PathApiLogin:              a.apiLogin,
+		PathApiLoginCodeVerify:    a.apiLoginCodeVerify,
+		PathApiLogout:             a.apiLogout,
+		PathApiRegister:           a.apiRegister,
+		PathApiRegisterCodeVerify: a.apiRegisterCodeVerify,
+		PathApiResetPassword:      a.apiPaswordReset,
+		PathApiRestorePassword:    a.apiPaswordRestore,
+		PathLogin:                 a.pageLogin,
+		PathLoginCodeVerify:       a.pageLoginCodeVerify,
+		PathLogout:                a.pageLogout,
+		PathPasswordReset:         a.pagePasswordReset,
+		PathPasswordRestore:       a.pagePasswordRestore,
 	}
 
 	if a.enableRegistration {
 		routes[PathRegister] = a.pageRegister
+		routes[PathRegisterCodeVerify] = a.pageRegisterCodeVerify
 	}
 
 	if val, ok := routes[route]; ok {
 		return val
 	}
 
-	// log.Println("Not found: " + route)
+	//log.Println("Not found: " + route)
 
 	return a.notFoundHandler
 }

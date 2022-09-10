@@ -6,25 +6,25 @@ import (
 	"github.com/gouniverse/hb"
 )
 
-func (a Auth) pageLoginCodeVerify(w http.ResponseWriter, r *http.Request) {
-	webpage := webpage("Verify Login Code", a.funcLayout(a.pageLoginCodeVerifyContent()), a.pageLoginCodeVerifyContentScripts())
+func (a Auth) pageRegisterCodeVerify(w http.ResponseWriter, r *http.Request) {
+	webpage := webpage("Verify Registration Code", a.funcLayout(a.pageRegisterCodeVerifyContent()), a.pageRegisterCodeVerifyScripts())
 
 	w.WriteHeader(200)
 	w.Header().Set("Content-Type", "text/html")
 	w.Write([]byte(webpage.ToHTML()))
 }
 
-func (a Auth) pageLoginCodeVerifyContent() string {
+func (a Auth) pageRegisterCodeVerifyContent() string {
 	// Elements for the form
 	alertSuccess := hb.NewDiv().Class("alert alert-success").Style("display:none")
 	alertDanger := hb.NewDiv().Class("alert alert-danger").Style("display:none")
 	alertGroup := hb.NewDiv().Class("alert-group").AddChild(alertSuccess).AddChild(alertDanger)
 
-	header := hb.NewHeading5().HTML("Login Code Verification").Attr("style", "margin:0px;")
+	header := hb.NewHeading5().HTML("Registration Code Verification").Attr("style", "margin:0px;")
 	verificationCodeLabel := hb.NewLabel().HTML("Verification code")
 	verificationCodeInput := hb.NewInput().Attr("class", "form-control").Attr("name", "verification_code").Attr("placeholder", "Enter verification code")
-	verificationCodeFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(verificationCodeLabel).AddChild(verificationCodeInput)
-	buttonLogin := hb.NewButton().Attr("class", "btn btn-lg btn-success btn-block w-100").HTML("Login").Attr("onclick", "loginFormValidate()")
+	verificationCodeFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").Child(verificationCodeLabel).Child(verificationCodeInput)
+	buttonLogin := hb.NewButton().Attr("class", "btn btn-lg btn-success btn-block w-100").HTML("Login").Attr("onclick", "registerCodeFormValidate()")
 	buttonLoginFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").AddChild(buttonLogin)
 	buttonBack := hb.NewHyperlink().Attr("class", "btn btn-info float-start").HTML("Resend code").Attr("href", a.LinkLogin())
 
@@ -50,12 +50,12 @@ func (a Auth) pageLoginCodeVerifyContent() string {
 	return container.ToHTML()
 }
 
-func (a Auth) pageLoginCodeVerifyContentScripts() string {
-	urlApiLoginCodeVerify := a.LinkApiLoginCodeVerify()
+func (a Auth) pageRegisterCodeVerifyScripts() string {
+	urlApiRegisterCodeVerify := a.LinkApiRegisterCodeVerify()
 	urlSuccess := a.LinkRedirectOnSuccess()
 
 	return `
-	var urlApiLoginCodeVerify = "` + urlApiLoginCodeVerify + `";
+	var urlApiRegisterCodeVerify = "` + urlApiRegisterCodeVerify + `";
 	var urlOnSuccess = "` + urlSuccess + `";
     /**
      * Raises an error message
@@ -84,7 +84,7 @@ func (a Auth) pageLoginCodeVerifyContentScripts() string {
      * Validate Login Form
      * @returns  {Boolean}
      */
-    function loginFormValidate() {
+    function registerCodeFormValidate() {
         var verificationCode = $.trim($('input[name=verification_code]').val());
 
         if (verificationCode === '') {
@@ -95,7 +95,7 @@ func (a Auth) pageLoginCodeVerifyContentScripts() string {
 
         var data = {"verification_code": verificationCode};
 
-        $.post(urlApiLoginCodeVerify, data).then(function (response) {
+        $.post(urlApiRegisterCodeVerify, data).then(function (response) {
             $('.buttonLogin .imgLoading').hide();
 
             if (response.status !== "success") {
