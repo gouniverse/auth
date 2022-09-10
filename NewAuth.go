@@ -49,17 +49,13 @@ func NewAuth(config Config) (*Auth, error) {
 		return nil, errors.New("auth: FuncEmailSend function is required")
 	}
 
-	//if config.FuncUserRegister != nil {
-	//	config.EnableRegistration = true
-	//}
-
 	if config.FuncLayout == nil {
 		config.FuncLayout = auth.layout
 	}
 
 	auth.enableRegistration = config.EnableRegistration
 	auth.endpoint = config.Endpoint
-	auth.Passwordless = config.Passwordless
+	auth.passwordless = false
 	auth.urlRedirectOnSuccess = config.UrlRedirectOnSuccess
 	auth.useCookies = config.UseCookies
 	auth.useLocalStorage = config.UseLocalStorage

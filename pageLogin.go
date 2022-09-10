@@ -9,7 +9,7 @@ import (
 func (a Auth) pageLogin(w http.ResponseWriter, r *http.Request) {
 	content := ""
 	scripts := ""
-	if a.Passwordless {
+	if a.passwordless {
 		content = a.pageLoginPasswordlessContent()
 		scripts = a.pageLoginPasswordlessScripts()
 	} else {

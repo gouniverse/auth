@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"strings"
 
@@ -38,30 +37,30 @@ func (a Auth) AuthHandler(w http.ResponseWriter, r *http.Request) {
 		uri = utils.StrLeftFrom(uri, "?")
 	}
 
-	if strings.HasSuffix(uri, pathApiLogin) {
-		path = pathApiLogin
-	} else if strings.HasSuffix(uri, pathApiLoginCodeVerify) {
-		path = pathApiLoginCodeVerify
-	} else if strings.HasSuffix(uri, pathApiLogout) {
-		path = pathApiLogout
-	} else if strings.HasSuffix(uri, pathApiResetPassword) {
-		path = pathApiResetPassword
-	} else if strings.HasSuffix(uri, pathApiRestorePassword) {
-		path = pathApiRestorePassword
-	} else if strings.HasSuffix(uri, pathApiRegister) {
-		path = pathApiRegister
-	} else if strings.HasSuffix(uri, pathLogin) {
-		path = pathLogin
-	} else if strings.HasSuffix(uri, pathLoginCodeVerify) {
-		path = pathLoginCodeVerify
-	} else if strings.HasSuffix(uri, pathLogout) {
-		path = pathLogout
-	} else if strings.HasSuffix(uri, pathRegister) {
-		path = pathRegister
-	} else if strings.HasSuffix(uri, pathPasswordRestore) {
-		path = pathPasswordRestore
-	} else if strings.HasSuffix(uri, pathPasswordReset) {
-		path = pathPasswordReset
+	if strings.HasSuffix(uri, PathApiLogin) {
+		path = PathApiLogin
+	} else if strings.HasSuffix(uri, PathApiLoginCodeVerify) {
+		path = PathApiLoginCodeVerify
+	} else if strings.HasSuffix(uri, PathApiLogout) {
+		path = PathApiLogout
+	} else if strings.HasSuffix(uri, PathApiResetPassword) {
+		path = PathApiResetPassword
+	} else if strings.HasSuffix(uri, PathApiRestorePassword) {
+		path = PathApiRestorePassword
+	} else if strings.HasSuffix(uri, PathApiRegister) {
+		path = PathApiRegister
+	} else if strings.HasSuffix(uri, PathLogin) {
+		path = PathLogin
+	} else if strings.HasSuffix(uri, PathLoginCodeVerify) {
+		path = PathLoginCodeVerify
+	} else if strings.HasSuffix(uri, PathLogout) {
+		path = PathLogout
+	} else if strings.HasSuffix(uri, PathRegister) {
+		path = PathRegister
+	} else if strings.HasSuffix(uri, PathPasswordRestore) {
+		path = PathPasswordRestore
+	} else if strings.HasSuffix(uri, PathPasswordReset) {
+		path = PathPasswordReset
 	}
 
 	// log.Println("Path: " + path)
@@ -75,28 +74,28 @@ func (a Auth) AuthHandler(w http.ResponseWriter, r *http.Request) {
 // getRoute finds a route
 func (a Auth) getRoute(route string) func(w http.ResponseWriter, r *http.Request) {
 	routes := map[string]func(w http.ResponseWriter, r *http.Request){
-		pathApiLogin:           a.apiLogin,
-		pathApiLoginCodeVerify: a.apiLoginCodeVerify,
-		pathApiLogout:          a.apiLogout,
-		pathApiRegister:        a.apiRegister,
-		pathApiResetPassword:   a.apiPaswordReset,
-		pathApiRestorePassword: a.apiPaswordRestore,
-		pathLogin:              a.pageLogin,
-		pathLoginCodeVerify:    a.pageLoginCodeVerify,
-		pathLogout:             a.pageLogout,
-		pathPasswordReset:      a.pagePasswordReset,
-		pathPasswordRestore:    a.pagePasswordRestore,
+		PathApiLogin:           a.apiLogin,
+		PathApiLoginCodeVerify: a.apiLoginCodeVerify,
+		PathApiLogout:          a.apiLogout,
+		PathApiRegister:        a.apiRegister,
+		PathApiResetPassword:   a.apiPaswordReset,
+		PathApiRestorePassword: a.apiPaswordRestore,
+		PathLogin:              a.pageLogin,
+		PathLoginCodeVerify:    a.pageLoginCodeVerify,
+		PathLogout:             a.pageLogout,
+		PathPasswordReset:      a.pagePasswordReset,
+		PathPasswordRestore:    a.pagePasswordRestore,
 	}
 
 	if a.enableRegistration {
-		routes[pathRegister] = a.pageRegister
+		routes[PathRegister] = a.pageRegister
 	}
 
 	if val, ok := routes[route]; ok {
 		return val
 	}
 
-	log.Println("Not foind: " + route)
+	// log.Println("Not found: " + route)
 
 	return a.notFoundHandler
 }

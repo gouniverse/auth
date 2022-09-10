@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -11,7 +12,7 @@ import (
 )
 
 func (a Auth) apiLogin(w http.ResponseWriter, r *http.Request) {
-	if a.Passwordless {
+	if a.passwordless {
 		a.apiLoginPasswordless(w, r)
 	} else {
 		a.apiLoginEmailAndPassword(w, r)
@@ -84,45 +85,25 @@ func (a Auth) apiLoginPasswordless(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	mailSent := true
+	verificationCode := utils.StrRandomFromGamma(8, "BCDFGHJKLMNPQRSTVXYZ")
 
-	if mailSent {
-		api.Respond(w, r, api.Success("Your login code has been sent"))
+	errTempTokenSave := a.funcTemporaryKeySet(verificationCode, email, 3600)
+
+	if errTempTokenSave != nil {
+		api.Respond(w, r, api.Error("token store failed. "+errTempTokenSave.Error()))
 		return
 	}
 
-	api.Respond(w, r, api.Error("Sorry login code failed to be emailed"))
+	emailContent := a.passwordlessFuncEmailTemplateLoginCode(email, verificationCode)
 
-	// userID, err := a.funcUserFindByUsername(email)
+	errEmailSent := a.passwordlessFuncEmailSend(email, "Password Restore", emailContent)
 
-	// if err != nil {
-	// 	api.Respond(w, r, api.Error("authentication failed. "+err.Error()))
-	// 	return
-	// }
+	log.Println(errEmailSent)
 
-	// token := utils.StrRandom(32)
+	if errEmailSent != nil {
+		api.Respond(w, r, api.Error("Login code failed to be sent. Please try again later"))
+		return
+	}
 
-	// errSession := a.funcUserStoreAuthToken(token, userID)
-
-	// if errSession != nil {
-	// 	api.Respond(w, r, api.Error("token store failed. "+errSession.Error()))
-	// 	return
-	// }
-
-	// if a.useCookies {
-	// 	expiration := time.Now().Add(365 * 24 * time.Hour)
-	// 	cookie := http.Cookie{
-	// 		Name:     "authtoken",
-	// 		Value:    token,
-	// 		Expires:  expiration,
-	// 		HttpOnly: false,
-	// 		Secure:   true,
-	// 		Path:     "/",
-	// 	}
-	// 	http.SetCookie(w, &cookie)
-	// }
-
-	// api.Respond(w, r, api.SuccessWithData("login success", map[string]interface{}{
-	// 	"token": token,
-	// }))
+	api.Respond(w, r, api.Success("Login code was sent to your e-mail"))
 }

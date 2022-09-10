@@ -1,6 +1,7 @@
-package auth
+package tests
 
 import (
+	"github.com/gouniverse/auth"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
@@ -16,7 +17,7 @@ func (suite *initTestSuite) SetupTest() {
 func (suite *initTestSuite) TestEndpointIsRequired() {
 	// expected := `<title>Home | Rem.land</title>`
 	// assert.HTTPBodyContainsf(suite.T(), routes.Router().ServeHTTP, "POST", links.Home(), url.Values{}, expected, "%")
-	_, err := NewAuth(Config{})
+	_, err := auth.NewAuth(auth.Config{})
 	assert.NotNil(suite.T(), err)
 	assert.Equal(suite.T(), "auth: endpoint is required", err.Error())
 }
@@ -24,7 +25,7 @@ func (suite *initTestSuite) TestEndpointIsRequired() {
 func (suite *initTestSuite) TesUrlRedirectOnSuccessIsRequired() {
 	// expected := `<title>Home | Rem.land</title>`
 	// assert.HTTPBodyContainsf(suite.T(), routes.Router().ServeHTTP, "POST", links.Home(), url.Values{}, expected, "%")
-	_, err := NewAuth(Config{
+	_, err := auth.NewAuth(auth.Config{
 		Endpoint: "http://localhost/auth",
 	})
 	assert.NotNil(suite.T(), err)
@@ -34,7 +35,7 @@ func (suite *initTestSuite) TesUrlRedirectOnSuccessIsRequired() {
 func (suite *initTestSuite) TestFuncTemporaryKeyGetIsRequired() {
 	// expected := `<title>Home | Rem.land</title>`
 	// assert.HTTPBodyContainsf(suite.T(), routes.Router().ServeHTTP, "POST", links.Home(), url.Values{}, expected, "%")
-	_, err := NewAuth(Config{
+	_, err := auth.NewAuth(auth.Config{
 		Endpoint:             "http://localhost/auth",
 		UrlRedirectOnSuccess: "http://localhost/dashboard",
 	})
@@ -45,7 +46,7 @@ func (suite *initTestSuite) TestFuncTemporaryKeyGetIsRequired() {
 func (suite *initTestSuite) TestFuncTemporaryKeySetIsRequired() {
 	// expected := `<title>Home | Rem.land</title>`
 	// assert.HTTPBodyContainsf(suite.T(), routes.Router().ServeHTTP, "POST", links.Home(), url.Values{}, expected, "%")
-	_, err := NewAuth(Config{
+	_, err := auth.NewAuth(auth.Config{
 		Endpoint:             "http://localhost/auth",
 		UrlRedirectOnSuccess: "http://localhost/dashboard",
 		FuncTemporaryKeyGet:  func(key string) (value string, err error) { return "", nil },
@@ -55,7 +56,7 @@ func (suite *initTestSuite) TestFuncTemporaryKeySetIsRequired() {
 }
 
 func (suite *initTestSuite) TestFuncUserFindByTokenIsRequired() {
-	_, err := NewAuth(Config{
+	_, err := auth.NewAuth(auth.Config{
 		Endpoint:             "http://localhost/auth",
 		UrlRedirectOnSuccess: "http://localhost/dashboard",
 		FuncTemporaryKeyGet:  func(key string) (value string, err error) { return "", nil },
@@ -66,7 +67,7 @@ func (suite *initTestSuite) TestFuncUserFindByTokenIsRequired() {
 }
 
 func (suite *initTestSuite) TestFuncUserFindByUsernameIsRequired() {
-	_, err := NewAuth(Config{
+	_, err := auth.NewAuth(auth.Config{
 		Endpoint:                "http://localhost/auth",
 		UrlRedirectOnSuccess:    "http://localhost/dashboard",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
@@ -78,7 +79,7 @@ func (suite *initTestSuite) TestFuncUserFindByUsernameIsRequired() {
 }
 
 func (suite *initTestSuite) TestInitializationSuccess() {
-	auth, err := NewAuth(Config{
+	auth, err := auth.NewAuth(auth.Config{
 		Endpoint:                "http://localhost/auth",
 		UrlRedirectOnSuccess:    "http://localhost/dashboard",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
@@ -96,7 +97,26 @@ func (suite *initTestSuite) TestInitializationSuccess() {
 
 func (suite *initTestSuite) TestLinks() {
 	endpoint := "http://localhost/auth"
-	auth, err := NewAuth(Config{
+	authentication, err := suite.newAuth()
+
+	assert.Nil(suite.T(), err)
+	assert.NotNil(suite.T(), authentication)
+	assert.Equal(suite.T(), endpoint+"/"+auth.PathApiLogin, authentication.LinkApiLogin())
+	assert.Equal(suite.T(), endpoint+"/"+auth.PathApiLogout, authentication.LinkApiLogout())
+	assert.Equal(suite.T(), endpoint+"/"+auth.PathApiRegister, authentication.LinkApiRegister())
+	assert.Equal(suite.T(), endpoint+"/"+auth.PathApiResetPassword, authentication.LinkApiPasswordReset())
+	assert.Equal(suite.T(), endpoint+"/"+auth.PathApiRestorePassword, authentication.LinkApiPasswordRestore())
+
+	assert.Equal(suite.T(), endpoint+"/"+auth.PathLogin, authentication.LinkLogin())
+	assert.Equal(suite.T(), endpoint+"/"+auth.PathLogout, authentication.LinkLogout())
+	assert.Equal(suite.T(), endpoint+"/"+auth.PathPasswordReset+"?t=mytoken", authentication.LinkPasswordReset("mytoken"))
+	assert.Equal(suite.T(), endpoint+"/"+auth.PathPasswordRestore, authentication.LinkPasswordRestore())
+	assert.Equal(suite.T(), endpoint+"/"+auth.PathRegister, authentication.LinkRegister())
+}
+
+func (suite *initTestSuite) newAuth() (*auth.Auth, error) {
+	endpoint := "http://localhost/auth"
+	return auth.NewAuth(auth.Config{
 		Endpoint:                endpoint,
 		UrlRedirectOnSuccess:    "http://localhost/dashboard",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
@@ -108,17 +128,4 @@ func (suite *initTestSuite) TestLinks() {
 		FuncUserStoreAuthToken:  func(sessionID string, userID string) (err error) { return nil },
 		FuncEmailSend:           func(userID string, emailSubject string, emailBody string) (err error) { return nil },
 	})
-	assert.Nil(suite.T(), err)
-	assert.NotNil(suite.T(), auth)
-	assert.Equal(suite.T(), endpoint+"/"+pathApiLogin, auth.LinkApiLogin())
-	assert.Equal(suite.T(), endpoint+"/"+pathApiLogout, auth.LinkApiLogout())
-	assert.Equal(suite.T(), endpoint+"/"+pathApiRegister, auth.LinkApiRegister())
-	assert.Equal(suite.T(), endpoint+"/"+pathApiResetPassword, auth.LinkApiPasswordReset())
-	assert.Equal(suite.T(), endpoint+"/"+pathApiRestorePassword, auth.LinkApiPasswordRestore())
-
-	assert.Equal(suite.T(), endpoint+"/"+pathLogin, auth.LinkLogin())
-	assert.Equal(suite.T(), endpoint+"/"+pathLogout, auth.LinkLogout())
-	assert.Equal(suite.T(), endpoint+"/"+pathPasswordReset+"?t=mytoken", auth.LinkPasswordReset("mytoken"))
-	assert.Equal(suite.T(), endpoint+"/"+pathPasswordRestore, auth.LinkPasswordRestore())
-	assert.Equal(suite.T(), endpoint+"/"+pathRegister, auth.LinkRegister())
 }
