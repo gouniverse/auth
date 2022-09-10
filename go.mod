@@ -3,7 +3,7 @@ module github.com/gouniverse/auth
 go 1.19
 
 require (
-	github.com/gouniverse/uncdn v0.1.0
+	github.com/gouniverse/uncdn v0.4.0
 	github.com/jcelliott/lumber v0.0.0-20160324203708-dd349441af25
 	github.com/stretchr/testify v1.8.0
 )
