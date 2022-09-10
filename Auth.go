@@ -16,18 +16,18 @@ type Auth struct {
 	urlRedirectOnSuccess string
 
 	// ===== START: shared by all implementations
-	funcLayout          func(content string) string
-	funcTemporaryKeyGet func(key string) (value string, err error)
-	funcTemporaryKeySet func(key string, value string, expiresSeconds int) (err error)
+	funcLayout              func(content string) string
+	funcTemporaryKeyGet     func(key string) (value string, err error)
+	funcTemporaryKeySet     func(key string, value string, expiresSeconds int) (err error)
+	funcUserFindByAuthToken func(token string) (userID string, err error)
+	funcUserLogout          func(userID string) (err error)
+	funcUserStoreAuthToken  func(token string, userID string) error
 	// ===== END: shared by all implementations
 
 	// ===== START: username(email) and password options
 	funcEmailTemplatePasswordRestore func(userID string, passwordRestoreLink string) string // optional
 	funcEmailSend                    func(userID string, emailSubject string, emailBody string) (err error)
 	funcUserLogin                    func(username string, password string) (userID string, err error)
-	funcUserLogout                   func(username string) (err error)
-	funcUserStoreAuthToken           func(token string, userID string) error
-	funcUserFindByAuthToken          func(token string) (userID string, err error)
 	funcUserPasswordChange           func(username string, newPassword string) (err error)
 	funcUserRegister                 func(username string, password string, first_name string, last_name string) (err error)
 	funcUserFindByUsername           func(username string, first_name string, last_name string) (userID string, err error)
@@ -70,6 +70,10 @@ func (a Auth) LinkApiRegister() string {
 	return link(a.endpoint, PathApiRegister)
 }
 
+func (a Auth) LinkApiRegisterCodeVerify() string {
+	return link(a.endpoint, PathApiRegisterCodeVerify)
+}
+
 func (a Auth) LinkApiPasswordRestore() string {
 	return link(a.endpoint, PathApiRestorePassword)
 }
@@ -102,6 +106,11 @@ func (a Auth) LinkPasswordReset(token string) string {
 // LinkRegister - returns the regsitration URL
 func (a Auth) LinkRegister() string {
 	return link(a.endpoint, PathRegister)
+}
+
+// LinkRegisterCodeVerify - returns the regsitration code verification URL
+func (a Auth) LinkRegisterCodeVerify() string {
+	return link(a.endpoint, PathRegisterCodeVerify)
 }
 
 // LinkRedirectOnSuccess - returns the URL to where the user will be redirected after successful registration

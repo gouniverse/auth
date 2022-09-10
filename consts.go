@@ -14,7 +14,7 @@ const (
 	// PathApiLogin contains the path to api login endpoint
 	PathApiLogin string = "api/login"
 
-	// PathApiLogin contains the path to api login endpoint
+	// PathApiLoginCodeVerify contains the path to api login code verification endpoint
 	PathApiLoginCodeVerify string = "api/login-code-verify"
 
 	// PathApiLogout contains the path to api logout endpoint
@@ -22,6 +22,9 @@ const (
 
 	// PathApiRegister contains the path to api register endpoint
 	PathApiRegister string = "api/register"
+
+	// PathApiRegisterCodeVerify contains the path to api register code verification endpoint
+	PathApiRegisterCodeVerify string = "api/register-code-verify"
 
 	// PathApiRestorePassword contains the path to api restore password endpoint
 	PathApiRestorePassword string = "api/restore-password"
@@ -32,7 +35,7 @@ const (
 	// PathLogin contains the path to login page
 	PathLogin string = "login"
 
-	// PathLogin contains the path to login page
+	// PathLoginCodeVerify contains the path to login code verification page
 	PathLoginCodeVerify string = "login-code-verify"
 
 	// PathLogout contains the path to logout page
@@ -40,6 +43,9 @@ const (
 
 	// PathRegister contains the path to logout page
 	PathRegister string = "register"
+
+	// PathRegisterCodeVerify contains the path to registration code verification page
+	PathRegisterCodeVerify string = "register-code-verify"
 
 	// PathRestore contains the path to password restore page
 	PathPasswordRestore string = "password-restore"

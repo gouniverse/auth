@@ -19,7 +19,7 @@ require (
 	github.com/darkoatanasovski/htmltags v1.0.0
 	github.com/gouniverse/api v1.5.0
 	github.com/gouniverse/hb v1.42.0
-	github.com/gouniverse/utils v1.26.0
+	github.com/gouniverse/utils v1.27.0
 	github.com/gouniverse/validator v0.11.0
 	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible

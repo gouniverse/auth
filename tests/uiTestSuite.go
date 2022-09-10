@@ -65,7 +65,7 @@ func (suite *uiTestSuite) TestPagePasswordReset() {
 
 func (suite *uiTestSuite) newAuthWithRegistrationDisabled() (*auth.Auth, error) {
 	endpoint := "http://localhost/auth"
-	return auth.NewAuth(auth.Config{
+	return auth.NewUsernameAndPasswordAuth(auth.ConfigUsernameAndPassword{
 		Endpoint:                endpoint,
 		UrlRedirectOnSuccess:    "http://localhost/dashboard",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
@@ -81,7 +81,7 @@ func (suite *uiTestSuite) newAuthWithRegistrationDisabled() (*auth.Auth, error) 
 
 func (suite *uiTestSuite) newAuthWithRegistrationEnabled() (*auth.Auth, error) {
 	endpoint := "http://localhost/auth"
-	return auth.NewAuth(auth.Config{
+	return auth.NewUsernameAndPasswordAuth(auth.ConfigUsernameAndPassword{
 		Endpoint:                endpoint,
 		UrlRedirectOnSuccess:    "http://localhost/dashboard",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },

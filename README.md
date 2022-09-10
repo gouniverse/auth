@@ -2,7 +2,21 @@
 
 ![tests](https://github.com/gouniverse/auth/workflows/tests/badge.svg)
 
-Authentication library for Golang
+Authentication library for Golang with two separate flows: 
+
+1. Username/email and password - The user logs in via a username and password. These days most of the applications will use email instad of username, as it is more convenient for the user not having to remember a username. Using email instead of username is also supported.
+
+2. Passwordless - A verification code is emailed to the user on each login. The user does not have to remember a password.
+
+The aim of this library is to provide a quick preset for authentication, which includes:
+
+1. User interface
+
+2. HTTP handler
+
+3. Authentication middleware
+
+It will then leave the actual implementation to you - where to save the tokens, session, users, etc.
 
 ## Installation
 
@@ -10,11 +24,21 @@ Authentication library for Golang
 go get github.com/gouniverse/auth
 ```
 
-## Usage
+## Usage of the Username/email and Password Flow
 
 - Implement your functions
 
 ```golang
+// userFindByEmail find the user by the provided email, and returns the user ID
+//
+// retrieve the userID from your database
+// note that the username can be an email (if you wish)
+//
+func userFindByUsername(username string) (userID string, err error) {
+    // your code here
+	return "yourUserId", nil
+}
+
 // userRegister registers the user
 //
 // save the user to your databases
@@ -39,7 +63,7 @@ func userLogin(username string, password string) (userID string, err error) {
 //
 // remove the auth token from wherever you have stored it (i.e. session store or the cache store)
 //
-func userLogout(username string) (err error) {
+func userLogout(userID string) (err error) {
     // your code here (remove token from session or cache store)
 	return nil
 }
@@ -67,7 +91,7 @@ func userFindByAuthToken(token string) (userID string, err error) {
 - Setup the auth settings
 
 ```golang
-auth, err := auth.NewAuth(auth.Config{
+auth, err := auth.NewUsernameAndPasswordAuth(auth.Config{
 	EnableRegistration:   true,
 	Endpoint:                "/",
 	UrlRedirectOnSuccess:   "http://localhost/user/dashboard",
@@ -87,10 +111,13 @@ auth, err := auth.NewAuth(auth.Config{
 
 ```golang
 mux := http.NewServeMux()
+
+// Example index page with login link
 mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Index page. Login at: " + auth.LinkLogin()))
+	w.Write([]byte("This is the index page visible to anyone on the internet. Login at: " + auth.LinkLogin()))
 })
 
+// Attach the authentication URLs
 mux.HandleFunc("/auth/", auth.Router)
 ```
 
@@ -100,6 +127,111 @@ mux.HandleFunc("/auth/", auth.Router)
 // Put your auth routes after the Auth middleware
 mux.Handle("/user/dashboard", auth.AuthMiddleware(dashboardHandler("IN AUTHENTICATED DASHBOARD")))
 ```
+
+
+## Usage of the Passwordless Flow
+
+- Implement your functions
+
+```golang
+// userFindByEmail find the user by the provided email, and returns the user ID
+//
+// retrieve the userID from your database
+//
+func userFindByEmail(email string) (userID string, err error) {
+    // your code here
+	return "yourUserId", nil
+}
+
+// userRegister registers the user
+//
+// save the user to your databases
+// note that the username can be an email (if you wish)
+//
+func userRegister(email string, first_name string, last_name string) error {
+    // your code here
+	return nil
+}
+
+// userLogout logs the user out
+//
+// remove the auth token from wherever you have stored it (i.e. session store or the cache store)
+//
+func userLogout(userID string) (err error) {
+    // your code here (remove token from session or cache store)
+	return nil
+}
+
+// userStoreAuthToken stores the auth token with the provided user ID
+//
+// save the auth token to your selected store it (i.e. session store or the cache store)
+// make sure you set an expiration time (i.e. 2 hours)
+//
+func userStoreAuthToken(token string, userID string) error {
+    // your code here (store in session or cache store with desired timeout)
+	return nil
+}
+
+// userFindByAuthToken find the user by the provided token, and returns the user ID
+//
+// retrieve the userID from your selected store  (i.e. session store or the cache store)
+//
+func userFindByAuthToken(token string) (userID string, err error) {
+    // your code here
+	return "yourUserId", nil
+}
+```
+
+- Setup the auth settings
+
+```golang
+auth, err := auth.NewPasswordlessAuth(auth.ConfigPasswordless{
+	EnableRegistration:   true,
+	Endpoint:                "/",
+	UrlRedirectOnSuccess:   "http://localhost/user/dashboard",
+	FuncUserFindByAuthToken: userFindByAuthToken,
+	FuncUserFindByEmail:     userFindByEmail,
+	FuncUserLogout:          userLogout,
+	FuncUserRegister:        userRegister, // optional, required only if registration is enabled
+	FuncUserStoreAuthToken:  userStoreAuthToken,
+	FuncEmailSend:           emailSend,
+	FuncTemporaryKeyGet:     tempKeyGet,
+	FuncTemporaryKeySet:     tempKeySet,
+})
+```
+
+- Attach to router
+
+```golang
+mux := http.NewServeMux()
+
+// Example index page with login link
+mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("This is the index page visible to anyone on the internet. Login at: " + auth.LinkLogin()))
+})
+
+// Attach the authentication URLs
+mux.HandleFunc("/auth/", auth.Router)
+```
+
+- Used the AuthMiddleware to protect the authenticated routes
+
+```golang
+// Put your auth routes after the Auth middleware
+mux.Handle("/user/dashboard", auth.AuthMiddleware(dashboardHandler("IN AUTHENTICATED DASHBOARD")))
+```
+
+
+
+## Frequently Asked Questions
+
+1. Can I use email and password instead of username and password to login users?
+
+Yes you absolutely can.
+
+2. Can I use username and password flow for regular users and passwordless flow for admin users?
+
+Yes you can. You just instantiate two separate instances, and atatch each separate HTTP handler to listen on its own path. For instance you may use /auth for regular users and /auth-admin for administrators
 
 
 ## Other Noteable Auth Projects

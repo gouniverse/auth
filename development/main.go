@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"errors"
 	"log"
 	"net/http"
 	"net/smtp"
@@ -19,162 +17,6 @@ import (
 	"github.com/gouniverse/utils"
 )
 
-var jsonStore *scribble.Driver
-
-func emailSend(userID string, subject string, body string) error {
-	emailSendTo("info@sinevia.com", []string{"info@sinevia.com"}, subject, body)
-	return nil
-}
-
-func userLogin(username string, password string) (userID string, err error) {
-	slug := utils.StrSlugify(username, rune('_'))
-	var user map[string]string
-	err = jsonStore.Read("users", slug, &user)
-	if err != nil {
-		return "not found err", err
-	}
-	log.Println(user)
-	if user == nil {
-		return "not found", errors.New("unable to find user")
-	}
-
-	if user["password"] == password {
-		return username, nil
-	}
-
-	return "password mismatch", errors.New("password mismatch")
-}
-
-func userLogout(username string) error {
-	return nil
-}
-
-func userFindByAuthToken(token string) (userID string, err error) {
-	slug := utils.StrSlugify(token, rune('_'))
-	err = jsonStore.Read("tokens", slug, &userID)
-	if err != nil {
-		return "not found err", err
-	}
-	return userID, nil
-}
-
-func userFindByUsername(username string, firstName string, lastName string) (userID string, err error) {
-	slug := utils.StrSlugify(username, rune('_'))
-	var user map[string]string
-	err = jsonStore.Read("users", slug, &user)
-	if err != nil {
-		return "not found err", err
-	}
-
-	if user == nil {
-		return "not found", errors.New("unable to find user")
-	}
-
-	return user["id"], nil
-}
-
-func userFindByEmail(email string) (userID string, err error) {
-	slug := utils.StrSlugify(email, rune('_'))
-	var user map[string]string
-	err = jsonStore.Read("users", slug, &user)
-	if err != nil {
-		log.Println(err.Error())
-		return "not found err", errors.New("unable to find user")
-	}
-
-	if user == nil {
-		return "not found", errors.New("unable to find user")
-	}
-
-	return user["id"], nil
-}
-
-func userPasswordChange(userID string, password string) error {
-	user, err := userFindByID(userID)
-	if err != nil {
-		return err
-	}
-
-	user["password"] = password
-
-	slug := utils.StrSlugify(user["username"], rune('_'))
-	errSave := jsonStore.Write("users", slug, user)
-	if errSave != nil {
-		return errSave
-	}
-
-	jsonStore.Delete("users", slug)
-
-	return nil
-}
-
-func userFindByID(userID string) (user map[string]string, err error) {
-	users, errReadAll := jsonStore.ReadAll("users")
-	if errReadAll != nil {
-		return nil, errReadAll
-	}
-
-	for _, userJson := range users {
-		json.Unmarshal(userJson, &user)
-		log.Println(userID)
-		log.Println(user)
-		if user["id"] == userID {
-			return user, nil
-		}
-	}
-
-	return nil, errors.New("user not found")
-}
-
-func userStoreAuthToken(token string, userID string) error {
-	slug := utils.StrSlugify(token, rune('_'))
-	err := jsonStore.Write("tokens", slug, userID)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func userRegister(username string, password string, first_name string, last_name string) error {
-	slug := utils.StrSlugify(username, rune('_'))
-	err := jsonStore.Write("users", slug, map[string]string{
-		"id":         utils.StrRandomFromGamma(16, "abcdef0123456789"),
-		"username":   username,
-		"password":   password,
-		"first_name": first_name,
-		"last_name":  last_name,
-	})
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func temporaryKeyGet(key string) (value string, err error) {
-	slug := utils.StrSlugify(key, rune('_'))
-	var record map[string]string
-	err = jsonStore.Read("temp", slug, &record)
-	if err != nil {
-		return "", err
-	}
-	return record["value"], nil
-}
-
-func temporaryKeySet(key string, value string, expiresSeconds int) (err error) {
-	slug := utils.StrSlugify(key, rune('_'))
-	expiresAt := time.Now().Add(time.Duration(expiresSeconds))
-	err = jsonStore.Write("temp", slug, map[string]string{
-		"id":           utils.StrRandomFromGamma(16, "abcdef0123456789"),
-		"value":        value,
-		"expires":      utils.ToString(expiresSeconds),
-		"expires_time": utils.ToString(expiresAt),
-	})
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func main() {
 	os.Remove(utils.Env("DB_DATABASE")) // remove database
 	log.Println("1. Initializing environment variables...")
@@ -188,7 +30,7 @@ func main() {
 		return
 	}
 
-	authUsernameAndPassword, errUsernameAndPassword := auth.NewAuth(auth.Config{
+	authUsernameAndPassword, errUsernameAndPassword := auth.NewUsernameAndPasswordAuth(auth.ConfigUsernameAndPassword{
 		Endpoint:                utils.Env("APP_URL") + "/auth-username-and-password",
 		UrlRedirectOnSuccess:    "/user/dashboard-after-username-and-password",
 		FuncEmailSend:           emailSend,
@@ -208,14 +50,20 @@ func main() {
 		log.Panicln(errUsernameAndPassword.Error())
 	}
 
-	authPasswordless, errPasswordless := auth.NewPasswordlessAuth(auth.PasswordlessConfig{
+	authPasswordless, errPasswordless := auth.NewPasswordlessAuth(auth.ConfigPasswordless{
 		Endpoint:             utils.Env("APP_URL") + "/auth-passwordless",
 		UrlRedirectOnSuccess: "/user/dashboard-after-passwordless",
 
-		FuncEmailSend:       emailSend,
-		FuncTemporaryKeyGet: temporaryKeyGet,
-		FuncTemporaryKeySet: temporaryKeySet,
-		FuncUserFindByEmail: userFindByEmail,
+		EnableRegistration: true,
+
+		FuncEmailSend:           emailSend,
+		FuncTemporaryKeyGet:     temporaryKeyGet,
+		FuncTemporaryKeySet:     temporaryKeySet,
+		FuncUserFindByEmail:     passwordlessUserFindByEmail,
+		FuncUserFindByAuthToken: userFindByAuthToken,
+		FuncUserLogout:          userLogout,
+		FuncUserRegister:        passwordlessUserRegister,
+		FuncUserStoreAuthToken:  userStoreAuthToken,
 
 		UseCookies: true,
 	})
@@ -233,6 +81,7 @@ func main() {
 	})
 	mux.HandleFunc("/auth-username-and-password/", authUsernameAndPassword.AuthHandler)
 	mux.Handle("/user/dashboard-after-username-and-password", authUsernameAndPassword.AuthMiddleware(messageHandler("<html>User page. Logout at: <a href='"+authUsernameAndPassword.LinkLogout()+"'>"+authUsernameAndPassword.LinkLogout()+"</a>")))
+
 	mux.HandleFunc("/auth-passwordless/", authPasswordless.AuthHandler)
 	mux.Handle("/user/dashboard-after-passwordless", authPasswordless.AuthMiddleware(messageHandler("<html>User page. Logout at: <a href='"+authPasswordless.LinkLogout()+"'>"+authPasswordless.LinkLogout()+"</a>")))
 
@@ -256,12 +105,12 @@ func main() {
 	log.Fatal(srv.ListenAndServe())
 }
 
-func Middleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Here"))
-		next.ServeHTTP(w, r)
-	})
-}
+// func Middleware(next http.Handler) http.Handler {
+// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+// 		w.Write([]byte("Here"))
+// 		next.ServeHTTP(w, r)
+// 	})
+// }
 
 func messageHandler(message string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
