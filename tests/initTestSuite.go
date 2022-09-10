@@ -63,7 +63,7 @@ func (suite *initTestSuite) TestFuncUserFindByTokenIsRequired() {
 		FuncTemporaryKeySet:  func(key string, value string, expiresSeconds int) (err error) { return nil },
 	})
 	assert.NotNil(suite.T(), err)
-	assert.Equal(suite.T(), "auth: FuncUserFindByToken function is required", err.Error())
+	assert.Equal(suite.T(), "auth: FuncUserFindByAuthToken function is required", err.Error())
 }
 
 func (suite *initTestSuite) TestFuncUserFindByUsernameIsRequired() {

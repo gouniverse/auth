@@ -238,16 +238,16 @@ func (suite *apiTestSuite) TestPasswordlessLoginCodeVerifyEndpointVerifiesEmail(
 func (suite *apiTestSuite) newAuthPasswordless() (*auth.Auth, error) {
 	endpoint := "http://localhost"
 	return auth.NewPasswordlessAuth(auth.ConfigPasswordless{
-		Endpoint:             endpoint,
-		UrlRedirectOnSuccess: "http://localhost/dashboard",
-		FuncTemporaryKeyGet:  func(key string) (value string, err error) { return "", nil },
-		FuncTemporaryKeySet:  func(key string, value string, expiresSeconds int) (err error) { return nil },
-		// FuncUserFindByAuthToken: func(token string) (userID string, err error) { return "", nil },
-		FuncUserFindByEmail: func(email string) (userID string, err error) { return "", nil },
+		Endpoint:                endpoint,
+		UrlRedirectOnSuccess:    "http://localhost/dashboard",
+		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
+		FuncTemporaryKeySet:     func(key string, value string, expiresSeconds int) (err error) { return nil },
+		FuncUserFindByAuthToken: func(token string) (userID string, err error) { return "", nil },
+		FuncUserFindByEmail:     func(email string) (userID string, err error) { return "", nil },
 		// FuncUserLogin:           func(username string, password string) (userID string, err error) { return "", nil },
-		// FuncUserLogout:          func(userID string) (err error) { return nil },
-		// FuncUserStoreAuthToken:  func(sessionID string, userID string) (err error) { return nil },
-		FuncEmailSend: func(email string, emailSubject string, emailBody string) (err error) { return nil },
+		FuncUserLogout:         func(userID string) (err error) { return nil },
+		FuncUserStoreAuthToken: func(sessionID string, userID string) (err error) { return nil },
+		FuncEmailSend:          func(email string, emailSubject string, emailBody string) (err error) { return nil },
 	})
 }
 
