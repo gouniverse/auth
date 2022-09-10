@@ -1,6 +1,8 @@
 # Auth
 
-![tests](https://github.com/gouniverse/auth/workflows/tests/badge.svg)
+[![Tests Status](https://github.com/gouniverse/auth/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/gouniverse/auth/actions/workflows/test.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/gouniverse/auth)](https://goreportcard.com/report/github.com/gouniverse/auth)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/gouniverse/auth)](https://pkg.go.dev/github.com/gouniverse/auth)
 
 Authentication library for Golang with two separate flows: 
 
