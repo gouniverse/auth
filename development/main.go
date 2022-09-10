@@ -175,7 +175,6 @@ func main() {
 	auth, err := auth.NewAuth(auth.Config{
 		Endpoint:             utils.Env("APP_URL") + "/auth",
 		UrlRedirectOnSuccess: "/user/dashboard",
-		Passwordless:         true,
 
 		// EmailAndPassword
 		FuncEmailSend:           emailSend,

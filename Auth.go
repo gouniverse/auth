@@ -21,7 +21,7 @@ type Auth struct {
 	funcTemporaryKeySet func(key string, value string, expiresSeconds int) (err error)
 	// ===== END: shared by all implementations
 
-	// Username (E-mail) and Password options
+	// ===== START: username(email) and password options
 	funcEmailTemplatePasswordRestore func(userID string, passwordRestoreLink string) string // optional
 	funcEmailSend                    func(userID string, emailSubject string, emailBody string) (err error)
 	funcUserLogin                    func(username string, password string) (userID string, err error)
@@ -31,13 +31,15 @@ type Auth struct {
 	funcUserPasswordChange           func(username string, newPassword string) (err error)
 	funcUserRegister                 func(username string, password string, first_name string, last_name string) (err error)
 	funcUserFindByUsername           func(username string, first_name string, last_name string) (userID string, err error)
+	// ===== END: username(email) and password options
 
-	// Passwordless options
+	// ===== START: passwordless options
 	passwordless                           bool
 	passwordlessFuncUserFindByEmail        func(email string) (userID string, err error)
 	passwordlessFuncEmailTemplateLoginCode func(email string, passwordRestoreLink string) string // optional
 	passwordlessFuncEmailSend              func(email string, emailSubject string, emailBody string) (err error)
 	passwordlessFuncUserRegister           func(email string, firstName string, lastName string) (err error)
+	// ===== END: passwordless options
 
 	// labelUsername   string
 	useCookies      bool

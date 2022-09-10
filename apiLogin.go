@@ -85,7 +85,7 @@ func (a Auth) apiLoginPasswordless(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	verificationCode := utils.StrRandomFromGamma(8, "BCDFGHJKLMNPQRSTVXYZ")
+	verificationCode := utils.StrRandomFromGamma(LoginCodeLength, LoginCodeGamma)
 
 	errTempTokenSave := a.funcTemporaryKeySet(verificationCode, email, 3600)
 

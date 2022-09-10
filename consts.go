@@ -46,4 +46,10 @@ const (
 
 	// PathReset contains the path to password reset page
 	PathPasswordReset string = "password-reset"
+
+	// LoginCodeLength specified the length of the login code
+	LoginCodeLength int = 8
+
+	// LoginCodeGamma specifies the characters to be used for building the login code
+	LoginCodeGamma string = "BCDFGHJKLMNPQRSTVXYZ"
 )

@@ -208,22 +208,32 @@ func (suite *apiTestSuite) TestPasswordlessLoginCodeVerifyEndpointRequiresVerifi
 }
 
 // TODO
-// func (suite *apiTestSuite) TestPasswordlessLoginCodeVerifyEndpointVerifiesEmail() {
-// 	authentication, err := suite.newAuthPasswordless()
+func (suite *apiTestSuite) TestPasswordlessLoginCodeVerifyEndpointVerifiesEmail() {
+	authentication, err := suite.newAuthPasswordless()
 
-// 	assert.Nil(suite.T(), err)
-// 	assert.NotNil(suite.T(), authentication)
+	assert.Nil(suite.T(), err)
+	assert.NotNil(suite.T(), authentication)
 
-// 	expectedSuccess := `"status":"success"`
-// 	assert.HTTPBodyContainsf(suite.T(), authentication.Router().ServeHTTP, "POST", authentication.LinkApiLoginCodeVerify(), url.Values{
-// 		"verification_code": {"test@test.com"},
-// 	}, expectedSuccess, "%")
+	expectedErrorMessage := `"message":"Verification code is invalid length"`
+	assert.HTTPBodyContainsf(suite.T(), authentication.Router().ServeHTTP, "POST", authentication.LinkApiLoginCodeVerify(), url.Values{
+		"verification_code": {"123456"},
+	}, expectedErrorMessage, "%")
 
-// 	expectedMessage := `"message":"Your login code has been sent"`
-// 	assert.HTTPBodyContainsf(suite.T(), authentication.Router().ServeHTTP, "POST", authentication.LinkApiLoginCodeVerify(), url.Values{
-// 		"email": {"test@test.com"},
-// 	}, expectedMessage, "%")
-// }
+	expectedErrorMessage2 := `"message":"Verification code contains invalid characters"`
+	assert.HTTPBodyContainsf(suite.T(), authentication.Router().ServeHTTP, "POST", authentication.LinkApiLoginCodeVerify(), url.Values{
+		"verification_code": {"12345678"},
+	}, expectedErrorMessage2, "%")
+
+	// expectedSuccess := `"status":"success"`
+	// assert.HTTPBodyContainsf(suite.T(), authentication.Router().ServeHTTP, "POST", authentication.LinkApiLoginCodeVerify(), url.Values{
+	// 	"verification_code": {"123456"},
+	// }, expectedSuccess, "%")
+
+	// expectedMessage := `"message":"Your code is correct"`
+	// assert.HTTPBodyContainsf(suite.T(), authentication.Router().ServeHTTP, "POST", authentication.LinkApiLoginCodeVerify(), url.Values{
+	// 	"email": {"123456"},
+	// }, expectedMessage, "%")
+}
 
 func (suite *apiTestSuite) newAuthPasswordless() (*auth.Auth, error) {
 	endpoint := "http://localhost"
