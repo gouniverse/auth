@@ -29,6 +29,16 @@ go get github.com/gouniverse/auth
 - Implement your functions
 
 ```golang
+// userFindByEmail find the user by the provided email, and returns the user ID
+//
+// retrieve the userID from your database
+// note that the username can be an email (if you wish)
+//
+func userFindByUsername(username string) (userID string, err error) {
+    // your code here
+	return "yourUserId", nil
+}
+
 // userRegister registers the user
 //
 // save the user to your databases
@@ -53,7 +63,7 @@ func userLogin(username string, password string) (userID string, err error) {
 //
 // remove the auth token from wherever you have stored it (i.e. session store or the cache store)
 //
-func userLogout(username string) (err error) {
+func userLogout(userID string) (err error) {
     // your code here (remove token from session or cache store)
 	return nil
 }
@@ -101,10 +111,106 @@ auth, err := auth.NewUsernameAndPasswordAuth(auth.Config{
 
 ```golang
 mux := http.NewServeMux()
+
+// Example index page with login link
 mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Index page. Login at: " + auth.LinkLogin()))
+	w.Write([]byte("This is the index page visible to anyone on the internet. Login at: " + auth.LinkLogin()))
 })
 
+// Attach the authentication URLs
+mux.HandleFunc("/auth/", auth.Router)
+```
+
+- Used the AuthMiddleware to protect the authenticated routes
+
+```golang
+// Put your auth routes after the Auth middleware
+mux.Handle("/user/dashboard", auth.AuthMiddleware(dashboardHandler("IN AUTHENTICATED DASHBOARD")))
+```
+
+
+## Usage of the Passwordless Flow
+
+- Implement your functions
+
+```golang
+// userFindByEmail find the user by the provided email, and returns the user ID
+//
+// retrieve the userID from your database
+//
+func userFindByEmail(email string) (userID string, err error) {
+    // your code here
+	return "yourUserId", nil
+}
+
+// userRegister registers the user
+//
+// save the user to your databases
+// note that the username can be an email (if you wish)
+//
+func userRegister(email string, first_name string, last_name string) error {
+    // your code here
+	return nil
+}
+
+// userLogout logs the user out
+//
+// remove the auth token from wherever you have stored it (i.e. session store or the cache store)
+//
+func userLogout(userID string) (err error) {
+    // your code here (remove token from session or cache store)
+	return nil
+}
+
+// userStoreAuthToken stores the auth token with the provided user ID
+//
+// save the auth token to your selected store it (i.e. session store or the cache store)
+// make sure you set an expiration time (i.e. 2 hours)
+//
+func userStoreAuthToken(token string, userID string) error {
+    // your code here (store in session or cache store with desired timeout)
+	return nil
+}
+
+// userFindByAuthToken find the user by the provided token, and returns the user ID
+//
+// retrieve the userID from your selected store  (i.e. session store or the cache store)
+//
+func userFindByAuthToken(token string) (userID string, err error) {
+    // your code here
+	return "yourUserId", nil
+}
+```
+
+- Setup the auth settings
+
+```golang
+auth, err := auth.NewPasswordlessAuth(auth.ConfigPasswordless{
+	EnableRegistration:   true,
+	Endpoint:                "/",
+	UrlRedirectOnSuccess:   "http://localhost/user/dashboard",
+	FuncUserFindByAuthToken: userFindByAuthToken,
+	FuncUserFindByEmail:     userFindByEmail,
+	FuncUserLogout:          userLogout,
+	FuncUserRegister:        userRegister, // optional, required only if registration is enabled
+	FuncUserStoreAuthToken:  userStoreAuthToken,
+	FuncEmailSend:           emailSend,
+	FuncTemporaryKeyGet:     tempKeyGet,
+	FuncTemporaryKeySet:     tempKeySet,
+})
+```
+
+- Attach to router
+
+```golang
+mux := http.NewServeMux()
+
+// Example index page with login link
+mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("This is the index page visible to anyone on the internet. Login at: " + auth.LinkLogin()))
+})
+
+// Attach the authentication URLs
 mux.HandleFunc("/auth/", auth.Router)
 ```
 

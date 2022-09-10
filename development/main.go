@@ -81,6 +81,7 @@ func main() {
 	})
 	mux.HandleFunc("/auth-username-and-password/", authUsernameAndPassword.AuthHandler)
 	mux.Handle("/user/dashboard-after-username-and-password", authUsernameAndPassword.AuthMiddleware(messageHandler("<html>User page. Logout at: <a href='"+authUsernameAndPassword.LinkLogout()+"'>"+authUsernameAndPassword.LinkLogout()+"</a>")))
+
 	mux.HandleFunc("/auth-passwordless/", authPasswordless.AuthHandler)
 	mux.Handle("/user/dashboard-after-passwordless", authPasswordless.AuthMiddleware(messageHandler("<html>User page. Logout at: <a href='"+authPasswordless.LinkLogout()+"'>"+authPasswordless.LinkLogout()+"</a>")))
 
@@ -104,12 +105,12 @@ func main() {
 	log.Fatal(srv.ListenAndServe())
 }
 
-func Middleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Here"))
-		next.ServeHTTP(w, r)
-	})
-}
+// func Middleware(next http.Handler) http.Handler {
+// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+// 		w.Write([]byte("Here"))
+// 		next.ServeHTTP(w, r)
+// 	})
+// }
 
 func messageHandler(message string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
