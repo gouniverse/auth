@@ -44,9 +44,9 @@ func NewPasswordlessAuth(config PasswordlessConfig) (*Auth, error) {
 	// 	return nil, errors.New("auth: FuncUserFindByToken function is required")
 	// }
 
-	// if config.FuncUserFindByUsername == nil {
-	// 	return nil, errors.New("auth: FuncUserFindByUsername function is required")
-	// }
+	if config.FuncUserFindByEmail == nil {
+		return nil, errors.New("auth: FuncUserFindByEmail function is required")
+	}
 
 	// if config.FuncUserLogin == nil {
 	// 	return nil, errors.New("auth: FuncUserLogin function is required")
@@ -92,6 +92,7 @@ func NewPasswordlessAuth(config PasswordlessConfig) (*Auth, error) {
 	// auth.funcUserFindByAuthToken = config.FuncUserFindByAuthToken
 	// auth.funcUserFindByUsername = config.FuncUserFindByUsername
 	// auth.funcUserStoreAuthToken = config.FuncUserStoreAuthToken
+	auth.passwordlessFuncUserFindByEmail = config.FuncUserFindByEmail
 	auth.passwordlessFuncEmailTemplateLoginCode = config.FuncEmailTemplateLoginCode
 	auth.passwordlessFuncEmailSend = config.FuncEmailSend
 

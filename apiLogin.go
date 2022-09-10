@@ -96,7 +96,7 @@ func (a Auth) apiLoginPasswordless(w http.ResponseWriter, r *http.Request) {
 
 	emailContent := a.passwordlessFuncEmailTemplateLoginCode(email, verificationCode)
 
-	errEmailSent := a.passwordlessFuncEmailSend(email, "Password Restore", emailContent)
+	errEmailSent := a.passwordlessFuncEmailSend(email, "Login Code", emailContent)
 
 	if errEmailSent != nil {
 		log.Println(errEmailSent)

@@ -22,7 +22,7 @@ func (a Auth) pageLoginCodeVerifyContent() string {
 
 	header := hb.NewHeading5().HTML("Login Code Verification").Attr("style", "margin:0px;")
 	verificationCodeLabel := hb.NewLabel().HTML("Verification code")
-	verificationCodeInput := hb.NewInput().Attr("class", "form-control").Attr("name", "email").Attr("placeholder", "Enter verification code")
+	verificationCodeInput := hb.NewInput().Attr("class", "form-control").Attr("name", "verification_code").Attr("placeholder", "Enter verification code")
 	verificationCodeFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(verificationCodeLabel).AddChild(verificationCodeInput)
 	buttonLogin := hb.NewButton().Attr("class", "btn btn-lg btn-success btn-block w-100").HTML("Login").Attr("onclick", "loginFormValidate()")
 	buttonLoginFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").AddChild(buttonLogin)
@@ -50,11 +50,11 @@ func (a Auth) pageLoginCodeVerifyContent() string {
 }
 
 func (a Auth) pageLoginCodeVerifyContentScripts() string {
-	urlApiLogin := a.LinkApiLogin()
+	urlApiLoginCodeVerify := a.LinkApiLoginCodeVerify()
 	urlSuccess := a.LinkLoginCodeVerify()
 
 	return `
-	var urlApiLogin = "` + urlApiLogin + `";
+	var urlApiLoginCodeVerify = "` + urlApiLoginCodeVerify + `";
 	var urlOnSuccess = "` + urlSuccess + `";
     /**
      * Raises an error message
@@ -84,17 +84,17 @@ func (a Auth) pageLoginCodeVerifyContentScripts() string {
      * @returns  {Boolean}
      */
     function loginFormValidate() {
-        var email = $.trim($('input[name=email]').val());
+        var verificationCode = $.trim($('input[name=verification_code]').val());
 
-        if (email === '') {
-            return loginFormRaiseError('Email is required');
+        if (verificationCode === '') {
+            return loginFormRaiseError('Code is required');
         }
 
         $('.buttonLogin .imgLoading').show();
 
-        var data = {"email": email};
+        var data = {"verification_code": verificationCode};
 
-        $.post(urlApiLogin, data).then(function (response) {
+        $.post(urlApiLoginCodeVerify, data).then(function (response) {
             $('.buttonLogin .imgLoading').hide();
 
             if (response.status !== "success") {

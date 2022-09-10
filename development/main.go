@@ -73,6 +73,22 @@ func userFindByUsername(username string, firstName string, lastName string) (use
 	return user["id"], nil
 }
 
+func userFindByEmail(email string) (userID string, err error) {
+	slug := utils.StrSlugify(email, rune('_'))
+	var user map[string]string
+	err = jsonStore.Read("users", slug, &user)
+	if err != nil {
+		log.Println(err.Error())
+		return "not found err", errors.New("unable to find user")
+	}
+
+	if user == nil {
+		return "not found", errors.New("unable to find user")
+	}
+
+	return user["id"], nil
+}
+
 func userPasswordChange(userID string, password string) error {
 	user, err := userFindByID(userID)
 	if err != nil {
@@ -172,11 +188,9 @@ func main() {
 		return
 	}
 
-	auth, err := auth.NewAuth(auth.Config{
-		Endpoint:             utils.Env("APP_URL") + "/auth",
-		UrlRedirectOnSuccess: "/user/dashboard",
-
-		// EmailAndPassword
+	authUsernameAndPassword, errUsernameAndPassword := auth.NewAuth(auth.Config{
+		Endpoint:                utils.Env("APP_URL") + "/auth-username-and-password",
+		UrlRedirectOnSuccess:    "/user/dashboard-after-username-and-password",
 		FuncEmailSend:           emailSend,
 		FuncUserFindByAuthToken: userFindByAuthToken,
 		FuncUserFindByUsername:  userFindByUsername,
@@ -187,22 +201,40 @@ func main() {
 		FuncUserStoreAuthToken:  userStoreAuthToken,
 		FuncTemporaryKeyGet:     temporaryKeyGet,
 		FuncTemporaryKeySet:     temporaryKeySet,
+		UseCookies:              true,
+	})
 
-		// Passwordless
+	if errUsernameAndPassword != nil {
+		log.Panicln(errUsernameAndPassword.Error())
+	}
+
+	authPasswordless, errPasswordless := auth.NewPasswordlessAuth(auth.PasswordlessConfig{
+		Endpoint:             utils.Env("APP_URL") + "/auth-passwordless",
+		UrlRedirectOnSuccess: "/user/dashboard-after-passwordless",
+
+		FuncEmailSend:       emailSend,
+		FuncTemporaryKeyGet: temporaryKeyGet,
+		FuncTemporaryKeySet: temporaryKeySet,
+		FuncUserFindByEmail: userFindByEmail,
 
 		UseCookies: true,
 	})
 
-	if err != nil {
-		log.Panicln(err.Error())
+	if errPasswordless != nil {
+		log.Panicln(errPasswordless.Error())
 	}
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("<html>Index page. Login at: <a href='" + auth.LinkLogin() + "'>" + auth.LinkLogin() + "</a>"))
+		html := "<h1>Index Page</h1>"
+		html += "<p>Login with username and password at: <a href='" + authUsernameAndPassword.LinkLogin() + "'>" + authUsernameAndPassword.LinkLogin() + "</a></p>"
+		html += "<p>Login without password at: <a href='" + authPasswordless.LinkLogin() + "'>" + authPasswordless.LinkLogin() + "</a></p>"
+		w.Write([]byte("<html>" + html))
 	})
-	mux.HandleFunc("/auth/", auth.AuthHandler)
-	mux.Handle("/user/dashboard", auth.AuthMiddleware(messageHandler("<html>User page. Logout at: <a href='"+auth.LinkLogout()+"'>"+auth.LinkLogout()+"</a>")))
+	mux.HandleFunc("/auth-username-and-password/", authUsernameAndPassword.AuthHandler)
+	mux.Handle("/user/dashboard-after-username-and-password", authUsernameAndPassword.AuthMiddleware(messageHandler("<html>User page. Logout at: <a href='"+authUsernameAndPassword.LinkLogout()+"'>"+authUsernameAndPassword.LinkLogout()+"</a>")))
+	mux.HandleFunc("/auth-passwordless/", authPasswordless.AuthHandler)
+	mux.Handle("/user/dashboard-after-passwordless", authPasswordless.AuthMiddleware(messageHandler("<html>User page. Logout at: <a href='"+authPasswordless.LinkLogout()+"'>"+authPasswordless.LinkLogout()+"</a>")))
 
 	log.Println("4. Starting server on http://" + utils.Env("SERVER_HOST") + ":" + utils.Env("SERVER_PORT") + " ...")
 	if strings.HasPrefix(utils.Env("APP_URL"), "https://") {
