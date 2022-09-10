@@ -98,12 +98,11 @@ func (a Auth) apiLoginPasswordless(w http.ResponseWriter, r *http.Request) {
 
 	errEmailSent := a.passwordlessFuncEmailSend(email, "Password Restore", emailContent)
 
-	log.Println(errEmailSent)
-
 	if errEmailSent != nil {
-		api.Respond(w, r, api.Error("Login code failed to be sent. Please try again later"))
+		log.Println(errEmailSent)
+		api.Respond(w, r, api.Error("Login code failed to be send. Please try again later"))
 		return
 	}
 
-	api.Respond(w, r, api.Success("Login code was sent to your e-mail"))
+	api.Respond(w, r, api.Success("Login code was sent successfully"))
 }

@@ -3,23 +3,22 @@ package auth
 import "errors"
 
 type PasswordlessConfig struct {
-	EnableRegistration bool
 
-	Endpoint string
-
-	// shared options
-	FuncTemporaryKeyGet func(key string) (value string, err error)
-	FuncTemporaryKeySet func(key string, value string, expiresSeconds int) (err error)
+	// ===== START: shared by all implementations
+	EnableRegistration   bool
+	Endpoint             string
+	FuncLayout           func(content string) string
+	FuncTemporaryKeyGet  func(key string) (value string, err error)
+	FuncTemporaryKeySet  func(key string, value string, expiresSeconds int) (err error)
+	UrlRedirectOnSuccess string
+	UseCookies           bool
+	UseLocalStorage      bool
+	// ===== END: shared by all implementations
 
 	FuncUserFindByEmail        func(email string) (userID string, err error)
 	FuncEmailTemplateLoginCode func(email string, passwordRestoreLink string) string // optional
 	FuncEmailSend              func(email string, emailSubject string, emailBody string) (err error)
 	FuncUserRegister           func(email string, firstName string, lastName string) (err error)
-
-	UrlRedirectOnSuccess string
-
-	UseCookies      bool
-	UseLocalStorage bool
 }
 
 func NewPasswordlessAuth(config PasswordlessConfig) (*Auth, error) {
@@ -81,13 +80,11 @@ func NewPasswordlessAuth(config PasswordlessConfig) (*Auth, error) {
 	auth.endpoint = config.Endpoint
 	auth.passwordless = true
 	auth.urlRedirectOnSuccess = config.UrlRedirectOnSuccess
-	// auth.useCookies = config.UseCookies
-	// auth.useLocalStorage = config.UseLocalStorage
-	// auth.funcEmailSend = config.FuncEmailSend
-	// auth.funcEmailTemplatePasswordRestore = config.FuncEmailTemplatePasswordRestore
-	// auth.funcLayout = config.FuncLayout
-	// auth.funcTemporaryKeyGet = config.FuncTemporaryKeyGet
-	// auth.funcTemporaryKeySet = config.FuncTemporaryKeySet
+	auth.useCookies = config.UseCookies
+	auth.useLocalStorage = config.UseLocalStorage
+	auth.funcLayout = config.FuncLayout
+	auth.funcTemporaryKeyGet = config.FuncTemporaryKeyGet
+	auth.funcTemporaryKeySet = config.FuncTemporaryKeySet
 	// auth.funcUserLogin = config.FuncUserLogin
 	// auth.funcUserLogout = config.FuncUserLogout
 	// auth.funcUserPasswordChange = config.FuncUserPasswordChange
@@ -95,10 +92,12 @@ func NewPasswordlessAuth(config PasswordlessConfig) (*Auth, error) {
 	// auth.funcUserFindByAuthToken = config.FuncUserFindByAuthToken
 	// auth.funcUserFindByUsername = config.FuncUserFindByUsername
 	// auth.funcUserStoreAuthToken = config.FuncUserStoreAuthToken
+	auth.passwordlessFuncEmailTemplateLoginCode = config.FuncEmailTemplateLoginCode
+	auth.passwordlessFuncEmailSend = config.FuncEmailSend
 
 	// If no user defined email template is set, use default
-	if auth.funcEmailTemplatePasswordRestore == nil {
-		auth.funcEmailTemplatePasswordRestore = emailTemplatePasswordChange
+	if auth.passwordlessFuncEmailTemplateLoginCode == nil {
+		auth.passwordlessFuncEmailTemplateLoginCode = emailLoginCodeTemplate
 	}
 
 	return auth, nil

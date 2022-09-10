@@ -188,7 +188,7 @@ func (suite *apiTestSuite) TestPasswordlessLoginEndpointSendsLoginCodeEmail() {
 		"email": {"test@test.com"},
 	}, expectedSuccess, "%")
 
-	expectedMessage := `"message":"Your login code has been sent"`
+	expectedMessage := `"message":"Login code was sent successfully"`
 	assert.HTTPBodyContainsf(suite.T(), authentication.Router().ServeHTTP, "POST", authentication.LinkApiLogin(), url.Values{
 		"email": {"test@test.com"},
 	}, expectedMessage, "%")
