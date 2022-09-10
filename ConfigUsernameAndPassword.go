@@ -1,7 +1,7 @@
 package auth
 
 // Config defines the available configuration options for authentication
-type Config struct {
+type ConfigUsernameAndPassword struct {
 	// ===== START: shared by all implementations
 	EnableRegistration   bool
 	Endpoint             string
@@ -13,7 +13,7 @@ type Config struct {
 	UseLocalStorage      bool
 	// ===== END: shared by all implementations
 
-	// ===== START: username(email) and password
+	// ===== START: username(email) and password options
 	FuncEmailTemplatePasswordRestore func(userID string, passwordRestoreLink string) string // optional
 	FuncEmailSend                    func(userID string, emailSubject string, emailBody string) (err error)
 	FuncUserFindByAuthToken          func(sessionID string) (userID string, err error)
@@ -24,5 +24,5 @@ type Config struct {
 	FuncUserRegister                 func(username string, password string, first_name string, last_name string) (err error)
 	FuncUserStoreAuthToken           func(sessionID string, userID string) error
 	LabelUsername                    string
-	// ===== END: username(email) and password
+	// ===== END: username(email) and password options
 }

@@ -17,7 +17,7 @@ func (suite *initTestSuite) SetupTest() {
 func (suite *initTestSuite) TestEndpointIsRequired() {
 	// expected := `<title>Home | Rem.land</title>`
 	// assert.HTTPBodyContainsf(suite.T(), routes.Router().ServeHTTP, "POST", links.Home(), url.Values{}, expected, "%")
-	_, err := auth.NewAuth(auth.Config{})
+	_, err := auth.NewUsernameAndPasswordAuth(auth.ConfigUsernameAndPassword{})
 	assert.NotNil(suite.T(), err)
 	assert.Equal(suite.T(), "auth: endpoint is required", err.Error())
 }
@@ -25,7 +25,7 @@ func (suite *initTestSuite) TestEndpointIsRequired() {
 func (suite *initTestSuite) TesUrlRedirectOnSuccessIsRequired() {
 	// expected := `<title>Home | Rem.land</title>`
 	// assert.HTTPBodyContainsf(suite.T(), routes.Router().ServeHTTP, "POST", links.Home(), url.Values{}, expected, "%")
-	_, err := auth.NewAuth(auth.Config{
+	_, err := auth.NewUsernameAndPasswordAuth(auth.ConfigUsernameAndPassword{
 		Endpoint: "http://localhost/auth",
 	})
 	assert.NotNil(suite.T(), err)
@@ -35,7 +35,7 @@ func (suite *initTestSuite) TesUrlRedirectOnSuccessIsRequired() {
 func (suite *initTestSuite) TestFuncTemporaryKeyGetIsRequired() {
 	// expected := `<title>Home | Rem.land</title>`
 	// assert.HTTPBodyContainsf(suite.T(), routes.Router().ServeHTTP, "POST", links.Home(), url.Values{}, expected, "%")
-	_, err := auth.NewAuth(auth.Config{
+	_, err := auth.NewUsernameAndPasswordAuth(auth.ConfigUsernameAndPassword{
 		Endpoint:             "http://localhost/auth",
 		UrlRedirectOnSuccess: "http://localhost/dashboard",
 	})
@@ -46,7 +46,7 @@ func (suite *initTestSuite) TestFuncTemporaryKeyGetIsRequired() {
 func (suite *initTestSuite) TestFuncTemporaryKeySetIsRequired() {
 	// expected := `<title>Home | Rem.land</title>`
 	// assert.HTTPBodyContainsf(suite.T(), routes.Router().ServeHTTP, "POST", links.Home(), url.Values{}, expected, "%")
-	_, err := auth.NewAuth(auth.Config{
+	_, err := auth.NewUsernameAndPasswordAuth(auth.ConfigUsernameAndPassword{
 		Endpoint:             "http://localhost/auth",
 		UrlRedirectOnSuccess: "http://localhost/dashboard",
 		FuncTemporaryKeyGet:  func(key string) (value string, err error) { return "", nil },
@@ -56,7 +56,7 @@ func (suite *initTestSuite) TestFuncTemporaryKeySetIsRequired() {
 }
 
 func (suite *initTestSuite) TestFuncUserFindByTokenIsRequired() {
-	_, err := auth.NewAuth(auth.Config{
+	_, err := auth.NewUsernameAndPasswordAuth(auth.ConfigUsernameAndPassword{
 		Endpoint:             "http://localhost/auth",
 		UrlRedirectOnSuccess: "http://localhost/dashboard",
 		FuncTemporaryKeyGet:  func(key string) (value string, err error) { return "", nil },
@@ -67,7 +67,7 @@ func (suite *initTestSuite) TestFuncUserFindByTokenIsRequired() {
 }
 
 func (suite *initTestSuite) TestFuncUserFindByUsernameIsRequired() {
-	_, err := auth.NewAuth(auth.Config{
+	_, err := auth.NewUsernameAndPasswordAuth(auth.ConfigUsernameAndPassword{
 		Endpoint:                "http://localhost/auth",
 		UrlRedirectOnSuccess:    "http://localhost/dashboard",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
@@ -79,7 +79,7 @@ func (suite *initTestSuite) TestFuncUserFindByUsernameIsRequired() {
 }
 
 func (suite *initTestSuite) TestInitializationSuccess() {
-	auth, err := auth.NewAuth(auth.Config{
+	auth, err := auth.NewUsernameAndPasswordAuth(auth.ConfigUsernameAndPassword{
 		Endpoint:                "http://localhost/auth",
 		UrlRedirectOnSuccess:    "http://localhost/dashboard",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
@@ -116,7 +116,7 @@ func (suite *initTestSuite) TestLinks() {
 
 func (suite *initTestSuite) newAuth() (*auth.Auth, error) {
 	endpoint := "http://localhost/auth"
-	return auth.NewAuth(auth.Config{
+	return auth.NewUsernameAndPasswordAuth(auth.ConfigUsernameAndPassword{
 		Endpoint:                endpoint,
 		UrlRedirectOnSuccess:    "http://localhost/dashboard",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },

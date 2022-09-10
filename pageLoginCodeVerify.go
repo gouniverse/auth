@@ -7,7 +7,7 @@ import (
 )
 
 func (a Auth) pageLoginCodeVerify(w http.ResponseWriter, r *http.Request) {
-	webpage := webpage("Login", a.funcLayout(a.pageLoginCodeVerifyContent()), a.pageLoginCodeVerifyContentScripts())
+	webpage := webpage("Verify Login Code", a.funcLayout(a.pageLoginCodeVerifyContent()), a.pageLoginCodeVerifyContentScripts())
 
 	w.WriteHeader(200)
 	w.Header().Set("Content-Type", "text/html")
@@ -26,25 +26,26 @@ func (a Auth) pageLoginCodeVerifyContent() string {
 	verificationCodeFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(verificationCodeLabel).AddChild(verificationCodeInput)
 	buttonLogin := hb.NewButton().Attr("class", "btn btn-lg btn-success btn-block w-100").HTML("Login").Attr("onclick", "loginFormValidate()")
 	buttonLoginFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").AddChild(buttonLogin)
+	buttonBack := hb.NewHyperlink().Attr("class", "btn btn-info float-start").HTML("Resend code").Attr("href", a.LinkLogin())
 
 	// Add elements in a card
-	cardHeader := hb.NewDiv().Class("card-header").AddChild(header)
-	cardBody := hb.NewDiv().Class("card-body").
-		// Attr("style", "margin-bottom:20px;").
-		AddChildren([]*hb.Tag{
-			alertGroup,
-			verificationCodeFormGroup,
-			buttonLoginFormGroup,
-		})
-	cardFooter := hb.NewDiv().Class("card-footer").AddChildren([]*hb.Tag{})
+	cardHeader := hb.NewDiv().Class("card-header").Child(header)
+	cardBody := hb.NewDiv().Class("card-body").Children([]*hb.Tag{
+		alertGroup,
+		verificationCodeFormGroup,
+		buttonLoginFormGroup,
+	})
+	cardFooter := hb.NewDiv().Class("card-footer").Children([]*hb.Tag{
+		buttonBack,
+	})
 
-	card := hb.NewDiv().Class("card card-default").
-		Style("margin:0 auto;max-width: 360px;").
-		AddChild(cardHeader).
-		AddChild(cardBody).
-		AddChild(cardFooter)
+	card := hb.NewDiv().Class("card card-default").Style("margin:0 auto;max-width: 360px;").Children([]*hb.Tag{
+		cardHeader,
+		cardBody,
+		cardFooter,
+	})
 
-	container := hb.NewDiv().Class("container").AddChild(card)
+	container := hb.NewDiv().Class("container").Child(card)
 
 	return container.ToHTML()
 }

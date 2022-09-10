@@ -28,33 +28,35 @@ func (a Auth) pageLoginPasswordlessContent() string {
 	// Elements for the form
 	alertSuccess := hb.NewDiv().Class("alert alert-success").Style("display:none")
 	alertDanger := hb.NewDiv().Class("alert alert-danger").Style("display:none")
-	alertGroup := hb.NewDiv().Class("alert-group").AddChild(alertSuccess).AddChild(alertDanger)
+	alertGroup := hb.NewDiv().Class("alert-group").Child(alertSuccess).Child(alertDanger)
 
 	header := hb.NewHeading5().HTML("Login").Attr("style", "margin:0px;")
 	emailLabel := hb.NewLabel().HTML("E-mail Address")
 	emailInput := hb.NewInput().Attr("class", "form-control").Attr("name", "email").Attr("placeholder", "Enter e-mail address")
 	emailFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(emailLabel).AddChild(emailInput)
 	buttonLogin := hb.NewButton().Attr("class", "btn btn-lg btn-success btn-block w-100").HTML("Login").Attr("onclick", "loginFormValidate()")
-	buttonLoginFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").AddChild(buttonLogin)
+	buttonLoginFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").Child(buttonLogin)
+	buttonRegister := hb.NewHyperlink().Attr("class", "btn btn-info float-start").HTML("Register").Attr("href", a.LinkRegister())
 
 	// Add elements in a card
-	cardHeader := hb.NewDiv().Class("card-header").AddChild(header)
-	cardBody := hb.NewDiv().Class("card-body").
-		// Attr("style", "margin-bottom:20px;").
-		AddChildren([]*hb.Tag{
-			alertGroup,
-			emailFormGroup,
-			buttonLoginFormGroup,
-		})
+	cardHeader := hb.NewDiv().Class("card-header").Child(header)
+	cardBody := hb.NewDiv().Class("card-body").Children([]*hb.Tag{
+		alertGroup,
+		emailFormGroup,
+		buttonLoginFormGroup,
+	})
 	cardFooter := hb.NewDiv().Class("card-footer").AddChildren([]*hb.Tag{})
+	if a.enableRegistration {
+		cardFooter.AddChild(buttonRegister)
+	}
 
 	card := hb.NewDiv().Class("card card-default").
 		Style("margin:0 auto;max-width: 360px;").
-		AddChild(cardHeader).
-		AddChild(cardBody).
-		AddChild(cardFooter)
+		Child(cardHeader).
+		Child(cardBody).
+		Child(cardFooter)
 
-	container := hb.NewDiv().Class("container").AddChild(card)
+	container := hb.NewDiv().Class("container").Child(card)
 
 	return container.ToHTML()
 }

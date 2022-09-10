@@ -237,7 +237,7 @@ func (suite *apiTestSuite) TestPasswordlessLoginCodeVerifyEndpointVerifiesEmail(
 
 func (suite *apiTestSuite) newAuthPasswordless() (*auth.Auth, error) {
 	endpoint := "http://localhost"
-	return auth.NewPasswordlessAuth(auth.PasswordlessConfig{
+	return auth.NewPasswordlessAuth(auth.ConfigPasswordless{
 		Endpoint:             endpoint,
 		UrlRedirectOnSuccess: "http://localhost/dashboard",
 		FuncTemporaryKeyGet:  func(key string) (value string, err error) { return "", nil },
@@ -253,7 +253,7 @@ func (suite *apiTestSuite) newAuthPasswordless() (*auth.Auth, error) {
 
 func (suite *apiTestSuite) newAuthWithRegistrationDisabled() (*auth.Auth, error) {
 	endpoint := "http://localhost"
-	return auth.NewAuth(auth.Config{
+	return auth.NewUsernameAndPasswordAuth(auth.ConfigUsernameAndPassword{
 		Endpoint:                endpoint,
 		UrlRedirectOnSuccess:    "http://localhost/dashboard",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
@@ -269,7 +269,7 @@ func (suite *apiTestSuite) newAuthWithRegistrationDisabled() (*auth.Auth, error)
 
 func (suite *apiTestSuite) newAuthWithRegistrationEnabled() (*auth.Auth, error) {
 	endpoint := "http://localhost"
-	return auth.NewAuth(auth.Config{
+	return auth.NewUsernameAndPasswordAuth(auth.ConfigUsernameAndPassword{
 		Endpoint:                endpoint,
 		UrlRedirectOnSuccess:    "http://localhost/dashboard",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },

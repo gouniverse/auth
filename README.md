@@ -2,7 +2,21 @@
 
 ![tests](https://github.com/gouniverse/auth/workflows/tests/badge.svg)
 
-Authentication library for Golang
+Authentication library for Golang with two separate flows: 
+
+1. Username/email and password - The user logs in via a username and password. These days most of the applications will use email instad of username, as it is more convenient for the user not having to remember a username. Using email instead of username is also supported.
+
+2. Passwordless - A verification code is emailed to the user on each login. The user does not have to remember a password.
+
+The aim of this library is to provide a quick preset for authentication, which includes:
+
+1. User interface
+
+2. HTTP handler
+
+3. Authentication middleware
+
+It will then leave the actual implementation to you - where to save the tokens, session, users, etc.
 
 ## Installation
 
@@ -10,7 +24,7 @@ Authentication library for Golang
 go get github.com/gouniverse/auth
 ```
 
-## Usage
+## Usage of the Username/email and Password Flow
 
 - Implement your functions
 
@@ -67,7 +81,7 @@ func userFindByAuthToken(token string) (userID string, err error) {
 - Setup the auth settings
 
 ```golang
-auth, err := auth.NewAuth(auth.Config{
+auth, err := auth.NewUsernameAndPasswordAuth(auth.Config{
 	EnableRegistration:   true,
 	Endpoint:                "/",
 	UrlRedirectOnSuccess:   "http://localhost/user/dashboard",
@@ -100,6 +114,18 @@ mux.HandleFunc("/auth/", auth.Router)
 // Put your auth routes after the Auth middleware
 mux.Handle("/user/dashboard", auth.AuthMiddleware(dashboardHandler("IN AUTHENTICATED DASHBOARD")))
 ```
+
+
+
+## Frequently Asked Questions
+
+1. Can I use email and password instead of username and password to login users?
+
+Yes you absolutely can.
+
+2. Can I use username and password flow for regular users and passwordless flow for admin users?
+
+Yes you can. You just instantiate two separate instances, and atatch each separate HTTP handler to listen on its own path. For instance you may use /auth for regular users and /auth-admin for administrators
 
 
 ## Other Noteable Auth Projects

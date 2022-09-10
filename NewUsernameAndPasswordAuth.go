@@ -2,7 +2,7 @@ package auth
 
 import "errors"
 
-func NewAuth(config Config) (*Auth, error) {
+func NewUsernameAndPasswordAuth(config ConfigUsernameAndPassword) (*Auth, error) {
 	auth := &Auth{}
 
 	if config.Endpoint == "" {
