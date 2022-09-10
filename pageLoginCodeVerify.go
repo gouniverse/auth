@@ -21,6 +21,7 @@ func (a Auth) pageLoginCodeVerifyContent() string {
 	alertGroup := hb.NewDiv().Class("alert-group").AddChild(alertSuccess).AddChild(alertDanger)
 
 	header := hb.NewHeading5().HTML("Login Code Verification").Attr("style", "margin:0px;")
+	infoParagraph := hb.NewParagraph().Class("text-info").HTML("We sent you a login code to your email. Please check your mailbox")
 	verificationCodeLabel := hb.NewLabel().HTML("Verification code")
 	verificationCodeInput := hb.NewInput().Attr("class", "form-control").Attr("name", "verification_code").Attr("placeholder", "Enter verification code")
 	verificationCodeFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(verificationCodeLabel).AddChild(verificationCodeInput)
@@ -32,6 +33,7 @@ func (a Auth) pageLoginCodeVerifyContent() string {
 	cardHeader := hb.NewDiv().Class("card-header").Child(header)
 	cardBody := hb.NewDiv().Class("card-body").Children([]*hb.Tag{
 		alertGroup,
+		infoParagraph,
 		verificationCodeFormGroup,
 		buttonLoginFormGroup,
 	})
