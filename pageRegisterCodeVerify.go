@@ -26,7 +26,7 @@ func (a Auth) pageRegisterCodeVerifyContent() string {
 	verificationCodeFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").Child(verificationCodeLabel).Child(verificationCodeInput)
 	buttonLogin := hb.NewButton().Attr("class", "btn btn-lg btn-success btn-block w-100").HTML("Login").Attr("onclick", "registerCodeFormValidate()")
 	buttonLoginFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").AddChild(buttonLogin)
-	buttonBack := hb.NewHyperlink().Attr("class", "btn btn-info float-start").HTML("Resend code").Attr("href", a.LinkLogin())
+	buttonBack := hb.NewHyperlink().Attr("class", "btn btn-info float-start").HTML("Resend code").Attr("href", a.LinkRegister())
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Class("card-header").Child(header)
