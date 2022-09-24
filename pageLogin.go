@@ -34,7 +34,10 @@ func (a Auth) pageLoginPasswordlessContent() string {
 	emailLabel := hb.NewLabel().HTML("E-mail Address")
 	emailInput := hb.NewInput().Attr("class", "form-control").Attr("name", "email").Attr("placeholder", "Enter e-mail address")
 	emailFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(emailLabel).AddChild(emailInput)
-	buttonLogin := hb.NewButton().Attr("class", "btn btn-lg btn-success btn-block w-100").HTML("Login").Attr("onclick", "loginFormValidate()")
+	buttonLogin := hb.NewButton().Class("ButtonLogin btn btn-lg btn-success btn-block w-100").OnClick("loginFormValidate()").Children([]*hb.Tag{
+		hb.NewSpan().HTML("Login"),
+		hb.NewDiv().Class("ImgLoading spinner-border spinner-border-sm text-light").Style("display:none;margin-left:10px;"),
+	})
 	buttonLoginFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").Child(buttonLogin)
 	buttonRegister := hb.NewHyperlink().Attr("class", "btn btn-info float-start").HTML("Register").Attr("href", a.LinkRegister())
 
@@ -102,12 +105,12 @@ func (a Auth) pageLoginPasswordlessScripts() string {
             return loginFormRaiseError('Email is required');
         }
 
-        $('.buttonLogin .imgLoading').show();
+        $('.ButtonLogin .ImgLoading').show();
 
         var data = {"email": email};
 
         $.post(urlApiLogin, data).then(function (response) {
-            $('.buttonLogin .imgLoading').hide();
+            $('.ButtonLogin .ImgLoading').hide();
 
             if (response.status !== "success") {
                 return loginFormRaiseError(response.message);
@@ -120,8 +123,8 @@ func (a Auth) pageLoginPasswordlessScripts() string {
             }, 2000);
             return;
         }).fail(function (error) {
-			console.log(error);
-            $('.buttonLogin .imgLoading').hide();
+            console.log(error);
+            $('.ButtonLogin .ImgLoading').hide();
             return loginFormRaiseError('There was an error. Try again later!');
         });
     }
