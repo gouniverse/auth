@@ -25,9 +25,9 @@ func (a Auth) pageLoginCodeVerifyContent() string {
 	verificationCodeLabel := hb.NewLabel().HTML("Verification code")
 	verificationCodeInput := hb.NewInput().Attr("class", "form-control").Attr("name", "verification_code").Attr("placeholder", "Enter verification code")
 	verificationCodeFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(verificationCodeLabel).AddChild(verificationCodeInput)
-	buttonLogin := hb.NewButton().Attr("class", "btn btn-lg btn-success btn-block w-100").HTML("Login").Attr("onclick", "loginFormValidate()")
+	buttonLogin := hb.NewButton().Attr("class", "btn btn-lg btn-success btn-block w-100 text-white").HTML("Login").Attr("onclick", "loginFormValidate()")
 	buttonLoginFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").AddChild(buttonLogin)
-	buttonBack := hb.NewHyperlink().Attr("class", "btn btn-info float-start").HTML("Resend code").Attr("href", a.LinkLogin())
+	buttonBack := hb.NewHyperlink().Attr("class", "btn btn-info text-white float-start").HTML("Resend code").Attr("href", a.LinkLogin())
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Class("card-header").Child(header)
