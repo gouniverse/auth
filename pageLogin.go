@@ -39,7 +39,7 @@ func (a Auth) pageLoginPasswordlessContent() string {
 		hb.NewDiv().Class("ImgLoading spinner-border spinner-border-sm text-light").Style("display:none;margin-left:10px;"),
 	})
 	buttonLoginFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").Child(buttonLogin)
-	buttonRegister := hb.NewHyperlink().Attr("class", "btn btn-info float-start").HTML("Register").Attr("href", a.LinkRegister())
+	buttonRegister := hb.NewHyperlink().Attr("class", "btn btn-info text-white float-start").HTML("Register").Attr("href", a.LinkRegister())
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Class("card-header").Child(header)
