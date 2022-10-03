@@ -241,3 +241,4 @@ Yes you can. You just instantiate two separate instances, and atatch each separa
 - https://github.com/authorizerdev/authorizer
 - https://github.com/markbates/goth
 - https://github.com/teamhanko/hanko
+- https://github.com/go-pkgz/auth
