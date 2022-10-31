@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gouniverse/hb"
+	"github.com/gouniverse/icons"
 )
 
 func (a Auth) pageRegister(w http.ResponseWriter, r *http.Request) {
@@ -40,9 +41,15 @@ func (a Auth) pageRegisterPasswordlessContent() string {
 	emailLabel := hb.NewLabel().HTML("E-mail Address")
 	emailInput := hb.NewInput().Attr("class", "form-control").Attr("name", "email").Attr("placeholder", "Enter e-mail address")
 	emailFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(emailLabel).AddChild(emailInput)
-	buttonRegister := hb.NewButton().Attr("class", "btn btn-lg btn-success btn-block w-100").HTML("Register").Attr("onclick", "registerFormValidate()")
+	buttonRegister := hb.NewButton().Attr("class", "btn btn-lg btn-success btn-block w-100").Children([]*hb.Tag{
+		icons.Icon("bi-person-circle", 24, 24, "white").Style("margin-right:8px;margin-top:-2px;"),
+		hb.NewSpan().HTML("Register"),
+	}).Attr("onclick", "registerFormValidate()")
 	buttonRegisterFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").AddChild(buttonRegister)
-	buttonLogin := hb.NewHyperlink().Attr("class", "btn btn-info float-start").HTML("Login").Attr("href", a.LinkLogin())
+	buttonLogin := hb.NewHyperlink().Attr("class", "btn btn-info float-start").Children([]*hb.Tag{
+		icons.Icon("bi-envelope", 16, 16, "white").Style("margin-right:8px;margin-top:-2px;"),
+		hb.NewSpan().HTML("Login"),
+	}).Attr("href", a.LinkLogin())
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Attr("class", "card-header").AddChild(header)
