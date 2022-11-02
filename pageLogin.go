@@ -152,7 +152,7 @@ func (a Auth) pageLoginContent() string {
 	passwordLabel := hb.NewLabel().AddChild(hb.NewHTML("Password"))
 	passwordInput := hb.NewInput().Attr("class", "form-control").Attr("name", "password").Attr("type", "password").Attr("placeholder", "Enter password")
 	passwordFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(passwordLabel).AddChild(passwordInput)
-	buttonLogin := hb.NewButton().Attr("class", "btn btn-lg btn-success text-white btn-block w-100").Children([]*hb.Tag{
+	buttonLogin := hb.NewButton().Attr("class", "ButtonLogin btn btn-lg btn-success text-white btn-block w-100").Children([]*hb.Tag{
 		icons.Icon("bi-send", 18, 18, "white").Style("margin-right:8px;margin-top:-2px;"),
 		hb.NewSpan().HTML("Send me a login code"),
 		hb.NewDiv().Class("ImgLoading spinner-border spinner-border-sm text-light").Style("display:none;margin-left:10px;"),
@@ -242,12 +242,12 @@ func (a Auth) pageLoginScripts() string {
             return loginFormRaiseError('Password is required');
         }
 
-        $('.buttonLogin .imgLoading').show();
+        $('.ButtonLogin .ImgLoading').show();
 
         var data = {"email": email, "password": password};
 
         $.post(urlApiLogin, data).then(function (response) {
-            $('.buttonLogin .imgLoading').hide();
+            $('.ButtonLogin .ImgLoading').hide();
 
             if (response.status !== "success") {
                 return loginFormRaiseError(response.message);
@@ -263,7 +263,7 @@ func (a Auth) pageLoginScripts() string {
             return;
         }).fail(function (error) {
 			console.log(error);
-            $('.buttonLogin .imgLoading').hide();
+            $('.ButtonLogin .ImgLoading').hide();
             return loginFormRaiseError('There was an error. Try again later!');
         });
     }
