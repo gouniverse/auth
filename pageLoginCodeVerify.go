@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gouniverse/hb"
+	"github.com/gouniverse/icons"
 )
 
 func (a Auth) pageLoginCodeVerify(w http.ResponseWriter, r *http.Request) {
@@ -25,9 +26,16 @@ func (a Auth) pageLoginCodeVerifyContent() string {
 	verificationCodeLabel := hb.NewLabel().HTML("Verification code")
 	verificationCodeInput := hb.NewInput().Attr("class", "form-control").Attr("name", "verification_code").Attr("placeholder", "Enter verification code")
 	verificationCodeFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(verificationCodeLabel).AddChild(verificationCodeInput)
-	buttonLogin := hb.NewButton().Attr("class", "btn btn-lg btn-success btn-block w-100 text-white").HTML("Login").Attr("onclick", "loginFormValidate()")
+	buttonLogin := hb.NewButton().Class("ButtonLogin btn btn-lg btn-success btn-block w-100 text-white").Children([]*hb.Tag{
+		icons.Icon("bi-send", 18, 18, "white").Style("margin-right:8px;margin-top:-2px;"),
+		hb.NewSpan().HTML("Login"),
+		hb.NewDiv().Class("ImgLoading spinner-border spinner-border-sm text-light").Style("display:none;margin-left:10px;"),
+	}).Attr("onclick", "loginFormValidate()")
 	buttonLoginFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").AddChild(buttonLogin)
-	buttonBack := hb.NewHyperlink().Attr("class", "btn btn-info text-white float-start").HTML("Resend code").Attr("href", a.LinkLogin())
+	buttonBack := hb.NewHyperlink().Attr("class", "btn btn-info text-white float-start").Children([]*hb.Tag{
+		icons.Icon("bi-chevron-left", 16, 16, "white").Style("margin-right:8px;margin-top:-2px;"),
+		hb.NewSpan().HTML("Resend code"),
+	}).Attr("href", a.LinkLogin())
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Class("card-header").Child(header)
@@ -93,12 +101,12 @@ func (a Auth) pageLoginCodeVerifyContentScripts() string {
             return loginFormRaiseError('Code is required');
         }
 
-        $('.buttonLogin .imgLoading').show();
+        $('.ButtonLogin .ImgLoading').show();
 
         var data = {"verification_code": verificationCode};
 
         $.post(urlApiLoginCodeVerify, data).then(function (response) {
-            $('.buttonLogin .imgLoading').hide();
+            $('.ButtonLogin .ImgLoading').hide();
 
             if (response.status !== "success") {
                 return loginFormRaiseError(response.message);
@@ -114,7 +122,7 @@ func (a Auth) pageLoginCodeVerifyContentScripts() string {
             return;
         }).fail(function (error) {
 			console.log(error);
-            $('.buttonLogin .imgLoading').hide();
+            $('.ButtonLogin .ImgLoading').hide();
             return loginFormRaiseError('There was an error. Try again later!');
         });
     }
