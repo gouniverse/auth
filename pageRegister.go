@@ -46,8 +46,8 @@ func (a Auth) pageRegisterPasswordlessContent() string {
 		hb.NewSpan().HTML("Register"),
 	}).Attr("onclick", "registerFormValidate()")
 	buttonRegisterFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").AddChild(buttonRegister)
-	buttonLogin := hb.NewHyperlink().Attr("class", "btn btn-info float-start").Children([]*hb.Tag{
-		icons.Icon("bi-envelope", 16, 16, "white").Style("margin-right:8px;margin-top:-2px;"),
+	buttonLogin := hb.NewHyperlink().Attr("class", "btn btn-info text-white float-start").Children([]*hb.Tag{
+		icons.Icon("bi-send", 16, 16, "white").Style("margin-right:8px;margin-top:-2px;"),
 		hb.NewSpan().HTML("Login"),
 	}).Attr("href", a.LinkLogin())
 
