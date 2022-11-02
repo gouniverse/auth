@@ -36,12 +36,15 @@ func (a Auth) pageLoginPasswordlessContent() string {
 	emailInput := hb.NewInput().Attr("class", "form-control").Attr("name", "email").Attr("placeholder", "Enter e-mail address")
 	emailFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(emailLabel).AddChild(emailInput)
 	buttonLogin := hb.NewButton().Class("ButtonLogin btn btn-lg btn-success btn-block w-100").OnClick("loginFormValidate()").Children([]*hb.Tag{
-		icons.Icon("bi-envelope", 18, 18, "white").Style("margin-right:8px;margin-top:-2px;"),
-		hb.NewSpan().HTML("Login"),
+		icons.Icon("bi-send", 18, 18, "white").Style("margin-right:8px;margin-top:-2px;"),
+		hb.NewSpan().HTML("Send me a login code"),
 		hb.NewDiv().Class("ImgLoading spinner-border spinner-border-sm text-light").Style("display:none;margin-left:10px;"),
 	})
 	buttonLoginFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").Child(buttonLogin)
-	buttonRegister := hb.NewHyperlink().Attr("class", "btn btn-info text-white float-start").HTML("Register").Attr("href", a.LinkRegister())
+	buttonRegister := hb.NewHyperlink().Attr("class", "btn btn-info text-white float-start").Children([]*hb.Tag{
+		icons.Icon("bi-person-circle", 16, 16, "white").Style("margin-right:8px;margin-top:-2px;"),
+		hb.NewSpan().HTML("Register"),
+	}).Attr("href", a.LinkRegister())
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Class("card-header").Child(header)
@@ -150,7 +153,7 @@ func (a Auth) pageLoginContent() string {
 	passwordInput := hb.NewInput().Attr("class", "form-control").Attr("name", "password").Attr("type", "password").Attr("placeholder", "Enter password")
 	passwordFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(passwordLabel).AddChild(passwordInput)
 	buttonLogin := hb.NewButton().Attr("class", "btn btn-lg btn-success text-white btn-block w-100").Children([]*hb.Tag{
-		icons.Icon("bi-envelope", 18, 18, "white").Style("margin-right:8px;margin-top:-2px;"),
+		icons.Icon("bi-send", 18, 18, "white").Style("margin-right:8px;margin-top:-2px;"),
 		hb.NewSpan().HTML("Send me a login code"),
 		hb.NewDiv().Class("ImgLoading spinner-border spinner-border-sm text-light").Style("display:none;margin-left:10px;"),
 	}).Attr("onclick", "loginFormValidate()")
