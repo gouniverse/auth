@@ -94,18 +94,19 @@ func userFindByAuthToken(token string) (userID string, err error) {
 
 ```golang
 auth, err := auth.NewUsernameAndPasswordAuth(auth.Config{
-	EnableRegistration:   true,
-	Endpoint:                "/",
-	UrlRedirectOnSuccess:   "http://localhost/user/dashboard",
-	FuncUserFindByAuthToken: userFindByAuthToken,
-	FuncUserFindByUsername:  userFindByUsername,
-	FuncUserLogin:           userLogin,
-	FuncUserLogout:          userLogout,
-	FuncUserRegister:        userRegister, // optional, required only if registration is enabled
-	FuncUserStoreAuthToken:  userStoreAuthToken,
-	FuncEmailSend:           emailSend,
-	FuncTemporaryKeyGet:     tempKeyGet,
-	FuncTemporaryKeySet:     tempKeySet,
+	EnableRegistration:              true,
+	Endpoint:                        "/",
+	UrlRedirectOnSuccess:            "http://localhost/user/dashboard",
+	FuncUserFindByAuthToken:         userFindByAuthToken,
+	FuncUserFindByUsername:          userFindByUsername,
+	FuncUserLogin:                   userLogin,
+	FuncUserLogout:                  userLogout,
+	FuncUserRegister:                userRegister, // optional, required only if registration is enabled
+	FuncUserStoreAuthToken:          userStoreAuthToken,
+	FuncEmailSend:                   emailSend,
+	FuncEmailTemplatePasswordRestore emailTemplatePasswordRestore // optional, if you wamt to set custom email template
+	FuncTemporaryKeyGet:             tempKeyGet,
+	FuncTemporaryKeySet:             tempKeySet,
 })
 ```
 
@@ -188,17 +189,18 @@ func userFindByAuthToken(token string) (userID string, err error) {
 
 ```golang
 auth, err := auth.NewPasswordlessAuth(auth.ConfigPasswordless{
-	EnableRegistration:   true,
-	Endpoint:                "/",
-	UrlRedirectOnSuccess:   "http://localhost/user/dashboard",
-	FuncUserFindByAuthToken: userFindByAuthToken,
-	FuncUserFindByEmail:     userFindByEmail,
-	FuncUserLogout:          userLogout,
-	FuncUserRegister:        userRegister, // optional, required only if registration is enabled
-	FuncUserStoreAuthToken:  userStoreAuthToken,
-	FuncEmailSend:           emailSend,
-	FuncTemporaryKeyGet:     tempKeyGet,
-	FuncTemporaryKeySet:     tempKeySet,
+	EnableRegistration:        true,
+	Endpoint:                  "/",
+	UrlRedirectOnSuccess:      "http://localhost/user/dashboard",
+	FuncUserFindByAuthToken:    userFindByAuthToken,
+	FuncUserFindByEmail:        userFindByEmail,
+	FuncUserLogout:             userLogout,
+	FuncUserRegister:           userRegister, // optional, required only if registration is enabled
+	FuncUserStoreAuthToken:     userStoreAuthToken,
+	FuncEmailSend:              emailSend,
+	FuncEmailTemplateLoginCode: emailLoginCodeTemplate, // optional, if you want to customize the template
+	FuncTemporaryKeyGet:        tempKeyGet,
+	FuncTemporaryKeySet:        tempKeySet,
 })
 ```
 
