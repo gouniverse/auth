@@ -34,11 +34,12 @@ type Auth struct {
 	// ===== END: username(email) and password options
 
 	// ===== START: passwordless options
-	passwordless                           bool
-	passwordlessFuncUserFindByEmail        func(email string) (userID string, err error)
-	passwordlessFuncEmailTemplateLoginCode func(email string, passwordRestoreLink string) string // optional
-	passwordlessFuncEmailSend              func(email string, emailSubject string, emailBody string) (err error)
-	passwordlessFuncUserRegister           func(email string, firstName string, lastName string) (err error)
+	passwordless                              bool
+	passwordlessFuncUserFindByEmail           func(email string) (userID string, err error)
+	passwordlessFuncEmailTemplateLoginCode    func(email string, passwordRestoreLink string) string // optional
+	passwordlessFuncEmailTemplateRegisterCode func(email string, passwordRestoreLink string) string // optional
+	passwordlessFuncEmailSend                 func(email string, emailSubject string, emailBody string) (err error)
+	passwordlessFuncUserRegister              func(email string, firstName string, lastName string) (err error)
 	// ===== END: passwordless options
 
 	// labelUsername   string

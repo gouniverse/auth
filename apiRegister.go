@@ -58,7 +58,7 @@ func (a Auth) apiRegisterPasswordless(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	emailContent := a.passwordlessFuncEmailTemplateLoginCode(email, verificationCode)
+	emailContent := a.passwordlessFuncEmailTemplateRegisterCode(email, verificationCode)
 
 	errEmailSent := a.passwordlessFuncEmailSend(email, "Registration Code", emailContent)
 

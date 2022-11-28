@@ -27,50 +27,52 @@ func (a Auth) pageRegister(w http.ResponseWriter, r *http.Request) {
 
 func (a Auth) pageRegisterPasswordlessContent() string {
 	// Elements for the form
-	alertSuccess := hb.NewDiv().Attr("class", "alert alert-success").Attr("style", "display:none")
-	alertDanger := hb.NewDiv().Attr("class", "alert alert-danger").Attr("style", "display:none")
-	alertGroup := hb.NewDiv().Attr("class", "alert-group").AddChild(alertSuccess).AddChild(alertDanger)
+	alertSuccess := hb.NewDiv().Class("alert alert-success").Style("display:none")
+	alertDanger := hb.NewDiv().Class("alert alert-danger").Style("display:none")
+	alertGroup := hb.NewDiv().Class("alert-group").Child(alertSuccess).Child(alertDanger)
 
-	header := hb.NewHeading5().HTML("Register").Attr("style", "margin:0px;")
+	header := hb.NewHeading5().HTML("Register").Style("margin:0px;")
+
 	firstNameLabel := hb.NewLabel().HTML("First Name")
-	firstNameInput := hb.NewInput().Attr("class", "form-control").Attr("name", "first_name").Attr("placeholder", "Enter first name")
-	firstNameFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(firstNameLabel).AddChild(firstNameInput)
+	firstNameInput := hb.NewInput().Class("form-control").Attr("name", "first_name").Attr("placeholder", "Enter first name")
+	firstNameFormGroup := hb.NewDiv().Class("form-group mt-3").Child(firstNameLabel).Child(firstNameInput)
+
 	lastNameLabel := hb.NewLabel().HTML("Last Name")
-	lastNameInput := hb.NewInput().Attr("class", "form-control").Attr("name", "last_name").Attr("placeholder", "Enter last name")
-	lastNameFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(lastNameLabel).AddChild(lastNameInput)
+	lastNameInput := hb.NewInput().Class("form-control").Attr("name", "last_name").Attr("placeholder", "Enter last name")
+	lastNameFormGroup := hb.NewDiv().Class("form-group mt-3").Child(lastNameLabel).Child(lastNameInput)
+
 	emailLabel := hb.NewLabel().HTML("E-mail Address")
-	emailInput := hb.NewInput().Attr("class", "form-control").Attr("name", "email").Attr("placeholder", "Enter e-mail address")
-	emailFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(emailLabel).AddChild(emailInput)
-	buttonRegister := hb.NewButton().Attr("class", "btn btn-lg btn-success btn-block w-100").Children([]*hb.Tag{
+	emailInput := hb.NewInput().Class("form-control").Attr("name", "email").Attr("placeholder", "Enter e-mail address")
+	emailFormGroup := hb.NewDiv().Class("form-group mt-3").AddChild(emailLabel).AddChild(emailInput)
+
+	buttonRegister := hb.NewButton().Class("btn btn-lg btn-success btn-block w-100").Children([]*hb.Tag{
 		icons.Icon("bi-person-circle", 24, 24, "white").Style("margin-right:8px;margin-top:-2px;"),
 		hb.NewSpan().HTML("Register"),
-	}).Attr("onclick", "registerFormValidate()")
-	buttonRegisterFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").AddChild(buttonRegister)
-	buttonLogin := hb.NewHyperlink().Attr("class", "btn btn-info text-white float-start").Children([]*hb.Tag{
+	}).OnClick("registerFormValidate()")
+
+	buttonRegisterFormGroup := hb.NewDiv().Class("form-group mt-3 mb-3").Child(buttonRegister)
+
+	buttonLogin := hb.NewHyperlink().Class("btn btn-info text-white float-start").Children([]*hb.Tag{
 		icons.Icon("bi-send", 16, 16, "white").Style("margin-right:8px;margin-top:-2px;"),
 		hb.NewSpan().HTML("Login"),
 	}).Attr("href", a.LinkLogin())
 
 	// Add elements in a card
-	cardHeader := hb.NewDiv().Attr("class", "card-header").AddChild(header)
-	cardBody := hb.NewDiv().Attr("class", "card-body").AddChildren([]*hb.Tag{
+	cardHeader := hb.NewDiv().Class("card-header").AddChild(header)
+	cardBody := hb.NewDiv().Class("card-body").AddChildren([]*hb.Tag{
 		alertGroup,
 		firstNameFormGroup,
 		lastNameFormGroup,
 		emailFormGroup,
 		buttonRegisterFormGroup,
 	})
-	cardFooter := hb.NewDiv().Attr("class", "card-footer").AddChildren([]*hb.Tag{
+	cardFooter := hb.NewDiv().Class("card-footer").Children([]*hb.Tag{
 		buttonLogin,
 	})
-	card := hb.NewDiv().Attr("class", "card card-default").Attr("style", "margin:0 auto;max-width: 360px;")
-	card.AddChild(cardHeader).AddChild(cardBody).AddChild(cardFooter)
+	card := hb.NewDiv().Class("card card-default").Style("margin:0 auto;max-width: 360px;")
+	card.AddChild(cardHeader).Child(cardBody).Child(cardFooter)
 
-	container := hb.NewDiv().Attr("class", "container")
-	// heading := hb.NewHeading1().Attr("class", "text-center").HTML("Register")
-
-	// container.AddChild(heading)
-	container.AddChild(card)
+	container := hb.NewDiv().Class("container").Child(card)
 
 	return container.ToHTML()
 }

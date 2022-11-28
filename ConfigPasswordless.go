@@ -17,9 +17,10 @@ type ConfigPasswordless struct {
 	// ===== END: shared by all implementations
 
 	// ===== START: passwordless options
-	FuncUserFindByEmail        func(email string) (userID string, err error)
-	FuncEmailTemplateLoginCode func(email string, passwordRestoreLink string) string // optional
-	FuncEmailSend              func(email string, emailSubject string, emailBody string) (err error)
-	FuncUserRegister           func(email string, firstName string, lastName string) (err error)
+	FuncUserFindByEmail           func(email string) (userID string, err error)
+	FuncEmailTemplateLoginCode    func(email string, logingLink string) string   // optional
+	FuncEmailTemplateRegisterCode func(email string, registerLink string) string // optional
+	FuncEmailSend                 func(email string, emailSubject string, emailBody string) (err error)
+	FuncUserRegister              func(email string, firstName string, lastName string) (err error)
 	// ===== END: passwordless options
 }

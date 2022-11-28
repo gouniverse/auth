@@ -62,6 +62,7 @@ func NewPasswordlessAuth(config ConfigPasswordless) (*Auth, error) {
 	auth.funcUserFindByAuthToken = config.FuncUserFindByAuthToken
 	auth.funcUserStoreAuthToken = config.FuncUserStoreAuthToken
 	auth.passwordlessFuncEmailTemplateLoginCode = config.FuncEmailTemplateLoginCode
+	auth.passwordlessFuncEmailTemplateRegisterCode = config.FuncEmailTemplateRegisterCode
 	auth.passwordlessFuncEmailSend = config.FuncEmailSend
 	auth.passwordlessFuncUserFindByEmail = config.FuncUserFindByEmail
 	auth.passwordlessFuncUserRegister = config.FuncUserRegister
@@ -69,6 +70,11 @@ func NewPasswordlessAuth(config ConfigPasswordless) (*Auth, error) {
 	// If no user defined email template is set, use default
 	if auth.passwordlessFuncEmailTemplateLoginCode == nil {
 		auth.passwordlessFuncEmailTemplateLoginCode = emailLoginCodeTemplate
+	}
+
+	// If no user defined email template is set, use default
+	if auth.passwordlessFuncEmailTemplateRegisterCode == nil {
+		auth.passwordlessFuncEmailTemplateRegisterCode = emailRegisterCodeTemplate
 	}
 
 	return auth, nil
