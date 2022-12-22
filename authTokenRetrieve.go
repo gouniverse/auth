@@ -17,7 +17,9 @@ func authTokenRetrieve(r *http.Request, useCookies bool) string {
 	if useCookies {
 		authTokenFromCookie, err := r.Cookie("authtoken")
 		if err != nil {
-			log.Println(err.Error())
+			if err != http.ErrNoCookie {
+				log.Println(err.Error())
+			}
 			return ""
 		}
 		return authTokenFromCookie.Value
