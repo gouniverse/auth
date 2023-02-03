@@ -56,13 +56,17 @@ func (a Auth) authenticateViaEmail(w http.ResponseWriter, r *http.Request, email
 	}
 
 	if a.useCookies {
+		secureCookie := true
+		if r.TLS == nil {
+			secureCookie = false // the scheme is HTTP
+		}
 		expiration := time.Now().Add(365 * 24 * time.Hour)
 		cookie := http.Cookie{
 			Name:     "authtoken",
 			Value:    token,
 			Expires:  expiration,
 			HttpOnly: false,
-			Secure:   true,
+			Secure:   secureCookie,
 			Path:     "/",
 		}
 		http.SetCookie(w, &cookie)
