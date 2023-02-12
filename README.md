@@ -93,7 +93,7 @@ func userFindByAuthToken(token string) (userID string, err error) {
 - Setup the auth settings
 
 ```golang
-auth, err := auth.NewUsernameAndPasswordAuth(auth.Config{
+auth, err := auth.NewUsernameAndPasswordAuth(auth.ConfigUsernameAndPassword{
 	EnableRegistration:              true,
 	Endpoint:                        "/",
 	UrlRedirectOnSuccess:            "http://localhost/user/dashboard",
