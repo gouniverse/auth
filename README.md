@@ -36,7 +36,7 @@ go get github.com/gouniverse/auth
 // retrieve the userID from your database
 // note that the username can be an email (if you wish)
 //
-func userFindByUsername(username string) (userID string, err error) {
+func userFindByUsername(username string, firstName string, lastName string) (userID string, err error) {
     // your code here
 	return "yourUserId", nil
 }
