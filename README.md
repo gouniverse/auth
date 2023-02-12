@@ -137,12 +137,18 @@ mux.Handle("/user/dashboard", auth.AuthMiddleware(dashboardHandler("IN AUTHENTIC
 - Implement your functions
 
 ```golang
+// emailSend sends an email to the provided email
+func emailSend(email string, emailSubject string, emailBody string) error {
+	// your code here
+	return nil
+}
+
 // userFindByEmail find the user by the provided email, and returns the user ID
 //
 // retrieve the userID from your database
 //
 func userFindByEmail(email string) (userID string, err error) {
-    // your code here
+	// your code here
 	return "yourUserId", nil
 }
 
