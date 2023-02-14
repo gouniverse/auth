@@ -104,7 +104,7 @@ auth, err := auth.NewUsernameAndPasswordAuth(auth.ConfigUsernameAndPassword{
 	FuncUserRegister:                userRegister, // optional, required only if registration is enabled
 	FuncUserStoreAuthToken:          userStoreAuthToken,
 	FuncEmailSend:                   emailSend,
-	FuncEmailTemplatePasswordRestore emailTemplatePasswordRestore // optional, if you wamt to set custom email template
+	FuncEmailTemplatePasswordRestore emailTemplatePasswordRestore, // optional, if you wamt to set custom email template
 	FuncTemporaryKeyGet:             tempKeyGet,
 	FuncTemporaryKeySet:             tempKeySet,
 })
