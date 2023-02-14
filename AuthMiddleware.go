@@ -25,7 +25,7 @@ func (a Auth) AuthMiddleware(next http.Handler) http.Handler {
 
 		userID, err := a.funcUserFindByAuthToken(authToken)
 
-		if err != nil {
+		if err != nil || userID == "" {
 			if a.useCookies {
 				http.Redirect(w, r, a.LinkLogin(), http.StatusTemporaryRedirect)
 				return

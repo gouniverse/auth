@@ -21,11 +21,13 @@ func (a Auth) apiLogout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	errLogout := a.funcUserLogout(userID)
+	if userID != "" {
+		errLogout := a.funcUserLogout(userID)
 
-	if errLogout != nil {
-		api.Respond(w, r, api.Error("logout failed. "+errLogout.Error()))
-		return
+		if errLogout != nil {
+			api.Respond(w, r, api.Error("logout failed. "+errLogout.Error()))
+			return
+		}
 	}
 
 	if a.useCookies {

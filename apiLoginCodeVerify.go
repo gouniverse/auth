@@ -46,6 +46,11 @@ func (a Auth) authenticateViaEmail(w http.ResponseWriter, r *http.Request, email
 		return
 	}
 
+	if userID == "" {
+		api.Respond(w, r, api.Error("authentication failed. user not found"))
+		return
+	}
+
 	token := utils.StrRandom(32)
 
 	errSession := a.funcUserStoreAuthToken(token, userID)

@@ -24,6 +24,11 @@ func (a Auth) ApiAuthOrErrorMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
+		if userID == "" {
+			api.Respond(w, r, api.Unauthenticated("user id is required"))
+			return
+		}
+
 		ctx := context.WithValue(r.Context(), AuthenticatedUserID{}, userID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})

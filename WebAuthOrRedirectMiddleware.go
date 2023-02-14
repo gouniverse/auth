@@ -19,6 +19,12 @@ func (a Auth) WebAuthOrRedirectMiddleware(next http.Handler) http.Handler {
 
 		if err != nil {
 			http.Redirect(w, r, a.LinkLogin(), http.StatusTemporaryRedirect)
+			return
+		}
+
+		if userID == "" {
+			http.Redirect(w, r, a.LinkLogin(), http.StatusTemporaryRedirect)
+			return
 		}
 
 		ctx := context.WithValue(r.Context(), AuthenticatedUserID{}, userID)

@@ -37,10 +37,10 @@ func (a Auth) apiPaswordRestore(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// if user == nil {
-	// 	api.Respond(w, r, api.Error("E-mail not registered"))
-	// 	return
-	// }
+	if userID == "" {
+		api.Respond(w, r, api.Error("User not found"))
+		return
+	}
 
 	// if strings.ToLower(user.FirstName) != strings.ToLower(firstName) {
 	// 	api.Respond(w, r, api.Error("First or last name not matching"))
