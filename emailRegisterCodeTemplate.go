@@ -17,7 +17,7 @@ func emailRegisterCodeTemplate(email string, code string) string {
 		Hello!
 	<p>
 	<p>
-		Someone requested to register with your emal {{.Email}}. Please use the code below to log in.
+		Someone requested to register with your email {{.Email}}. Please use the code below to confirm your registration.
 	</p>
 	<p>
 		{{.Code}}

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gouniverse/hb"
+	"github.com/gouniverse/icons"
 )
 
 func (a Auth) pageRegisterCodeVerify(w http.ResponseWriter, r *http.Request) {
@@ -20,20 +21,38 @@ func (a Auth) pageRegisterCodeVerifyContent() string {
 	alertDanger := hb.NewDiv().Class("alert alert-danger").Style("display:none")
 	alertGroup := hb.NewDiv().Class("alert-group").AddChild(alertSuccess).AddChild(alertDanger)
 
-	header := hb.NewHeading5().HTML("Registration Code Verification").Attr("style", "margin:0px;")
+	header := hb.NewHeading5().HTML("Registration Code Verification").Style("margin:0px;")
+
 	verificationCodeLabel := hb.NewLabel().HTML("Verification code")
-	verificationCodeInput := hb.NewInput().Attr("class", "form-control").Attr("name", "verification_code").Attr("placeholder", "Enter verification code")
-	verificationCodeFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").Child(verificationCodeLabel).Child(verificationCodeInput)
-	buttonLogin := hb.NewButton().Attr("class", "btn btn-lg btn-success btn-block w-100").HTML("Login").Attr("onclick", "registerCodeFormValidate()")
-	buttonLoginFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").AddChild(buttonLogin)
-	buttonBack := hb.NewHyperlink().Attr("class", "btn btn-info float-start").HTML("Resend code").Attr("href", a.LinkRegister())
+	verificationCodeInput := hb.NewInput().
+		Class("form-control").
+		Attr("name", "verification_code").
+		Attr("placeholder", "Enter verification code")
+	verificationCodeFormGroup := hb.NewDiv().
+		Class("form-group mt-3").
+		Child(verificationCodeLabel).
+		Child(verificationCodeInput)
+	buttonVerify := hb.NewButton().
+		Class("btn btn-lg btn-success btn-block w-100").
+		Children([]*hb.Tag{
+			icons.Icon("bi-person-circle", 24, 24, "white").Style("margin-right:8px;margin-top:-2px;"),
+			hb.NewSpan().HTML("Verify Registration"),
+		}).
+		OnClick("registerCodeFormValidate()")
+	buttonVerifyFormGroup := hb.NewDiv().
+		Class("form-group mt-3 mb-3").
+		AddChild(buttonVerify)
+	buttonBack := hb.NewButton().Class("btn btn-info text-white float-start").Children([]*hb.Tag{
+		icons.Icon("bi-chevron-left", 16, 16, "white").Style("margin-right:8px;margin-top:-2px;"),
+		hb.NewSpan().HTML("Resend code"),
+	}).Attr("href", a.LinkRegister())
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Class("card-header").Child(header)
 	cardBody := hb.NewDiv().Class("card-body").Children([]*hb.Tag{
 		alertGroup,
 		verificationCodeFormGroup,
-		buttonLoginFormGroup,
+		buttonVerifyFormGroup,
 	})
 	cardFooter := hb.NewDiv().Class("card-footer").Children([]*hb.Tag{
 		buttonBack,
