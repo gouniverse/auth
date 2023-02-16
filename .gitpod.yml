@@ -5,6 +5,9 @@
 tasks:
   - name: Install Taskfile
     command: go install github.com/go-task/task/v3/cmd/task@latest
+    
+  - name: Install and Run Mailhog
+    command: docker run --restart always -d --name=mailhog -p 1025:1025 -p 8025:8025 mailhog/mailhog
 
   # - name: Install Fresh
     # command: go install github.com/pilu/fresh
