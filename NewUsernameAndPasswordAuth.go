@@ -49,6 +49,14 @@ func NewUsernameAndPasswordAuth(config ConfigUsernameAndPassword) (*Auth, error)
 		return nil, errors.New("auth: FuncEmailSend function is required")
 	}
 
+	if config.UseCookies && config.UseLocalStorage {
+		return nil, errors.New("auth: UseCookies and UseLocalStorage cannot be both true")
+	}
+
+	if !config.UseCookies && !config.UseLocalStorage {
+		return nil, errors.New("auth: UseCookies and UseLocalStorage cannot be both false")
+	}
+
 	if config.FuncLayout == nil {
 		config.FuncLayout = auth.layout
 	}
