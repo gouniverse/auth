@@ -90,6 +90,8 @@ func (suite *initTestSuite) TestInitializationSuccess() {
 		FuncUserLogout:          func(userID string) (err error) { return nil },
 		FuncUserStoreAuthToken:  func(sessionID string, userID string) (err error) { return nil },
 		FuncEmailSend:           func(userID string, emailSubject string, emailBody string) (err error) { return nil },
+		UseCookies:              true,
+		UseLocalStorage:         false,
 	})
 	assert.Nil(suite.T(), err)
 	assert.NotNil(suite.T(), auth)
