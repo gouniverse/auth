@@ -129,5 +129,6 @@ func (suite *initTestSuite) newAuth() (*auth.Auth, error) {
 		FuncUserLogout:          func(userID string) (err error) { return nil },
 		FuncUserStoreAuthToken:  func(sessionID string, userID string) (err error) { return nil },
 		FuncEmailSend:           func(userID string, emailSubject string, emailBody string) (err error) { return nil },
+		UseCookies:              true,
 	})
 }

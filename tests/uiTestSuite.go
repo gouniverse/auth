@@ -76,6 +76,7 @@ func (suite *uiTestSuite) newAuthWithRegistrationDisabled() (*auth.Auth, error) 
 		FuncUserLogout:          func(userID string) (err error) { return nil },
 		FuncUserStoreAuthToken:  func(sessionID string, userID string) (err error) { return nil },
 		FuncEmailSend:           func(userID string, emailSubject string, emailBody string) (err error) { return nil },
+		UseCookies:              true,
 	})
 }
 
@@ -94,5 +95,6 @@ func (suite *uiTestSuite) newAuthWithRegistrationEnabled() (*auth.Auth, error) {
 		FuncUserStoreAuthToken:  func(sessionID string, userID string) (err error) { return nil },
 		FuncEmailSend:           func(userID string, emailSubject string, emailBody string) (err error) { return nil },
 		EnableRegistration:      true,
+		UseCookies:              true,
 	})
 }
