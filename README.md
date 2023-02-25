@@ -8,7 +8,7 @@ Authentication library for Golang with two separate flows:
 
 1. Username/email and password - The user logs in via a username and password. Using email instead of username is also supported. These days most of the applications will use email instad of username, as it is more convenient for the user not having to remember a username.
 
-2. Passwordless - A verification code is emailed to the user on each login. The user does not have to remember a password. As well as its better for us, as we do not have to securely store passwords on our end.
+2. Passwordless - A verification code is emailed to the user on each login. The user does not have to remember a password. This flow is recommended because it is safer as it relieves the application from having to securely store passwords.
 
 The aim of this library is to provide a quick preset for authentication, which includes:
 
