@@ -196,19 +196,19 @@ func userFindByAuthToken(token string) (userID string, err error) {
 
 ```golang
 auth, err := auth.NewPasswordlessAuth(auth.ConfigPasswordless{
-	EnableRegistration:				true,				// optional, required only if registration is required
-	Endpoint:						"/",
-	UrlRedirectOnSuccess:			"http://localhost/user/dashboard",
-	FuncUserFindByAuthToken:		userFindByAuthToken,
-	FuncUserFindByEmail:			userFindByEmail,
-	FuncUserLogout:					userLogout,
-	FuncUserRegister:				userRegister,			// optional, required only if registration is enabled
-	FuncUserStoreAuthToken:			userStoreAuthToken,
-	FuncEmailSend:					emailSend,
-	FuncEmailTemplateLoginCode:		emailLoginCodeTemplate,		// optional, if you want to customize the template
+	EnableRegistration:		true,				// optional, required only if registration is required
+	Endpoint:			"/",
+	UrlRedirectOnSuccess:		"http://localhost/user/dashboard",
+	FuncUserFindByAuthToken:	userFindByAuthToken,
+	FuncUserFindByEmail:		userFindByEmail,
+	FuncUserLogout:			userLogout,
+	FuncUserRegister:		userRegister,			// optional, required only if registration is enabled
+	FuncUserStoreAuthToken:		userStoreAuthToken,
+	FuncEmailSend:			emailSend,
+	FuncEmailTemplateLoginCode:	emailLoginCodeTemplate,		// optional, if you want to customize the template
 	FuncEmailTemplateRegisterCode:	emailRegisterCodeTemplate,	// optional, if you want to customize the template
 	FuncTemporaryKeyGet:        	tempKeyGet,
-	FuncTemporaryKeySet:			tempKeySet,
+	FuncTemporaryKeySet:		tempKeySet,
 })
 ```
 
