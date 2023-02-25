@@ -2,10 +2,11 @@ package auth
 
 import (
 	"context"
+	"log"
 	"net/http"
 )
 
-func (a Auth) WebJustAppendUserIDMiddleware(next http.Handler) http.Handler {
+func (a Auth) WebAppendUserIdIfExistsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		authToken := authTokenRetrieve(r, a.useCookies)
@@ -14,14 +15,11 @@ func (a Auth) WebJustAppendUserIDMiddleware(next http.Handler) http.Handler {
 			userID, err := a.funcUserFindByAuthToken(authToken)
 
 			if err != nil {
-				http.Redirect(w, r, a.LinkLogin(), http.StatusTemporaryRedirect)
+				next.ServeHTTP(w, r)
 				return
 			}
 
-			if userID == "" {
-				http.Redirect(w, r, a.LinkLogin(), http.StatusTemporaryRedirect)
-				return
-			}
+			log.Println("USERID", userID)
 
 			ctx := context.WithValue(r.Context(), AuthenticatedUserID{}, userID)
 			next.ServeHTTP(w, r.WithContext(ctx))
