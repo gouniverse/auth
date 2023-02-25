@@ -44,6 +44,8 @@ func main() {
 		FuncTemporaryKeyGet:     temporaryKeyGet,
 		FuncTemporaryKeySet:     temporaryKeySet,
 		UseCookies:              true,
+		EnableRegistration:      true,
+		EnableVerification:      true,
 	})
 
 	if errUsernameAndPassword != nil {

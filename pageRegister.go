@@ -212,6 +212,9 @@ func (a Auth) pageRegisterUsernameAndPasswordContent() string {
 func (a Auth) pageRegisterUsernameAndPasswordScripts() string {
 	urlApiRegister := a.LinkApiRegister()
 	urlSuccess := a.LinkLogin()
+	if a.enableVerification {
+		urlSuccess = a.LinkRegisterCodeVerify()
+	}
 
 	return `
 	var urlApiRegister = "` + urlApiRegister + `";

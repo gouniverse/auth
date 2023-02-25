@@ -9,6 +9,7 @@ import (
 	"github.com/gouniverse/utils"
 )
 
+// apiLoginCodeVerify used for passwordless login code verification
 func (a Auth) apiLoginCodeVerify(w http.ResponseWriter, r *http.Request) {
 	verificationCode := strings.Trim(utils.Req(r, "verification_code", ""), " ")
 
@@ -34,12 +35,21 @@ func (a Auth) apiLoginCodeVerify(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a.authenticateViaEmail(w, r, email)
+	a.authenticateViaUsername(w, r, email, "", "")
 }
 
 // authenticateViaEmail used for passwordless login and registration
-func (a Auth) authenticateViaEmail(w http.ResponseWriter, r *http.Request, email string) {
-	userID, errUser := a.passwordlessFuncUserFindByEmail(email)
+// username is an email in passwordless auth
+// firstName is used only in username and password auth
+// lastName is used only in username and password auth
+func (a Auth) authenticateViaUsername(w http.ResponseWriter, r *http.Request, username string, firstName string, lastName string) {
+	var userID string
+	var errUser error
+	if a.passwordless {
+		userID, errUser = a.passwordlessFuncUserFindByEmail(username)
+	} else {
+		userID, errUser = a.funcUserFindByUsername(username, firstName, lastName)
+	}
 
 	if errUser != nil {
 		api.Respond(w, r, api.Error("authentication failed. "+errUser.Error()))

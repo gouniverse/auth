@@ -103,16 +103,52 @@ func (a Auth) apiRegisterUsernameAndPassword(w http.ResponseWriter, r *http.Requ
 	}
 
 	if a.funcUserRegister == nil {
-		api.Respond(w, r, api.Error("registration failed. FuncUserRegister finction not defined"))
+		api.Respond(w, r, api.Error("registration failed. FuncUserRegister function not defined"))
 		return
 	}
 
-	err := a.funcUserRegister(email, password, first_name, last_name)
+	if a.enableVerification == false {
+		err := a.funcUserRegister(email, password, first_name, last_name)
 
-	if err != nil {
-		api.Respond(w, r, api.Error("registration failed. "+err.Error()))
+		if err != nil {
+			api.Respond(w, r, api.Error("registration failed. "+err.Error()))
+			return
+		}
+
+		api.Respond(w, r, api.SuccessWithData("registration success", map[string]interface{}{}))
 		return
 	}
 
-	api.Respond(w, r, api.SuccessWithData("registration success", map[string]interface{}{}))
+	verificationCode := utils.StrRandomFromGamma(LoginCodeLength, LoginCodeGamma)
+
+	json, errJson := utils.ToJSON(map[string]string{
+		"email":      email,
+		"first_name": first_name,
+		"last_name":  last_name,
+		"password":   password,
+	})
+
+	if errJson != nil {
+		api.Respond(w, r, api.Error("Error serializing data"))
+		return
+	}
+
+	errTempTokenSave := a.funcTemporaryKeySet(verificationCode, json, 3600)
+
+	if errTempTokenSave != nil {
+		api.Respond(w, r, api.Error("token store failed. "+errTempTokenSave.Error()))
+		return
+	}
+
+	emailContent := a.funcEmailTemplateRegisterCode(email, verificationCode)
+
+	errEmailSent := a.funcEmailSend(email, "Registration Code", emailContent)
+
+	if errEmailSent != nil {
+		log.Println(errEmailSent)
+		api.Respond(w, r, api.Error("Registration code failed to be send. Please try again later"))
+		return
+	}
+
+	api.Respond(w, r, api.Success("Registration code was sent successfully"))
 }

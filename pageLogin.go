@@ -146,31 +146,59 @@ func (a Auth) pageLoginContent() string {
 	alertGroup := hb.NewDiv().Class("alert-group").AddChild(alertSuccess).AddChild(alertDanger)
 
 	header := hb.NewHeading5().HTML("Login").Attr("style", "margin:0px;")
-	emailLabel := hb.NewLabel().HTML("E-mail Address")
-	emailInput := hb.NewInput().Attr("class", "form-control").Attr("name", "email").Attr("placeholder", "Enter e-mail address")
-	emailFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(emailLabel).AddChild(emailInput)
-	passwordLabel := hb.NewLabel().AddChild(hb.NewHTML("Password"))
-	passwordInput := hb.NewInput().Attr("class", "form-control").Attr("name", "password").Attr("type", "password").Attr("placeholder", "Enter password")
-	passwordFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(passwordLabel).AddChild(passwordInput)
-	buttonLogin := hb.NewButton().Attr("class", "ButtonLogin btn btn-lg btn-success text-white btn-block w-100").Children([]*hb.Tag{
-		icons.Icon("bi-send", 18, 18, "white").Style("margin-right:8px;margin-top:-2px;"),
-		hb.NewSpan().HTML("Send me a login code"),
-		hb.NewDiv().Class("ImgLoading spinner-border spinner-border-sm text-light").Style("display:none;margin-left:10px;"),
-	}).Attr("onclick", "loginFormValidate()")
-	buttonLoginFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").AddChild(buttonLogin)
-	buttonRegister := hb.NewHyperlink().Attr("class", "btn btn-info text-white float-start").Children([]*hb.Tag{
-		icons.Icon("bi-person-circle", 16, 16, "white").Style("margin-right:8px;margin-top:-2px;"),
-		hb.NewSpan().HTML("Register"),
-	}).Attr("href", a.LinkRegister())
-	buttonForgotPassword := hb.NewHyperlink().Attr("class", "btn btn-warning text-white float-end").Children([]*hb.Tag{
-		icons.Icon("bi-pass", 16, 16, "white").Style("margin-right:8px;margin-top:-2px;"),
-		hb.NewSpan().HTML("Forgot password?"),
-	}).Attr("href", a.LinkPasswordRestore())
+
+	emailLabel := hb.NewLabel().
+		HTML("E-mail Address")
+	emailInput := hb.NewInput().
+		Class("form-control").
+		Attr("name", "email").
+		Attr("placeholder", "Enter e-mail address")
+	emailFormGroup := hb.NewDiv().Class("form-group mt-3").
+		Child(emailLabel).
+		Child(emailInput)
+
+	passwordLabel := hb.NewLabel().
+		HTML("Password")
+	passwordInput := hb.NewInput().Class("form-control").
+		Attr("name", "password").
+		Attr("type", "password").
+		Attr("placeholder", "Enter password")
+	passwordFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").
+		Child(passwordLabel).
+		Child(passwordInput)
+
+	buttonLogin := hb.NewButton().
+		Attr("class", "ButtonLogin btn btn-lg btn-success text-white btn-block w-100").
+		Children([]*hb.Tag{
+			icons.Icon("bi-door-open", 18, 18, "white").Style("margin-right:8px;margin-top:-2px;"),
+			hb.NewSpan().
+				HTML("Log in"),
+			hb.NewDiv().
+				Class("ImgLoading spinner-border spinner-border-sm text-light").
+				Style("display:none;margin-left:10px;"),
+		}).
+		OnClick("loginFormValidate()")
+
+	buttonLoginFormGroup := hb.NewDiv().Class("form-group mt-3 mb-3").AddChild(buttonLogin)
+
+	buttonRegister := hb.NewHyperlink().
+		Class("btn btn-info text-white float-start").
+		Children([]*hb.Tag{
+			icons.Icon("bi-person-circle", 16, 16, "white").Style("margin-right:8px;margin-top:-2px;"),
+			hb.NewSpan().HTML("Register"),
+		}).
+		Attr("href", a.LinkRegister())
+
+	buttonForgotPassword := hb.NewHyperlink().
+		Class("btn btn-warning text-white float-end").
+		Children([]*hb.Tag{
+			icons.Icon("bi-pass", 16, 16, "white").Style("margin-right:8px;margin-top:-2px;"),
+			hb.NewSpan().HTML("Forgot password?"),
+		}).Attr("href", a.LinkPasswordRestore())
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Class("card-header").AddChild(header)
 	cardBody := hb.NewDiv().Class("card-body").
-		// Attr("style", "margin-bottom:20px;").
 		AddChildren([]*hb.Tag{
 			alertGroup,
 			emailFormGroup,
@@ -187,9 +215,9 @@ func (a Auth) pageLoginContent() string {
 
 	card := hb.NewDiv().Class("card card-default").
 		Style("margin:0 auto;max-width: 360px;").
-		AddChild(cardHeader).
-		AddChild(cardBody).
-		AddChild(cardFooter)
+		Child(cardHeader).
+		Child(cardBody).
+		Child(cardFooter)
 
 	container := hb.NewDiv().Class("container").AddChild(card)
 

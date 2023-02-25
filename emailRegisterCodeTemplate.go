@@ -23,7 +23,7 @@ func emailRegisterCodeTemplate(email string, code string) string {
 		{{.Code}}
 	</p>
 	<p>
-		If you did not request to login no further action is required.
+		If you did not request to register no further action is required.
 	</p>
 	<p>
 		Thanks,

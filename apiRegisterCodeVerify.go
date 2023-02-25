@@ -43,13 +43,20 @@ func (a Auth) apiRegisterCodeVerify(w http.ResponseWriter, r *http.Request) {
 	email := register.(map[string]interface{})["email"].(string)
 	firstName := register.(map[string]interface{})["first_name"].(string)
 	lastName := register.(map[string]interface{})["last_name"].(string)
+	password := register.(map[string]interface{})["password"].(string)
 
-	errRegister := a.passwordlessFuncUserRegister(email, firstName, lastName)
+	var errRegister error = nil
+
+	if a.passwordless {
+		errRegister = a.passwordlessFuncUserRegister(email, firstName, lastName)
+	} else {
+		errRegister = a.funcUserRegister(email, password, firstName, lastName)
+	}
 
 	if errRegister != nil {
 		api.Respond(w, r, api.Error("registration failed. "+errRegister.Error()))
 		return
 	}
 
-	a.authenticateViaEmail(w, r, email)
+	a.authenticateViaUsername(w, r, email, firstName, lastName)
 }

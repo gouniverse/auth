@@ -16,7 +16,9 @@ type ConfigUsernameAndPassword struct {
 	// ===== END: shared by all implementations
 
 	// ===== START: username(email) and password options
+	EnableVerification               bool
 	FuncEmailTemplatePasswordRestore func(userID string, passwordRestoreLink string) string // optional
+	FuncEmailTemplateRegisterCode    func(userID string, passwordRestoreLink string) string // optional
 	FuncEmailSend                    func(userID string, emailSubject string, emailBody string) (err error)
 	FuncUserFindByUsername           func(username string, firstName string, lastName string) (userID string, err error)
 	FuncUserLogin                    func(username string, password string) (userID string, err error)

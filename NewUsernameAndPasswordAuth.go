@@ -3,8 +3,6 @@ package auth
 import "errors"
 
 func NewUsernameAndPasswordAuth(config ConfigUsernameAndPassword) (*Auth, error) {
-	auth := &Auth{}
-
 	if config.Endpoint == "" {
 		return nil, errors.New("auth: endpoint is required")
 	}
@@ -57,11 +55,9 @@ func NewUsernameAndPasswordAuth(config ConfigUsernameAndPassword) (*Auth, error)
 		return nil, errors.New("auth: UseCookies and UseLocalStorage cannot be both false")
 	}
 
-	if config.FuncLayout == nil {
-		config.FuncLayout = auth.layout
-	}
-
+	auth := &Auth{}
 	auth.enableRegistration = config.EnableRegistration
+	auth.enableVerification = config.EnableVerification
 	auth.endpoint = config.Endpoint
 	auth.passwordless = false
 	auth.urlRedirectOnSuccess = config.UrlRedirectOnSuccess
@@ -80,9 +76,19 @@ func NewUsernameAndPasswordAuth(config ConfigUsernameAndPassword) (*Auth, error)
 	auth.funcUserFindByUsername = config.FuncUserFindByUsername
 	auth.funcUserStoreAuthToken = config.FuncUserStoreAuthToken
 
+	// If no user defined layout is set, use default
+	if auth.funcLayout == nil {
+		auth.funcLayout = auth.layout
+	}
+
 	// If no user defined email template is set, use default
 	if auth.funcEmailTemplatePasswordRestore == nil {
 		auth.funcEmailTemplatePasswordRestore = emailTemplatePasswordChange
+	}
+
+	// If no user defined email template is set, use default
+	if auth.funcEmailTemplateRegisterCode == nil {
+		auth.funcEmailTemplateRegisterCode = emailRegisterCodeTemplate
 	}
 
 	return auth, nil

@@ -25,7 +25,9 @@ type Auth struct {
 	// ===== END: shared by all implementations
 
 	// ===== START: username(email) and password options
+	enableVerification               bool
 	funcEmailTemplatePasswordRestore func(userID string, passwordRestoreLink string) string // optional
+	funcEmailTemplateRegisterCode    func(email string, passwordRestoreLink string) string  // optional
 	funcEmailSend                    func(userID string, emailSubject string, emailBody string) (err error)
 	funcUserLogin                    func(username string, password string) (userID string, err error)
 	funcUserPasswordChange           func(username string, newPassword string) (err error)
@@ -104,12 +106,12 @@ func (a Auth) LinkPasswordReset(token string) string {
 	return link(a.endpoint, PathPasswordReset) + "?t=" + token
 }
 
-// LinkRegister - returns the regsitration URL
+// LinkRegister - returns the registration URL
 func (a Auth) LinkRegister() string {
 	return link(a.endpoint, PathRegister)
 }
 
-// LinkRegisterCodeVerify - returns the regsitration code verification URL
+// LinkRegisterCodeVerify - returns the registration code verification URL
 func (a Auth) LinkRegisterCodeVerify() string {
 	return link(a.endpoint, PathRegisterCodeVerify)
 }
