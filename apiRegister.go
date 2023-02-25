@@ -107,7 +107,7 @@ func (a Auth) apiRegisterUsernameAndPassword(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	if a.enableVerification == false {
+	if !a.enableVerification {
 		err := a.funcUserRegister(email, password, first_name, last_name)
 
 		if err != nil {

@@ -2,10 +2,19 @@ package auth
 
 import (
 	"context"
-	"log"
 	"net/http"
 )
 
+// WebAppendUserIdIfExistsMiddleware appends the user ID to the context
+// if an authentication token exists in the requests. This middleware does
+// not have a side effect like for instance redirecting to the login
+// endpoint. This is why it is important to be added to places which
+// can be used by both guests and users (i.e. website pages), where authenticated
+// users may have some extra privileges
+//
+// If you need to redirect the user if authentication token not found,
+// or the user does not exist, take a look at the WebAuthOrRedirectMiddleware
+// middleware, which does exactly that
 func (a Auth) WebAppendUserIdIfExistsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -18,8 +27,6 @@ func (a Auth) WebAppendUserIdIfExistsMiddleware(next http.Handler) http.Handler 
 				next.ServeHTTP(w, r)
 				return
 			}
-
-			log.Println("USERID", userID)
 
 			ctx := context.WithValue(r.Context(), AuthenticatedUserID{}, userID)
 			next.ServeHTTP(w, r.WithContext(ctx))

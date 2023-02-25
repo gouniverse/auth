@@ -5,6 +5,14 @@ import (
 	"net/http"
 )
 
+// WebAuthOrRedirectMiddleware checks that an authentication token
+// exists, and then finds the userID based on it. On success appends
+// the user ID to the context. On failure it will redirect the user
+// to the login endpoint to reauthenticate.
+//
+// If you need to only find if the authentication token is successful
+// without redirection please use the WebAppendUserIdIfExistsMiddleware
+// which does exactly that without side effects
 func (a Auth) WebAuthOrRedirectMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
