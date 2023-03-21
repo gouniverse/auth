@@ -40,10 +40,27 @@ func (a Auth) apiRegisterCodeVerify(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	email := register.(map[string]interface{})["email"].(string)
-	firstName := register.(map[string]interface{})["first_name"].(string)
-	lastName := register.(map[string]interface{})["last_name"].(string)
-	password := register.(map[string]interface{})["password"].(string)
+	registerMap := register.(map[string]interface{})
+
+	email := ""
+	if val, ok := registerMap["email"]; ok {
+		email = val.(string)
+	}
+
+	firstName := ""
+	if val, ok := registerMap["first_name"]; ok {
+		firstName = val.(string)
+	}
+
+	lastName := ""
+	if val, ok := registerMap["last_name"]; ok {
+		lastName = val.(string)
+	}
+
+	password := ""
+	if val, ok := registerMap["password"]; ok {
+		password = val.(string)
+	}
 
 	var errRegister error = nil
 
