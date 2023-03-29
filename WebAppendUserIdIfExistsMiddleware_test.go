@@ -35,7 +35,7 @@ func TestBlockRobotsMiddlewareShouldPassForHomeWithoutSlash(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	req.AddCookie(&http.Cookie{Name: "authtoken", Value: "123456"})
+	req.AddCookie(&http.Cookie{Name: CookieName, Value: "123456"})
 
 	testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		value := r.Context().Value(AuthenticatedUserID{})

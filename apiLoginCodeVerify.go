@@ -3,7 +3,6 @@ package auth
 import (
 	"net/http"
 	"strings"
-	"time"
 
 	"github.com/gouniverse/api"
 	"github.com/gouniverse/utils"
@@ -71,20 +70,7 @@ func (a Auth) authenticateViaUsername(w http.ResponseWriter, r *http.Request, us
 	}
 
 	if a.useCookies {
-		secureCookie := true
-		if r.TLS == nil {
-			secureCookie = false // the scheme is HTTP
-		}
-		expiration := time.Now().Add(365 * 24 * time.Hour)
-		cookie := http.Cookie{
-			Name:     "authtoken",
-			Value:    token,
-			Expires:  expiration,
-			HttpOnly: false,
-			Secure:   secureCookie,
-			Path:     "/",
-		}
-		http.SetCookie(w, &cookie)
+		authCookieSet(w, r, token)
 	}
 
 	api.Respond(w, r, api.SuccessWithData("login success", map[string]interface{}{

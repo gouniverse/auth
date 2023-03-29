@@ -15,7 +15,7 @@ import (
 //  3. Request param "token"
 func authTokenRetrieve(r *http.Request, useCookies bool) string {
 	if useCookies {
-		authTokenFromCookie, err := r.Cookie("authtoken")
+		authTokenFromCookie, err := r.Cookie(CookieName)
 		if err != nil {
 			if err != http.ErrNoCookie {
 				log.Println(err.Error())

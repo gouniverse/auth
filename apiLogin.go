@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/http"
 	"strings"
-	"time"
 
 	"github.com/gouniverse/api"
 	"github.com/gouniverse/utils"
@@ -95,16 +94,7 @@ func (a Auth) apiLoginUsernameAndPassword(w http.ResponseWriter, r *http.Request
 	}
 
 	if a.useCookies {
-		expiration := time.Now().Add(365 * 24 * time.Hour)
-		cookie := http.Cookie{
-			Name:     "authtoken",
-			Value:    token,
-			Expires:  expiration,
-			HttpOnly: false,
-			Secure:   true,
-			Path:     "/",
-		}
-		http.SetCookie(w, &cookie)
+		authCookieSet(w, r, token)
 	}
 
 	api.Respond(w, r, api.SuccessWithData("login success", map[string]interface{}{

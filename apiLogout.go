@@ -2,7 +2,6 @@ package auth
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/gouniverse/api"
 )
@@ -31,16 +30,7 @@ func (a Auth) apiLogout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if a.useCookies {
-		expiration := time.Now().Add(-365 * 24 * time.Hour)
-		cookie := http.Cookie{
-			Name:     "authtoken",
-			Value:    "none",
-			Expires:  expiration,
-			HttpOnly: false,
-			Secure:   true,
-			Path:     "/",
-		}
-		http.SetCookie(w, &cookie)
+		authCookieRemove(w, r)
 	}
 
 	api.Respond(w, r, api.Success("logout success"))
