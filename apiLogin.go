@@ -57,47 +57,18 @@ func (a Auth) apiLoginUsernameAndPassword(w http.ResponseWriter, r *http.Request
 	email := strings.Trim(utils.Req(r, "email", ""), " ")
 	password := strings.Trim(utils.Req(r, "password", ""), " ")
 
-	if email == "" {
-		api.Respond(w, r, api.Error("Email is required field"))
-		return
-	}
+	response := a.LoginWithUsernameAndPassword(email, password)
 
-	if password == "" {
-		api.Respond(w, r, api.Error("Password is required field"))
-		return
-	}
-
-	if !validator.IsEmail(email) {
-		api.Respond(w, r, api.Error("This is not a valid email: "+email))
-		return
-	}
-
-	userID, err := a.funcUserLogin(email, password)
-
-	if err != nil {
-		api.Respond(w, r, api.Error("authentication failed. "+err.Error()))
-		return
-	}
-
-	if userID == "" {
-		api.Respond(w, r, api.Error("authentication failed. user not found"))
-		return
-	}
-
-	token := utils.StrRandom(32)
-
-	errSession := a.funcUserStoreAuthToken(token, userID)
-
-	if errSession != nil {
-		api.Respond(w, r, api.Error("token store failed. "+errSession.Error()))
+	if response.ErrorMessage != "" {
+		api.Respond(w, r, api.Error(response.ErrorMessage))
 		return
 	}
 
 	if a.useCookies {
-		authCookieSet(w, r, token)
+		AuthCookieSet(w, r, response.Token)
 	}
 
-	api.Respond(w, r, api.SuccessWithData("login success", map[string]interface{}{
-		"token": token,
+	api.Respond(w, r, api.SuccessWithData(response.SuccessMessage, map[string]any{
+		"token": response.Token,
 	}))
 }

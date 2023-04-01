@@ -7,7 +7,6 @@ import (
 
 	"github.com/gouniverse/api"
 	"github.com/gouniverse/utils"
-	validator "github.com/gouniverse/validator"
 )
 
 func (a Auth) apiRegister(w http.ResponseWriter, r *http.Request) {
@@ -77,78 +76,12 @@ func (a Auth) apiRegisterUsernameAndPassword(w http.ResponseWriter, r *http.Requ
 	first_name := strings.Trim(utils.Req(r, "first_name", ""), " ")
 	last_name := strings.Trim(utils.Req(r, "last_name", ""), " ")
 
-	if first_name == "" {
-		api.Respond(w, r, api.Error("First name is required field"))
+	response := a.RegisterWithUsernameAndPassword(email, password, first_name, last_name)
+
+	if response.ErrorMessage != "" {
+		api.Respond(w, r, api.Error(response.ErrorMessage))
 		return
 	}
 
-	if last_name == "" {
-		api.Respond(w, r, api.Error("Last name is required field"))
-		return
-	}
-
-	if email == "" {
-		api.Respond(w, r, api.Error("Email is required field"))
-		return
-	}
-
-	if password == "" {
-		api.Respond(w, r, api.Error("Password is required field"))
-		return
-	}
-
-	if !validator.IsEmail(email) {
-		api.Respond(w, r, api.Error("This is not a valid email: "+email))
-		return
-	}
-
-	if a.funcUserRegister == nil {
-		api.Respond(w, r, api.Error("registration failed. FuncUserRegister function not defined"))
-		return
-	}
-
-	if !a.enableVerification {
-		err := a.funcUserRegister(email, password, first_name, last_name)
-
-		if err != nil {
-			api.Respond(w, r, api.Error("registration failed. "+err.Error()))
-			return
-		}
-
-		api.Respond(w, r, api.SuccessWithData("registration success", map[string]interface{}{}))
-		return
-	}
-
-	verificationCode := utils.StrRandomFromGamma(LoginCodeLength, LoginCodeGamma)
-
-	json, errJson := utils.ToJSON(map[string]string{
-		"email":      email,
-		"first_name": first_name,
-		"last_name":  last_name,
-		"password":   password,
-	})
-
-	if errJson != nil {
-		api.Respond(w, r, api.Error("Error serializing data"))
-		return
-	}
-
-	errTempTokenSave := a.funcTemporaryKeySet(verificationCode, json, 3600)
-
-	if errTempTokenSave != nil {
-		api.Respond(w, r, api.Error("token store failed. "+errTempTokenSave.Error()))
-		return
-	}
-
-	emailContent := a.funcEmailTemplateRegisterCode(email, verificationCode)
-
-	errEmailSent := a.funcEmailSend(email, "Registration Code", emailContent)
-
-	if errEmailSent != nil {
-		log.Println(errEmailSent)
-		api.Respond(w, r, api.Error("Registration code failed to be send. Please try again later"))
-		return
-	}
-
-	api.Respond(w, r, api.Success("Registration code was sent successfully"))
+	api.Respond(w, r, api.Success(response.SuccessMessage))
 }

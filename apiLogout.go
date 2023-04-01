@@ -30,7 +30,7 @@ func (a Auth) apiLogout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if a.useCookies {
-		authCookieRemove(w, r)
+		AuthCookieRemove(w, r)
 	}
 
 	api.Respond(w, r, api.Success("logout success"))

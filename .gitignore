@@ -18,3 +18,4 @@ development/.env
 development/database.db
 development/temp/
 development/bin/air
+oryxBuildBinary

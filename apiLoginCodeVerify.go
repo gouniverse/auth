@@ -70,7 +70,7 @@ func (a Auth) authenticateViaUsername(w http.ResponseWriter, r *http.Request, us
 	}
 
 	if a.useCookies {
-		authCookieSet(w, r, token)
+		AuthCookieSet(w, r, token)
 	}
 
 	api.Respond(w, r, api.SuccessWithData("login success", map[string]interface{}{

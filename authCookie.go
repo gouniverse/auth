@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func authCookieSet(w http.ResponseWriter, r *http.Request, token string) {
+func AuthCookieSet(w http.ResponseWriter, r *http.Request, token string) {
 	secureCookie := true
 	if r.TLS == nil {
 		secureCookie = false // the scheme is HTTP
@@ -22,7 +22,7 @@ func authCookieSet(w http.ResponseWriter, r *http.Request, token string) {
 	http.SetCookie(w, &cookie)
 }
 
-func authCookieRemove(w http.ResponseWriter, r *http.Request) {
+func AuthCookieRemove(w http.ResponseWriter, r *http.Request) {
 	secureCookie := true
 	if r.TLS == nil {
 		secureCookie = false // the scheme is HTTP
