@@ -18,7 +18,7 @@ import (
 func (a Auth) WebAppendUserIdIfExistsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		authToken := authTokenRetrieve(r, a.useCookies)
+		authToken := AuthTokenRetrieve(r, a.useCookies)
 
 		if authToken != "" {
 			userID, err := a.funcUserFindByAuthToken(authToken)

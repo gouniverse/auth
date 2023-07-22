@@ -11,7 +11,7 @@ import (
 func (a Auth) AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		authToken := authTokenRetrieve(r, a.useCookies)
+		authToken := AuthTokenRetrieve(r, a.useCookies)
 
 		if authToken == "" {
 			if a.useCookies {

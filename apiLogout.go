@@ -7,7 +7,7 @@ import (
 )
 
 func (a Auth) apiLogout(w http.ResponseWriter, r *http.Request) {
-	authToken := authTokenRetrieve(r, a.useCookies)
+	authToken := AuthTokenRetrieve(r, a.useCookies)
 
 	if authToken == "" {
 		api.Respond(w, r, api.Success("logout success"))
