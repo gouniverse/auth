@@ -8,7 +8,7 @@ import (
 	"github.com/gouniverse/utils"
 )
 
-func (a Auth) apiPaswordReset(w http.ResponseWriter, r *http.Request) {
+func (a Auth) apiPasswordReset(w http.ResponseWriter, r *http.Request) {
 	token := strings.Trim(utils.Req(r, "token", ""), " ")
 	password := strings.Trim(utils.Req(r, "password", ""), " ")
 	passwordConfirm := strings.Trim(utils.Req(r, "password_confirm", ""), " ")

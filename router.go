@@ -31,8 +31,6 @@ func (a Auth) AuthHandler(w http.ResponseWriter, r *http.Request) {
 
 	uri = strings.TrimSuffix(uri, "/") // Remove trailing slash
 
-	// log.Println(uri)
-
 	if strings.Contains(uri, "?") {
 		uri = utils.StrLeftFrom(uri, "?")
 	}
@@ -67,11 +65,10 @@ func (a Auth) AuthHandler(w http.ResponseWriter, r *http.Request) {
 		path = PathPasswordReset
 	}
 
-	// log.Println("Path: " + path)
-
 	ctx := context.WithValue(r.Context(), keyEndpoint, r.URL.Path)
 
 	routeFunc := a.getRoute(path)
+
 	routeFunc(w, r.WithContext(ctx))
 }
 
@@ -83,8 +80,8 @@ func (a Auth) getRoute(route string) func(w http.ResponseWriter, r *http.Request
 		PathApiLogout:             a.apiLogout,
 		PathApiRegister:           a.apiRegister,
 		PathApiRegisterCodeVerify: a.apiRegisterCodeVerify,
-		PathApiResetPassword:      a.apiPaswordReset,
-		PathApiRestorePassword:    a.apiPaswordRestore,
+		PathApiResetPassword:      a.apiPasswordReset,
+		PathApiRestorePassword:    a.apiPasswordRestore,
 		PathLogin:                 a.pageLogin,
 		PathLoginCodeVerify:       a.pageLoginCodeVerify,
 		PathLogout:                a.pageLogout,
@@ -100,8 +97,6 @@ func (a Auth) getRoute(route string) func(w http.ResponseWriter, r *http.Request
 	if val, ok := routes[route]; ok {
 		return val
 	}
-
-	//log.Println("Not found: " + route)
 
 	return a.notFoundHandler
 }

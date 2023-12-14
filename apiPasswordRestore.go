@@ -9,7 +9,7 @@ import (
 	"github.com/gouniverse/utils"
 )
 
-func (a Auth) apiPaswordRestore(w http.ResponseWriter, r *http.Request) {
+func (a Auth) apiPasswordRestore(w http.ResponseWriter, r *http.Request) {
 	email := strings.Trim(utils.Req(r, "email", ""), " ")
 	firstName := strings.Trim(utils.Req(r, "first_name", ""), " ")
 	lastName := strings.Trim(utils.Req(r, "last_name", ""), " ")
