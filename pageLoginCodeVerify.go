@@ -21,21 +21,21 @@ func (a Auth) pageLoginCodeVerifyContent() string {
 	alertDanger := hb.NewDiv().Class("alert alert-danger").Style("display:none")
 	alertGroup := hb.NewDiv().Class("alert-group").AddChild(alertSuccess).AddChild(alertDanger)
 
-	header := hb.NewHeading5().HTML("Login Code Verification").Attr("style", "margin:0px;")
-	infoParagraph := hb.NewParagraph().Class("text-info").HTML("We sent you a login code to your email. Please check your mailbox")
-	verificationCodeLabel := hb.NewLabel().HTML("Verification code")
-	verificationCodeInput := hb.NewInput().Attr("class", "form-control").Attr("name", "verification_code").Attr("placeholder", "Enter verification code")
-	verificationCodeFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(verificationCodeLabel).AddChild(verificationCodeInput)
+	header := hb.NewHeading5().Text("Login Code Verification").Style("margin:0px;")
+	infoParagraph := hb.NewParagraph().Class("text-info").Text("We sent you a login code to your email. Please check your mailbox")
+	verificationCodeLabel := hb.NewLabel().Text("Verification code")
+	verificationCodeInput := hb.NewInput().Class("form-control").Name("verification_code").Placeholder("Enter verification code")
+	verificationCodeFormGroup := hb.NewDiv().Class("form-group mt-3").Child(verificationCodeLabel).AddChild(verificationCodeInput)
 	buttonLogin := hb.NewButton().Class("ButtonLogin btn btn-lg btn-success btn-block w-100 text-white").Children([]*hb.Tag{
 		icons.Icon("bi-send", 18, 18, "white").Style("margin-right:8px;margin-top:-2px;"),
-		hb.NewSpan().HTML("Login"),
+		hb.NewSpan().Text("Login"),
 		hb.NewDiv().Class("ImgLoading spinner-border spinner-border-sm text-light").Style("display:none;margin-left:10px;"),
-	}).Attr("onclick", "loginFormValidate()")
-	buttonLoginFormGroup := hb.NewDiv().Attr("class", "form-group mt-3 mb-3").AddChild(buttonLogin)
-	buttonBack := hb.NewHyperlink().Attr("class", "btn btn-info text-white float-start").Children([]*hb.Tag{
+	}).OnClick("loginFormValidate()")
+	buttonLoginFormGroup := hb.NewDiv().Class("form-group mt-3 mb-3").AddChild(buttonLogin)
+	buttonBack := hb.NewHyperlink().Class("btn btn-info text-white float-start").Children([]*hb.Tag{
 		icons.Icon("bi-chevron-left", 16, 16, "white").Style("margin-right:8px;margin-top:-2px;"),
-		hb.NewSpan().HTML("Resend code"),
-	}).Attr("href", a.LinkLogin())
+		hb.NewSpan().Text("Resend code"),
+	}).Href(a.LinkLogin())
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Class("card-header").Child(header)

@@ -11,7 +11,7 @@ func (a Auth) layout(content string) string {
 	}
 	`).ToHTML()
 	h := hb.NewSection().
-		Attr("style", "padding:120px 0px").
+		Style("padding:120px 0px").
 		AddChild(hb.NewHTML(content))
 	return font + style + h.ToHTML()
 }

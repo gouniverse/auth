@@ -16,50 +16,52 @@ func (a Auth) pagePasswordRestore(w http.ResponseWriter, r *http.Request) {
 
 func (a Auth) pagePasswordRestoreContent() string {
 	// Elements for the form
-	alertSuccess := hb.NewDiv().Attr("class", "alert alert-success").Attr("style", "display:none")
-	alertDanger := hb.NewDiv().Attr("class", "alert alert-danger").Attr("style", "display:none")
-	alertGroup := hb.NewDiv().Attr("class", "alert-group").AddChild(alertSuccess).AddChild(alertDanger)
+	alertSuccess := hb.NewDiv().Class("alert alert-success").Style("display:none")
+	alertDanger := hb.NewDiv().Class("alert alert-danger").Style("display:none")
+	alertGroup := hb.NewDiv().Class("alert-group").AddChild(alertSuccess).AddChild(alertDanger)
 
 	header := hb.NewHeading5().
-		Attr("style", "margin:0px;").
+		Style("margin:0px;").
 		HTML("Restore password")
-	firstNameLabel := hb.NewLabel().HTML("First Name")
-	firstNameInput := hb.NewInput().Attr("class", "form-control").Attr("name", "first_name").Attr("placeholder", "Enter first name")
-	firstNameFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(firstNameLabel).AddChild(firstNameInput)
-	lastNameLabel := hb.NewLabel().HTML("Last Name")
-	lastNameInput := hb.NewInput().Attr("class", "form-control").Attr("name", "last_name").Attr("placeholder", "Enter last name")
-	lastNameFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(lastNameLabel).AddChild(lastNameInput)
-	emailLabel := hb.NewLabel().HTML("E-mail Address")
-	emailInput := hb.NewInput().Attr("class", "form-control").Attr("name", "email").Attr("placeholder", "Enter e-mail address")
-	emailFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(emailLabel).AddChild(emailInput)
+	firstNameLabel := hb.NewLabel().Text("First Name")
+	firstNameInput := hb.NewInput().Class("form-control").Name("first_name").Placeholder("Enter first name")
+	firstNameFormGroup := hb.NewDiv().Class("form-group mt-3").AddChild(firstNameLabel).AddChild(firstNameInput)
+	lastNameLabel := hb.NewLabel().Text("Last Name")
+	lastNameInput := hb.NewInput().Class("form-control").Name("last_name").Placeholder("Enter last name")
+	lastNameFormGroup := hb.NewDiv().Class("form-group mt-3").AddChild(lastNameLabel).AddChild(lastNameInput)
+	emailLabel := hb.NewLabel().Text("E-mail Address")
+	emailInput := hb.NewInput().Class("form-control").Name("email").Placeholder("Enter e-mail address")
+	emailFormGroup := hb.NewDiv().Class("form-group mt-3").AddChild(emailLabel).AddChild(emailInput)
+
 	buttonContinue := hb.NewButton().
-		Attr("class", "ButtonContinue btn btn-lg btn-success btn-block w-100").
-		Attr("onclick", "passwordRestoreFormValidate()").
+		Class("ButtonContinue btn btn-lg btn-success btn-block w-100").
+		OnClick("passwordRestoreFormValidate()").
 		HTML("Send Password Reset Link")
+
 	buttonContinueFormGroup := hb.NewDiv().
-		Attr("class", "form-group mt-3 mb-3").
-		AddChild(buttonContinue)
+		Class("form-group mt-3 mb-3").
+		Child(buttonContinue)
+
 	buttonLogin := hb.NewHyperlink().
-		Attr("class", "btn btn-info float-start").
-		Attr("href", a.LinkLogin()).
+		Class("btn btn-info float-start").
+		Href(a.LinkLogin()).
 		HTML("Login")
+
 	buttonRegister := hb.NewHyperlink().
-		Attr("class", "btn btn-warning float-end").
-		Attr("href", a.LinkRegister()).
+		Class("btn btn-warning float-end").
+		Href(a.LinkRegister()).
 		HTML("Register")
 
-	//form := hb.NewForm().Attr("method", "POST")
-
 	// Add elements in a card
-	cardHeader := hb.NewDiv().Attr("class", "card-header").AddChild(header)
-	cardBody := hb.NewDiv().Attr("class", "card-body").AddChildren([]*hb.Tag{
+	cardHeader := hb.NewDiv().Class("card-header").AddChild(header)
+	cardBody := hb.NewDiv().Class("card-body").AddChildren([]*hb.Tag{
 		alertGroup,
 		firstNameFormGroup,
 		lastNameFormGroup,
 		emailFormGroup,
 		buttonContinueFormGroup,
 	})
-	cardFooter := hb.NewDiv().Attr("class", "card-footer").AddChildren([]*hb.Tag{
+	cardFooter := hb.NewDiv().Class("card-footer").AddChildren([]*hb.Tag{
 		buttonLogin,
 	})
 
@@ -67,10 +69,10 @@ func (a Auth) pagePasswordRestoreContent() string {
 		cardFooter.AddChild(buttonRegister)
 	}
 
-	card := hb.NewDiv().Attr("class", "card card-default").Attr("style", "margin:0 auto;max-width: 360px;")
+	card := hb.NewDiv().Class("card card-default").Style("margin:0 auto;max-width: 360px;")
 	card.AddChild(cardHeader).AddChild(cardBody).AddChild(cardFooter)
 
-	container := hb.NewDiv().Attr("class", "container").
+	container := hb.NewDiv().Class("container").
 		AddChild(card)
 
 	return container.ToHTML()

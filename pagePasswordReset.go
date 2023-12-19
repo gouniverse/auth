@@ -34,32 +34,31 @@ func (a Auth) pagePasswordResetContent(token string, errorMessage string) string
 	urlLogin := a.LinkLogin()
 	urlRegister := a.LinkRegister()
 	// Elements for the form
-	alertSuccess := hb.NewDiv().Attr("class", "alert alert-success").Attr("style", "display:none")
-	alertDanger := hb.NewDiv().Attr("class", "alert alert-danger")
+	alertSuccess := hb.NewDiv().Class("alert alert-success").Style("display:none")
+	alertDanger := hb.NewDiv().Class("alert alert-danger")
 	if errorMessage != "" {
-		alertDanger.HTML(errorMessage)
+		alertDanger.Text(errorMessage)
 	} else {
-		alertDanger.Attr("style", "display:none")
+		alertDanger.Style("display:none")
 	}
-	alertGroup := hb.NewDiv().Attr("class", "alert-group").AddChild(alertSuccess).AddChild(alertDanger)
+	alertGroup := hb.NewDiv().Class("alert-group").AddChild(alertSuccess).AddChild(alertDanger)
 
-	header := hb.NewHeading5().HTML("Reset Password").Attr("style", "margin:0px;")
-	tokenInput := hb.NewInput().Attr("name", "token").Attr("value", token)
-	passwordLabel := hb.NewLabel().HTML("New Password")
-	passwordInput := hb.NewInput().Attr("class", "form-control").Attr("name", "password").Attr("placeholder", "Enter new password")
-	passwordFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(passwordLabel).AddChild(passwordInput)
-	passwordConfirmLabel := hb.NewLabel().HTML("Confirm New Password")
-	passwordConfirmInput := hb.NewInput().Attr("class", "form-control").Attr("name", "password_confirm").Attr("placeholder", "Enter confirnation of new password")
-	passwordConfirmFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(passwordConfirmLabel).AddChild(passwordConfirmInput)
-	buttonContinue := hb.NewButton().Attr("class", "ButtonContinue btn btn-lg btn-success btn-block w-100").HTML("Reset Password").Attr("onclick", "resetFormValidate()")
-	buttonContinueFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(buttonContinue)
-	buttonLogin := hb.NewHyperlink().Attr("class", "btn btn-info float-start").HTML("Login").Attr("href", a.LinkLogin())
-	buttonRegister := hb.NewHyperlink().Attr("class", "btn btn-warning float-end").HTML("Register").Attr("href", a.LinkRegister())
-	//form := hb.NewForm().Attr("method", "POST")
+	header := hb.NewHeading5().Text("Reset Password").Style("margin:0px;")
+	tokenInput := hb.NewInput().Name("token").Value(token)
+	passwordLabel := hb.NewLabel().Text("New Password")
+	passwordInput := hb.NewInput().Class("form-control").Name("password").Placeholder("Enter new password")
+	passwordFormGroup := hb.NewDiv().Class("form-group mt-3").Child(passwordLabel).Child(passwordInput)
+	passwordConfirmLabel := hb.NewLabel().Text("Confirm New Password")
+	passwordConfirmInput := hb.NewInput().Class("form-control").Name("password_confirm").Placeholder("Enter confirmation of new password")
+	passwordConfirmFormGroup := hb.NewDiv().Class("form-group mt-3").Child(passwordConfirmLabel).Child(passwordConfirmInput)
+	buttonContinue := hb.NewButton().Class("ButtonContinue btn btn-lg btn-success btn-block w-100").Text("Reset Password").OnClick("resetFormValidate()")
+	buttonContinueFormGroup := hb.NewDiv().Class("form-group mt-3").AddChild(buttonContinue)
+	buttonLogin := hb.NewHyperlink().Class("btn btn-info float-start").Text("Login").Href(a.LinkLogin())
+	buttonRegister := hb.NewHyperlink().Class("btn btn-warning float-end").Text("Register").Href(a.LinkRegister())
 
 	// Add elements in a card
-	cardHeader := hb.NewDiv().Attr("class", "card-header").AddChild(header)
-	cardBody := hb.NewDiv().Attr("class", "card-body").AddChildren([]*hb.Tag{
+	cardHeader := hb.NewDiv().Class("card-header").AddChild(header)
+	cardBody := hb.NewDiv().Class("card-body").AddChildren([]*hb.Tag{
 		alertGroup,
 	})
 
@@ -69,13 +68,13 @@ func (a Auth) pagePasswordResetContent(token string, errorMessage string) string
 		cardBody.AddChild(passwordConfirmFormGroup)
 		cardBody.AddChild(buttonContinueFormGroup)
 	} else {
-		cardBody.AddChild(hb.NewParagraph().HTML("Sorry, there was an error processing your request. Please select one of the following options:"))
-		cardBody.AddChild(hb.NewParagraph().AddChild(hb.NewHyperlink().Attr("href", urlPasswordRestore).HTML("request a reset of your password")))
-		cardBody.AddChild(hb.NewParagraph().AddChild(hb.NewHyperlink().Attr("href", urlLogin).HTML("login to the system")))
-		cardBody.AddChild(hb.NewParagraph().AddChild(hb.NewHyperlink().Attr("href", urlRegister).HTML("create a new account")))
+		cardBody.AddChild(hb.NewParagraph().Text("Sorry, there was an error processing your request. Please select one of the following options:"))
+		cardBody.AddChild(hb.NewParagraph().AddChild(hb.NewHyperlink().Href(urlPasswordRestore).Text("request a reset of your password")))
+		cardBody.AddChild(hb.NewParagraph().AddChild(hb.NewHyperlink().Href(urlLogin).Text("login to the system")))
+		cardBody.AddChild(hb.NewParagraph().AddChild(hb.NewHyperlink().Href(urlRegister).Text("create a new account")))
 	}
 
-	cardFooter := hb.NewDiv().Attr("class", "card-footer").AddChildren([]*hb.Tag{
+	cardFooter := hb.NewDiv().Class("card-footer").AddChildren([]*hb.Tag{
 		buttonLogin,
 	})
 
@@ -84,16 +83,12 @@ func (a Auth) pagePasswordResetContent(token string, errorMessage string) string
 	}
 
 	card := hb.NewDiv().
-		Attr("class", "card card-default").
-		Attr("style", "margin:0 auto;max-width: 360px;")
+		Class("card card-default").
+		Style("margin:0 auto;max-width: 360px;")
 
 	card.AddChild(cardHeader).AddChild(cardBody).AddChild(cardFooter)
 
-	container := hb.NewDiv().Attr("class", "container")
-	// heading := hb.NewHeading1().Attr("class", "text-center").HTML("Change Password")
-
-	// container.AddChild(heading)
-	container.AddChild(card)
+	container := hb.NewDiv().Class("container").Child(card)
 
 	return container.ToHTML()
 }

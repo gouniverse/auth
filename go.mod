@@ -19,13 +19,13 @@ require (
 require (
 	github.com/darkoatanasovski/htmltags v1.0.0
 	github.com/gouniverse/api v1.5.0
-	github.com/gouniverse/hb v1.68.0
+	github.com/gouniverse/hb v1.71.0
 	github.com/gouniverse/utils v1.35.0
 	github.com/gouniverse/validator v0.11.0
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
-	github.com/tdewolff/minify/v2 v2.20.9 // indirect
-	github.com/tdewolff/parse/v2 v2.7.6 // indirect
+	github.com/tdewolff/minify/v2 v2.20.10 // indirect
+	github.com/tdewolff/parse/v2 v2.7.7 // indirect
 	golang.org/x/net v0.19.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 )

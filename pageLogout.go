@@ -20,9 +20,9 @@ func (a Auth) pageLogoutContent() string {
 	alertDanger := hb.NewDiv().Class("alert alert-danger").Style("display:none")
 	alertGroup := hb.NewDiv().Class("alert-group").AddChild(alertSuccess).AddChild(alertDanger)
 
-	header := hb.NewHeading5().HTML("Sign out").Style("margin:0px;")
-	buttonContinue := hb.NewButton().Class("btn btn-lg btn-success btn-block w-100").HTML("Logout").Attr("onclick", "logoutFormValidate()")
-	buttonContinueFormGroup := hb.NewDiv().Attr("class", "form-group mt-3").AddChild(buttonContinue)
+	header := hb.NewHeading5().Text("Sign out").Style("margin:0px;")
+	buttonContinue := hb.NewButton().Class("btn btn-lg btn-success btn-block w-100").Text("Logout").OnClick("logoutFormValidate()")
+	buttonContinueFormGroup := hb.NewDiv().Class("form-group mt-3").AddChild(buttonContinue)
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Class("card-header").AddChild(header)

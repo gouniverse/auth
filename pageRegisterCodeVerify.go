@@ -21,13 +21,13 @@ func (a Auth) pageRegisterCodeVerifyContent() string {
 	alertDanger := hb.NewDiv().Class("alert alert-danger").Style("display:none")
 	alertGroup := hb.NewDiv().Class("alert-group").AddChild(alertSuccess).AddChild(alertDanger)
 
-	header := hb.NewHeading5().HTML("Registration Code Verification").Style("margin:0px;")
+	header := hb.NewHeading5().Text("Registration Code Verification").Style("margin:0px;")
 
-	verificationCodeLabel := hb.NewLabel().HTML("Verification code")
+	verificationCodeLabel := hb.NewLabel().Text("Verification code")
 	verificationCodeInput := hb.NewInput().
 		Class("form-control").
-		Attr("name", "verification_code").
-		Attr("placeholder", "Enter verification code")
+		Name("verification_code").
+		Placeholder("Enter verification code")
 	verificationCodeFormGroup := hb.NewDiv().
 		Class("form-group mt-3").
 		Child(verificationCodeLabel).
@@ -36,7 +36,7 @@ func (a Auth) pageRegisterCodeVerifyContent() string {
 		Class("btn btn-lg btn-success btn-block w-100").
 		Children([]*hb.Tag{
 			icons.Icon("bi-person-circle", 24, 24, "white").Style("margin-right:8px;margin-top:-2px;"),
-			hb.NewSpan().HTML("Verify Registration"),
+			hb.NewSpan().Text("Verify Registration"),
 		}).
 		OnClick("registerCodeFormValidate()")
 	buttonVerifyFormGroup := hb.NewDiv().
@@ -44,8 +44,8 @@ func (a Auth) pageRegisterCodeVerifyContent() string {
 		AddChild(buttonVerify)
 	buttonBack := hb.NewButton().Class("btn btn-info text-white float-start").Children([]*hb.Tag{
 		icons.Icon("bi-chevron-left", 16, 16, "white").Style("margin-right:8px;margin-top:-2px;"),
-		hb.NewSpan().HTML("Resend code"),
-	}).Attr("href", a.LinkRegister())
+		hb.NewSpan().Text("Resend code"),
+	}).Href(a.LinkRegister())
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Class("card-header").Child(header)
