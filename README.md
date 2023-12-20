@@ -4,7 +4,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/gouniverse/auth)](https://goreportcard.com/report/github.com/gouniverse/auth)
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/gouniverse/auth)](https://pkg.go.dev/github.com/gouniverse/auth)
 
-<img src="logo.jpg" width="100" />
+<img src="logo.jpg" width="100%" />
 
 Authentication library for Golang with two separate flows: 
 
