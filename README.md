@@ -4,6 +4,8 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/gouniverse/auth)](https://goreportcard.com/report/github.com/gouniverse/auth)
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/gouniverse/auth)](https://pkg.go.dev/github.com/gouniverse/auth)
 
+<img src="logo.jpg" width="100" />
+
 Authentication library for Golang with two separate flows: 
 
 1. Username/email and password - The user logs in via a username and password. Using email instead of username is also supported. These days most of the applications will use email instad of username, as it is more convenient for the user not having to remember a username.
