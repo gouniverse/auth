@@ -3,6 +3,8 @@ package auth
 import (
 	"context"
 	"net/http"
+
+	"github.com/gouniverse/utils"
 )
 
 // WebAuthOrRedirectMiddleware checks that an authentication token
@@ -23,7 +25,7 @@ func (a Auth) WebAuthOrRedirectMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		userID, err := a.funcUserFindByAuthToken(authToken)
+		userID, err := a.funcUserFindByAuthToken(authToken, utils.IP(r), r.UserAgent())
 
 		if err != nil {
 			http.Redirect(w, r, a.LinkLogin(), http.StatusTemporaryRedirect)

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gouniverse/api"
+	"github.com/gouniverse/utils"
 )
 
 func (a Auth) apiLogout(w http.ResponseWriter, r *http.Request) {
@@ -13,7 +14,7 @@ func (a Auth) apiLogout(w http.ResponseWriter, r *http.Request) {
 		api.Respond(w, r, api.Success("logout success"))
 	}
 
-	userID, errToken := a.funcUserFindByAuthToken(authToken)
+	userID, errToken := a.funcUserFindByAuthToken(authToken, utils.IP(r), r.UserAgent())
 
 	if errToken != nil {
 		api.Respond(w, r, api.Error("logout failed"))

@@ -11,7 +11,7 @@ type LoginUsernameAndPasswordResponse struct {
 	Token          string
 }
 
-func (a Auth) LoginWithUsernameAndPassword(email string, password string) (response LoginUsernameAndPasswordResponse) {
+func (a Auth) LoginWithUsernameAndPassword(email string, password string, userIP string, userAgent string) (response LoginUsernameAndPasswordResponse) {
 	if email == "" {
 		response.ErrorMessage = "Email is required field"
 		return response
@@ -41,7 +41,7 @@ func (a Auth) LoginWithUsernameAndPassword(email string, password string) (respo
 
 	token := utils.StrRandom(32)
 
-	errSession := a.funcUserStoreAuthToken(token, userID)
+	errSession := a.funcUserStoreAuthToken(token, userID, userIP, userAgent)
 
 	if errSession != nil {
 		response.ErrorMessage = "token store failed. " + errSession.Error()

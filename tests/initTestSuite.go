@@ -72,7 +72,7 @@ func (suite *initTestSuite) TestFuncUserFindByUsernameIsRequired() {
 		UrlRedirectOnSuccess:    "http://localhost/dashboard",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
 		FuncTemporaryKeySet:     func(key string, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByAuthToken: func(token string) (userID string, err error) { return "", nil },
+		FuncUserFindByAuthToken: func(token string, userIP string, userAgent string) (userID string, err error) { return "", nil },
 	})
 	assert.NotNil(suite.T(), err)
 	assert.Equal(suite.T(), "auth: FuncUserFindByUsername function is required", err.Error())
@@ -84,11 +84,11 @@ func (suite *initTestSuite) TestInitializationSuccess() {
 		UrlRedirectOnSuccess:    "http://localhost/dashboard",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
 		FuncTemporaryKeySet:     func(key string, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByAuthToken: func(token string) (userID string, err error) { return "", nil },
+		FuncUserFindByAuthToken: func(token string, userIP string, userAgent string) (userID string, err error) { return "", nil },
 		FuncUserFindByUsername:  func(username string, firstName string, lastName string) (userID string, err error) { return "", nil },
 		FuncUserLogin:           func(username string, password string) (userID string, err error) { return "", nil },
 		FuncUserLogout:          func(userID string) (err error) { return nil },
-		FuncUserStoreAuthToken:  func(sessionID string, userID string) (err error) { return nil },
+		FuncUserStoreAuthToken:  func(sessionID string, userID string, userIP string, userAgent string) (err error) { return nil },
 		FuncEmailSend:           func(userID string, emailSubject string, emailBody string) (err error) { return nil },
 		UseCookies:              true,
 		UseLocalStorage:         false,
@@ -123,11 +123,11 @@ func (suite *initTestSuite) newAuth() (*auth.Auth, error) {
 		UrlRedirectOnSuccess:    "http://localhost/dashboard",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
 		FuncTemporaryKeySet:     func(key string, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByAuthToken: func(token string) (userID string, err error) { return "", nil },
+		FuncUserFindByAuthToken: func(token string, userIP string, userAgent string) (userID string, err error) { return "", nil },
 		FuncUserFindByUsername:  func(username string, firstName string, lastName string) (userID string, err error) { return "", nil },
 		FuncUserLogin:           func(username string, password string) (userID string, err error) { return "", nil },
 		FuncUserLogout:          func(userID string) (err error) { return nil },
-		FuncUserStoreAuthToken:  func(sessionID string, userID string) (err error) { return nil },
+		FuncUserStoreAuthToken:  func(sessionID string, userID string, userIP string, userAgent string) (err error) { return nil },
 		FuncEmailSend:           func(userID string, emailSubject string, emailBody string) (err error) { return nil },
 		UseCookies:              true,
 	})

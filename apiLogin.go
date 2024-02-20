@@ -57,7 +57,7 @@ func (a Auth) apiLoginUsernameAndPassword(w http.ResponseWriter, r *http.Request
 	email := strings.Trim(utils.Req(r, "email", ""), " ")
 	password := strings.Trim(utils.Req(r, "password", ""), " ")
 
-	response := a.LoginWithUsernameAndPassword(email, password)
+	response := a.LoginWithUsernameAndPassword(email, password, utils.IP(r), r.UserAgent())
 
 	if response.ErrorMessage != "" {
 		api.Respond(w, r, api.Error(response.ErrorMessage))

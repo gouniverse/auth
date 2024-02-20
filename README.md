@@ -58,7 +58,7 @@ func userRegister(username string, password string, first_name string, last_name
 // find the user by the specified username and password, 
 // note that the username can be an email (if you wish)
 //
-func userLogin(username string, password string) (userID string, err error) {
+func userLogin(username string, password string, userIP string, userAgent string) (userID string, err error) {
     // your code here
 	return "yourUserId", nil
 }
@@ -77,7 +77,7 @@ func userLogout(userID string) (err error) {
 // save the auth token to your selected store it (i.e. session store or the cache store)
 // make sure you set an expiration time (i.e. 2 hours)
 //
-func userStoreAuthToken(token string, userID string) error {
+func userStoreAuthToken(token string, userID string, userIP string, userAgent string) error {
     // your code here (store in session or cache store with desired timeout)
 	return nil
 }
@@ -86,7 +86,7 @@ func userStoreAuthToken(token string, userID string) error {
 //
 // retrieve the userID from your selected store  (i.e. session store or the cache store)
 //
-func userFindByAuthToken(token string) (userID string, err error) {
+func userFindByAuthToken(token string, userIP string, userAgent string) (userID string, err error) {
     // your code here
 	return "yourUserId", nil
 }

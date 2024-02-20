@@ -3,6 +3,8 @@ package auth
 import (
 	"context"
 	"net/http"
+
+	"github.com/gouniverse/utils"
 )
 
 // WebAppendUserIdIfExistsMiddleware appends the user ID to the context
@@ -21,7 +23,7 @@ func (a Auth) WebAppendUserIdIfExistsMiddleware(next http.Handler) http.Handler 
 		authToken := AuthTokenRetrieve(r, a.useCookies)
 
 		if authToken != "" {
-			userID, err := a.funcUserFindByAuthToken(authToken)
+			userID, err := a.funcUserFindByAuthToken(authToken, utils.IP(r), r.UserAgent())
 
 			if err != nil {
 				next.ServeHTTP(w, r)
