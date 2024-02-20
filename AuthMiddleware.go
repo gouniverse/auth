@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gouniverse/api"
+	"github.com/gouniverse/utils"
 )
 
 // DEPRECATED use the Web or the API middleware instead
@@ -23,7 +24,7 @@ func (a Auth) AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		userID, err := a.funcUserFindByAuthToken(authToken)
+		userID, err := a.funcUserFindByAuthToken(authToken, utils.IP(r), r.UserAgent())
 
 		if err != nil || userID == "" {
 			if a.useCookies {

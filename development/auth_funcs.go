@@ -40,7 +40,7 @@ func userLogout(username string) error {
 	return nil
 }
 
-func userFindByAuthToken(token string) (userID string, err error) {
+func userFindByAuthToken(token string, userIP string, userAgent string) (userID string, err error) {
 	slug := utils.StrSlugify(token, rune('_'))
 	err = jsonStore.Read("tokens", slug, &userID)
 	if err != nil {
@@ -101,7 +101,7 @@ func userFindByID(userID string) (user map[string]string, err error) {
 	return nil, errors.New("user not found")
 }
 
-func userStoreAuthToken(token string, userID string) error {
+func userStoreAuthToken(token string, userID string, userIP string, userAgent string) error {
 	slug := utils.StrSlugify(token, rune('_'))
 	err := jsonStore.Write("tokens", slug, userID)
 	if err != nil {

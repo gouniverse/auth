@@ -19,9 +19,9 @@ type Auth struct {
 	funcLayout              func(content string) string
 	funcTemporaryKeyGet     func(key string) (value string, err error)
 	funcTemporaryKeySet     func(key string, value string, expiresSeconds int) (err error)
-	funcUserFindByAuthToken func(token string) (userID string, err error)
+	funcUserFindByAuthToken func(token string, userIP string, userAgent string) (userID string, err error)
 	funcUserLogout          func(userID string) (err error)
-	funcUserStoreAuthToken  func(token string, userID string) error
+	funcUserStoreAuthToken  func(token string, userID string, userIP string, userAgent string) error
 	// ===== END: shared by all implementations
 
 	// ===== START: username(email) and password options

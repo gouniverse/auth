@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gouniverse/api"
+	"github.com/gouniverse/utils"
 )
 
 // ApiAuthOrErrorMiddleware checks that an authentication token
@@ -21,7 +22,7 @@ func (a Auth) ApiAuthOrErrorMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		userID, err := a.funcUserFindByAuthToken(authToken)
+		userID, err := a.funcUserFindByAuthToken(authToken, utils.IP(r), r.UserAgent())
 
 		if err != nil {
 			api.Respond(w, r, api.Unauthenticated("auth token is required"))

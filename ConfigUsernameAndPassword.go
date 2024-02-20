@@ -8,8 +8,8 @@ type ConfigUsernameAndPassword struct {
 	FuncLayout              func(content string) string
 	FuncTemporaryKeyGet     func(key string) (value string, err error)
 	FuncTemporaryKeySet     func(key string, value string, expiresSeconds int) (err error)
-	FuncUserStoreAuthToken  func(sessionID string, userID string) error
-	FuncUserFindByAuthToken func(sessionID string) (userID string, err error)
+	FuncUserStoreAuthToken  func(sessionID string, userID string, userIP string, userAgent string) error
+	FuncUserFindByAuthToken func(sessionID string, userIP string, userAgent string) (userID string, err error)
 	UrlRedirectOnSuccess    string
 	UseCookies              bool
 	UseLocalStorage         bool
