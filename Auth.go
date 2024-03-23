@@ -33,7 +33,7 @@ type Auth struct {
 	enableVerification               bool
 	funcEmailTemplatePasswordRestore func(userID string, passwordRestoreLink string, options UserAuthOptions) string // optional
 	funcEmailTemplateRegisterCode    func(email string, passwordRestoreLink string, options UserAuthOptions) string  // optional
-	funcEmailSend                    func(userID string, emailSubject string, emailBody string, options UserAuthOptions) (err error)
+	funcEmailSend                    func(userID string, emailSubject string, emailBody string) (err error)
 	funcUserLogin                    func(username string, password string, options UserAuthOptions) (userID string, err error)
 	funcUserPasswordChange           func(username string, newPassword string, options UserAuthOptions) (err error)
 	funcUserRegister                 func(username string, password string, first_name string, last_name string, options UserAuthOptions) (err error)
@@ -45,7 +45,7 @@ type Auth struct {
 	passwordlessFuncUserFindByEmail           func(email string, options UserAuthOptions) (userID string, err error)
 	passwordlessFuncEmailTemplateLoginCode    func(email string, passwordRestoreLink string, options UserAuthOptions) string // optional
 	passwordlessFuncEmailTemplateRegisterCode func(email string, passwordRestoreLink string, options UserAuthOptions) string // optional
-	passwordlessFuncEmailSend                 func(email string, emailSubject string, emailBody string, options UserAuthOptions) (err error)
+	passwordlessFuncEmailSend                 func(email string, emailSubject string, emailBody string) (err error)
 	passwordlessFuncUserRegister              func(email string, firstName string, lastName string, options UserAuthOptions) (err error)
 	// ===== END: passwordless options
 

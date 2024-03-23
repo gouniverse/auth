@@ -8,13 +8,19 @@ func testSetupUsernameAndPasswordAuth() (*Auth, error) {
 		UrlRedirectOnSuccess:    "http://localhost/dashboard",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
 		FuncTemporaryKeySet:     func(key string, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByAuthToken: func(token string, userIP string, userAgent string) (userID string, err error) { return "", nil },
-		FuncUserFindByUsername:  func(username string, firstName string, lastName string) (userID string, err error) { return "", nil },
-		FuncUserLogin:           func(username string, password string) (userID string, err error) { return "", nil },
-		FuncUserLogout:          func(userID string) (err error) { return nil },
-		FuncUserStoreAuthToken:  func(sessionID string, userID string, userIP string, userAgent string) (err error) { return nil },
-		FuncEmailSend:           func(userID string, emailSubject string, emailBody string) (err error) { return nil },
-		UseCookies:              true,
+		FuncUserFindByAuthToken: func(token string, options UserAuthOptions) (userID string, err error) { return "", nil },
+		FuncUserFindByUsername: func(username string, firstName string, lastName string, options UserAuthOptions) (userID string, err error) {
+			return "", nil
+		},
+		FuncUserLogin: func(username string, password string, options UserAuthOptions) (userID string, err error) {
+			return "", nil
+		},
+		FuncUserLogout: func(userID string, options UserAuthOptions) (err error) { return nil },
+		FuncUserStoreAuthToken: func(sessionID string, userID string, options UserAuthOptions) (err error) {
+			return nil
+		},
+		FuncEmailSend: func(userID string, emailSubject string, emailBody string) (err error) { return nil },
+		UseCookies:    true,
 	})
 }
 
@@ -26,10 +32,10 @@ func testSetupPasswordlessAuth() (*Auth, error) {
 		UrlRedirectOnSuccess:    "http://localhost/dashboard",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
 		FuncTemporaryKeySet:     func(key string, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByAuthToken: func(token string, userIP string, userAgent string) (userID string, err error) { return "111", nil },
-		FuncUserFindByEmail:     func(email string) (userID string, err error) { return "111", nil },
-		FuncUserLogout:          func(userID string) (err error) { return nil },
-		FuncUserStoreAuthToken:  func(sessionID string, userID string, userIP string, userAgent string) (err error) { return nil },
+		FuncUserFindByAuthToken: func(token string, options UserAuthOptions) (userID string, err error) { return "111", nil },
+		FuncUserFindByEmail:     func(email string, options UserAuthOptions) (userID string, err error) { return "111", nil },
+		FuncUserLogout:          func(userID string, options UserAuthOptions) (err error) { return nil },
+		FuncUserStoreAuthToken:  func(sessionID string, userID string, options UserAuthOptions) (err error) { return nil },
 		FuncEmailSend:           func(email string, emailSubject string, emailBody string) (err error) { return nil },
 		UseCookies:              true,
 	})

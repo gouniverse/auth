@@ -4,10 +4,11 @@ import (
 	"errors"
 	"log"
 
+	"github.com/gouniverse/auth"
 	"github.com/gouniverse/utils"
 )
 
-func passwordlessUserRegister(username string, first_name string, last_name string) error {
+func passwordlessUserRegister(username string, first_name string, last_name string, options auth.UserAuthOptions) error {
 	slug := utils.StrSlugify(username, rune('_'))
 	err := jsonStore.Write("users", slug, map[string]string{
 		"id":         utils.StrRandomFromGamma(16, "abcdef0123456789"),
@@ -22,7 +23,7 @@ func passwordlessUserRegister(username string, first_name string, last_name stri
 	return nil
 }
 
-func passwordlessUserFindByEmail(email string) (userID string, err error) {
+func passwordlessUserFindByEmail(email string, options auth.UserAuthOptions) (userID string, err error) {
 	slug := utils.StrSlugify(email, rune('_'))
 	var user map[string]string
 	err = jsonStore.Read("users", slug, &user)

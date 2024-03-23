@@ -7,7 +7,7 @@ import (
 )
 
 // emailLoginCodeTemplate returns the template for the login code verification email
-func emailLoginCodeTemplate(email string, code string) string {
+func emailLoginCodeTemplate(email string, code string, options UserAuthOptions) string {
 	msg := `
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -17,7 +17,7 @@ func emailLoginCodeTemplate(email string, code string) string {
 		Hello!
 	<p>
 	<p>
-		Someone requested to login with your emal {{.Email}}. Please use the code below to log in.
+		Someone requested to login with your email {{.Email}}. Please use the code below to log in.
 	</p>
 	<p>
 		{{.Code}}

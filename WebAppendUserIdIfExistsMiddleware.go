@@ -23,7 +23,10 @@ func (a Auth) WebAppendUserIdIfExistsMiddleware(next http.Handler) http.Handler 
 		authToken := AuthTokenRetrieve(r, a.useCookies)
 
 		if authToken != "" {
-			userID, err := a.funcUserFindByAuthToken(authToken, utils.IP(r), r.UserAgent())
+			userID, err := a.funcUserFindByAuthToken(authToken, UserAuthOptions{
+				UserIp:    utils.IP(r),
+				UserAgent: r.UserAgent(),
+			})
 
 			if err != nil {
 				next.ServeHTTP(w, r)

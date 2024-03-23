@@ -70,13 +70,17 @@ func (suite *uiTestSuite) newAuthWithRegistrationDisabled() (*auth.Auth, error) 
 		UrlRedirectOnSuccess:    "http://localhost/dashboard",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
 		FuncTemporaryKeySet:     func(key string, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByAuthToken: func(token string, userIP string, userAgent string) (userID string, err error) { return "", nil },
-		FuncUserFindByUsername:  func(username string, firstName string, lastName string) (userID string, err error) { return "", nil },
-		FuncUserLogin:           func(username string, password string) (userID string, err error) { return "", nil },
-		FuncUserLogout:          func(userID string) (err error) { return nil },
-		FuncUserStoreAuthToken:  func(sessionID string, userID string, userIP string, userAgent string) (err error) { return nil },
-		FuncEmailSend:           func(userID string, emailSubject string, emailBody string) (err error) { return nil },
-		UseCookies:              true,
+		FuncUserFindByAuthToken: func(token string, options auth.UserAuthOptions) (userID string, err error) { return "", nil },
+		FuncUserFindByUsername: func(username string, firstName string, lastName string, options auth.UserAuthOptions) (userID string, err error) {
+			return "", nil
+		},
+		FuncUserLogin: func(username string, password string, options auth.UserAuthOptions) (userID string, err error) {
+			return "", nil
+		},
+		FuncUserLogout:         func(userID string, options auth.UserAuthOptions) (err error) { return nil },
+		FuncUserStoreAuthToken: func(sessionID string, userID string, options auth.UserAuthOptions) (err error) { return nil },
+		FuncEmailSend:          func(userID string, emailSubject string, emailBody string) (err error) { return nil },
+		UseCookies:             true,
 	})
 }
 
@@ -87,14 +91,20 @@ func (suite *uiTestSuite) newAuthWithRegistrationEnabled() (*auth.Auth, error) {
 		UrlRedirectOnSuccess:    "http://localhost/dashboard",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
 		FuncTemporaryKeySet:     func(key string, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByAuthToken: func(token string, userIP string, userAgent string) (userID string, err error) { return "", nil },
-		FuncUserFindByUsername:  func(username string, firstName string, lastName string) (userID string, err error) { return "", nil },
-		FuncUserLogin:           func(username string, password string) (userID string, err error) { return "", nil },
-		FuncUserRegister:        func(username string, password string, firstName string, lastName string) (err error) { return nil },
-		FuncUserLogout:          func(userID string) (err error) { return nil },
-		FuncUserStoreAuthToken:  func(sessionID string, userID string, userIP string, userAgent string) (err error) { return nil },
-		FuncEmailSend:           func(userID string, emailSubject string, emailBody string) (err error) { return nil },
-		EnableRegistration:      true,
-		UseCookies:              true,
+		FuncUserFindByAuthToken: func(token string, options auth.UserAuthOptions) (userID string, err error) { return "", nil },
+		FuncUserFindByUsername: func(username string, firstName string, lastName string, options auth.UserAuthOptions) (userID string, err error) {
+			return "", nil
+		},
+		FuncUserLogin: func(username string, password string, options auth.UserAuthOptions) (userID string, err error) {
+			return "", nil
+		},
+		FuncUserRegister: func(username string, password string, firstName string, lastName string, options auth.UserAuthOptions) (err error) {
+			return nil
+		},
+		FuncUserLogout:         func(userID string, options auth.UserAuthOptions) (err error) { return nil },
+		FuncUserStoreAuthToken: func(sessionID string, userID string, options auth.UserAuthOptions) (err error) { return nil },
+		FuncEmailSend:          func(userID string, emailSubject string, emailBody string) (err error) { return nil },
+		EnableRegistration:     true,
+		UseCookies:             true,
 	})
 }

@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/gouniverse/auth"
 	"github.com/gouniverse/auth/development/scribble"
 	"github.com/gouniverse/utils"
 )
@@ -17,7 +18,7 @@ func emailSend(userID string, subject string, body string) error {
 	return nil
 }
 
-func userLogin(username string, password string) (userID string, err error) {
+func userLogin(username string, password string, options auth.UserAuthOptions) (userID string, err error) {
 	slug := utils.StrSlugify(username, rune('_'))
 	var user map[string]string
 	err = jsonStore.Read("users", slug, &user)
@@ -36,11 +37,11 @@ func userLogin(username string, password string) (userID string, err error) {
 	return "password mismatch", errors.New("password mismatch")
 }
 
-func userLogout(username string) error {
+func userLogout(username string, options auth.UserAuthOptions) error {
 	return nil
 }
 
-func userFindByAuthToken(token string, userIP string, userAgent string) (userID string, err error) {
+func userFindByAuthToken(token string, options auth.UserAuthOptions) (userID string, err error) {
 	slug := utils.StrSlugify(token, rune('_'))
 	err = jsonStore.Read("tokens", slug, &userID)
 	if err != nil {
@@ -101,7 +102,7 @@ func userFindByID(userID string) (user map[string]string, err error) {
 	return nil, errors.New("user not found")
 }
 
-func userStoreAuthToken(token string, userID string, userIP string, userAgent string) error {
+func userStoreAuthToken(token string, userID string, options auth.UserAuthOptions) error {
 	slug := utils.StrSlugify(token, rune('_'))
 	err := jsonStore.Write("tokens", slug, userID)
 	if err != nil {

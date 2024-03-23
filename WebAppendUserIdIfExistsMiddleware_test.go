@@ -13,15 +13,15 @@ func TestBlockRobotsMiddlewareShouldPassForHomeWithoutSlash(t *testing.T) {
 		UrlRedirectOnSuccess: "/user",
 		FuncTemporaryKeyGet:  func(key string) (value string, err error) { return "", nil },
 		FuncTemporaryKeySet:  func(key, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByAuthToken: func(sessionID string, userIP string, userAgent string) (userID string, err error) {
+		FuncUserFindByAuthToken: func(sessionID string, options UserAuthOptions) (userID string, err error) {
 			if sessionID == "123456" {
 				return "234567", nil
 			}
 			return "", nil
 		},
-		FuncUserFindByEmail:    func(email string) (userID string, err error) { return "", nil },
-		FuncUserLogout:         func(userID string) (err error) { return nil },
-		FuncUserStoreAuthToken: func(sessionID, userID string, userIP string, userAgent string) error { return nil },
+		FuncUserFindByEmail:    func(email string, options UserAuthOptions) (userID string, err error) { return "", nil },
+		FuncUserLogout:         func(userID string, options UserAuthOptions) (err error) { return nil },
+		FuncUserStoreAuthToken: func(sessionID, userID string, options UserAuthOptions) error { return nil },
 		FuncEmailSend:          func(email, emailSubject, emailBody string) (err error) { return nil },
 		UseCookies:             true,
 		UseLocalStorage:        false,

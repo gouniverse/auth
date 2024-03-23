@@ -62,10 +62,7 @@ func (a Auth) apiRegisterPasswordless(w http.ResponseWriter, r *http.Request) {
 		UserAgent: r.UserAgent(),
 	})
 
-	errEmailSent := a.passwordlessFuncEmailSend(email, "Registration Code", emailContent, UserAuthOptions{
-		UserIp:    utils.IP(r),
-		UserAgent: r.UserAgent(),
-	})
+	errEmailSent := a.passwordlessFuncEmailSend(email, "Registration Code", emailContent)
 
 	if errEmailSent != nil {
 		log.Println(errEmailSent)
@@ -82,7 +79,10 @@ func (a Auth) apiRegisterUsernameAndPassword(w http.ResponseWriter, r *http.Requ
 	first_name := strings.Trim(utils.Req(r, "first_name", ""), " ")
 	last_name := strings.Trim(utils.Req(r, "last_name", ""), " ")
 
-	response := a.RegisterWithUsernameAndPassword(email, password, first_name, last_name)
+	response := a.RegisterWithUsernameAndPassword(email, password, first_name, last_name, UserAuthOptions{
+		UserIp:    utils.IP(r),
+		UserAgent: r.UserAgent(),
+	})
 
 	if response.ErrorMessage != "" {
 		api.Respond(w, r, api.Error(response.ErrorMessage))

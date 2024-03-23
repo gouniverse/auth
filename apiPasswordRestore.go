@@ -69,10 +69,7 @@ func (a Auth) apiPasswordRestore(w http.ResponseWriter, r *http.Request) {
 		UserAgent: r.UserAgent(),
 	})
 
-	errEmailSent := a.funcEmailSend(userID, "Password Restore", emailContent, UserAuthOptions{
-		UserIp:    utils.IP(r),
-		UserAgent: r.UserAgent(),
-	})
+	errEmailSent := a.funcEmailSend(userID, "Password Restore", emailContent)
 
 	log.Println(errEmailSent)
 

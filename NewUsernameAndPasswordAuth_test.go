@@ -74,7 +74,7 @@ func TestNewUsernameAndPasswordAuth_FuncUserFindByUsernameIsRequired(t *testing.
 		UrlRedirectOnSuccess:    "/user",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
 		FuncTemporaryKeySet:     func(key, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByAuthToken: func(sessionID string, userIP string, userAgent string) (userID string, err error) { return "", nil },
+		FuncUserFindByAuthToken: func(sessionID string, options UserAuthOptions) (userID string, err error) { return "", nil },
 	})
 	if err == nil {
 		t.Fatal("Error SHOULD NOT BE NULL")
@@ -90,8 +90,10 @@ func TestNewUsernameAndPasswordAuth_FuncUserLoginIsRequired(t *testing.T) {
 		UrlRedirectOnSuccess:    "/user",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
 		FuncTemporaryKeySet:     func(key, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByAuthToken: func(sessionID string, userIP string, userAgent string) (userID string, err error) { return "", nil },
-		FuncUserFindByUsername:  func(username, firstName, lastName string) (userID string, err error) { return "", nil },
+		FuncUserFindByAuthToken: func(sessionID string, options UserAuthOptions) (userID string, err error) { return "", nil },
+		FuncUserFindByUsername: func(username, firstName, lastName string, options UserAuthOptions) (userID string, err error) {
+			return "", nil
+		},
 	})
 	if err == nil {
 		t.Fatal("Error SHOULD NOT BE NULL")
@@ -107,9 +109,11 @@ func TestNewUsernameAndPasswordAuth_FuncUserLogoutIsRequired(t *testing.T) {
 		UrlRedirectOnSuccess:    "/user",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
 		FuncTemporaryKeySet:     func(key, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByAuthToken: func(sessionID string, userIP string, userAgent string) (userID string, err error) { return "", nil },
-		FuncUserFindByUsername:  func(username, firstName, lastName string) (userID string, err error) { return "", nil },
-		FuncUserLogin:           func(username, password string) (userID string, err error) { return "", nil },
+		FuncUserFindByAuthToken: func(sessionID string, options UserAuthOptions) (userID string, err error) { return "", nil },
+		FuncUserFindByUsername: func(username, firstName, lastName string, options UserAuthOptions) (userID string, err error) {
+			return "", nil
+		},
+		FuncUserLogin: func(username, password string, options UserAuthOptions) (userID string, err error) { return "", nil },
 	})
 	if err == nil {
 		t.Fatal("Error SHOULD NOT BE NULL")
@@ -125,10 +129,12 @@ func TestNewUsernameAndPasswordAuth_FuncUserStoreTokenFuncUserStoreTokenIsRequir
 		UrlRedirectOnSuccess:    "/user",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
 		FuncTemporaryKeySet:     func(key, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByAuthToken: func(sessionID string, userIP string, userAgent string) (userID string, err error) { return "", nil },
-		FuncUserFindByUsername:  func(username, firstName, lastName string) (userID string, err error) { return "", nil },
-		FuncUserLogin:           func(username, password string) (userID string, err error) { return "", nil },
-		FuncUserLogout:          func(userID string) (err error) { return nil },
+		FuncUserFindByAuthToken: func(sessionID string, options UserAuthOptions) (userID string, err error) { return "", nil },
+		FuncUserFindByUsername: func(username, firstName, lastName string, options UserAuthOptions) (userID string, err error) {
+			return "", nil
+		},
+		FuncUserLogin:  func(username, password string, options UserAuthOptions) (userID string, err error) { return "", nil },
+		FuncUserLogout: func(userID string, options UserAuthOptions) (err error) { return nil },
 	})
 	if err == nil {
 		t.Fatal("Error SHOULD NOT BE NULL")
@@ -144,11 +150,13 @@ func TestNewUsernameAndPasswordAuth_FuncEmailSendIsRequired(t *testing.T) {
 		UrlRedirectOnSuccess:    "/user",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
 		FuncTemporaryKeySet:     func(key, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByAuthToken: func(sessionID string, userIP string, userAgent string) (userID string, err error) { return "", nil },
-		FuncUserStoreAuthToken:  func(sessionID, userID string, userIP string, userAgent string) error { return nil },
-		FuncUserFindByUsername:  func(username, firstName, lastName string) (userID string, err error) { return "", nil },
-		FuncUserLogin:           func(username, password string) (userID string, err error) { return "", nil },
-		FuncUserLogout:          func(userID string) (err error) { return nil },
+		FuncUserFindByAuthToken: func(sessionID string, options UserAuthOptions) (userID string, err error) { return "", nil },
+		FuncUserStoreAuthToken:  func(sessionID, userID string, options UserAuthOptions) error { return nil },
+		FuncUserFindByUsername: func(username, firstName, lastName string, options UserAuthOptions) (userID string, err error) {
+			return "", nil
+		},
+		FuncUserLogin:  func(username, password string, options UserAuthOptions) (userID string, err error) { return "", nil },
+		FuncUserLogout: func(userID string, options UserAuthOptions) (err error) { return nil },
 	})
 	if err == nil {
 		t.Fatal("Error SHOULD NOT BE NULL")
@@ -164,12 +172,14 @@ func TestNewUsernameAndPasswordAuth_UseCookiesAndLocalStorageCannotBeBothFalse(t
 		UrlRedirectOnSuccess:    "/user",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
 		FuncTemporaryKeySet:     func(key, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByAuthToken: func(sessionID string, userIP string, userAgent string) (userID string, err error) { return "", nil },
-		FuncUserFindByUsername:  func(username, firstName, lastName string) (userID string, err error) { return "", nil },
-		FuncUserLogin:           func(username, password string) (userID string, err error) { return "", nil },
-		FuncUserLogout:          func(userID string) (err error) { return nil },
-		FuncUserStoreAuthToken:  func(sessionID, userID string, userIP string, userAgent string) error { return nil },
-		FuncEmailSend:           func(email, emailSubject, emailBody string) (err error) { return nil },
+		FuncUserFindByAuthToken: func(sessionID string, options UserAuthOptions) (userID string, err error) { return "", nil },
+		FuncUserFindByUsername: func(username, firstName, lastName string, options UserAuthOptions) (userID string, err error) {
+			return "", nil
+		},
+		FuncUserLogin:          func(username, password string, options UserAuthOptions) (userID string, err error) { return "", nil },
+		FuncUserLogout:         func(userID string, options UserAuthOptions) (err error) { return nil },
+		FuncUserStoreAuthToken: func(sessionID, userID string, options UserAuthOptions) error { return nil },
+		FuncEmailSend:          func(email, emailSubject, emailBody string) (err error) { return nil },
 	})
 	if err == nil {
 		t.Fatal("Error SHOULD NOT BE NULL")
@@ -185,14 +195,16 @@ func TestNewUsernameAndPasswordAuth_UseCookiesAndLocalStorageCannotBeBothTrue(t 
 		UrlRedirectOnSuccess:    "/user",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
 		FuncTemporaryKeySet:     func(key, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByAuthToken: func(sessionID string, userIP string, userAgent string) (userID string, err error) { return "", nil },
-		FuncUserLogout:          func(userID string) (err error) { return nil },
-		FuncUserStoreAuthToken:  func(sessionID, userID string, userIP string, userAgent string) error { return nil },
+		FuncUserFindByAuthToken: func(sessionID string, options UserAuthOptions) (userID string, err error) { return "", nil },
+		FuncUserLogout:          func(userID string, options UserAuthOptions) (err error) { return nil },
+		FuncUserStoreAuthToken:  func(sessionID, userID string, options UserAuthOptions) error { return nil },
 		FuncEmailSend:           func(email, emailSubject, emailBody string) (err error) { return nil },
-		FuncUserFindByUsername:  func(username, firstName, lastName string) (userID string, err error) { return "", nil },
-		FuncUserLogin:           func(username, password string) (userID string, err error) { return "", nil },
-		UseCookies:              true,
-		UseLocalStorage:         true,
+		FuncUserFindByUsername: func(username, firstName, lastName string, options UserAuthOptions) (userID string, err error) {
+			return "", nil
+		},
+		FuncUserLogin:   func(username, password string, options UserAuthOptions) (userID string, err error) { return "", nil },
+		UseCookies:      true,
+		UseLocalStorage: true,
 	})
 	if err == nil {
 		t.Fatal("Error SHOULD NOT BE NULL")
@@ -208,14 +220,16 @@ func TestNewUsernameAndPasswordAuth_UseCookiesAndLocalStorageCannotBeBothTruee(t
 		UrlRedirectOnSuccess:    "/user",
 		FuncTemporaryKeyGet:     func(key string) (value string, err error) { return "", nil },
 		FuncTemporaryKeySet:     func(key, value string, expiresSeconds int) (err error) { return nil },
-		FuncUserFindByAuthToken: func(sessionID string, userIP string, userAgent string) (userID string, err error) { return "", nil },
-		FuncUserLogout:          func(userID string) (err error) { return nil },
-		FuncUserStoreAuthToken:  func(sessionID, userID string, userIP string, userAgent string) error { return nil },
+		FuncUserFindByAuthToken: func(sessionID string, options UserAuthOptions) (userID string, err error) { return "", nil },
+		FuncUserLogout:          func(userID string, options UserAuthOptions) (err error) { return nil },
+		FuncUserStoreAuthToken:  func(sessionID, userID string, options UserAuthOptions) error { return nil },
 		FuncEmailSend:           func(email, emailSubject, emailBody string) (err error) { return nil },
-		FuncUserFindByUsername:  func(username, firstName, lastName string) (userID string, err error) { return "", nil },
-		FuncUserLogin:           func(username, password string) (userID string, err error) { return "", nil },
-		UseCookies:              true,
-		UseLocalStorage:         false,
+		FuncUserFindByUsername: func(username, firstName, lastName string, options UserAuthOptions) (userID string, err error) {
+			return "", nil
+		},
+		FuncUserLogin:   func(username, password string, options UserAuthOptions) (userID string, err error) { return "", nil },
+		UseCookies:      true,
+		UseLocalStorage: false,
 	})
 
 	if err != nil {

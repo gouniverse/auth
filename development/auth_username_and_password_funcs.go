@@ -3,10 +3,11 @@ package main
 import (
 	"errors"
 
+	"github.com/gouniverse/auth"
 	"github.com/gouniverse/utils"
 )
 
-func userFindByUsername(username string, firstName string, lastName string) (userID string, err error) {
+func userFindByUsername(username string, firstName string, lastName string, options auth.UserAuthOptions) (userID string, err error) {
 	slug := utils.StrSlugify(username, rune('_'))
 	var user map[string]string
 	err = jsonStore.Read("users", slug, &user)
@@ -21,7 +22,7 @@ func userFindByUsername(username string, firstName string, lastName string) (use
 	return user["id"], nil
 }
 
-func userPasswordChange(userID string, password string) error {
+func userPasswordChange(userID string, password string, options auth.UserAuthOptions) error {
 	user, err := userFindByID(userID)
 	if err != nil {
 		return err
@@ -40,7 +41,7 @@ func userPasswordChange(userID string, password string) error {
 	return nil
 }
 
-func userRegister(username string, password string, first_name string, last_name string) error {
+func userRegister(username string, password string, first_name string, last_name string, options auth.UserAuthOptions) error {
 	slug := utils.StrSlugify(username, rune('_'))
 	err := jsonStore.Write("users", slug, map[string]string{
 		"id":         utils.StrRandomFromGamma(16, "abcdef0123456789"),
