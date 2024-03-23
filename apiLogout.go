@@ -14,7 +14,10 @@ func (a Auth) apiLogout(w http.ResponseWriter, r *http.Request) {
 		api.Respond(w, r, api.Success("logout success"))
 	}
 
-	userID, errToken := a.funcUserFindByAuthToken(authToken, utils.IP(r), r.UserAgent())
+	userID, errToken := a.funcUserFindByAuthToken(authToken, UserAuthOptions{
+		UserIp:    utils.IP(r),
+		UserAgent: r.UserAgent(),
+	})
 
 	if errToken != nil {
 		api.Respond(w, r, api.Error("logout failed"))
@@ -22,7 +25,10 @@ func (a Auth) apiLogout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if userID != "" {
-		errLogout := a.funcUserLogout(userID)
+		errLogout := a.funcUserLogout(userID, UserAuthOptions{
+			UserIp:    utils.IP(r),
+			UserAgent: r.UserAgent(),
+		})
 
 		if errLogout != nil {
 			api.Respond(w, r, api.Error("logout failed. "+errLogout.Error()))

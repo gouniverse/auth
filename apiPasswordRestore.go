@@ -29,7 +29,10 @@ func (a Auth) apiPasswordRestore(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userID, err := a.funcUserFindByUsername(email, firstName, lastName)
+	userID, err := a.funcUserFindByUsername(email, firstName, lastName, UserAuthOptions{
+		UserIp:    utils.IP(r),
+		UserAgent: r.UserAgent(),
+	})
 
 	if err != nil {
 		log.Println(err.Error())
@@ -61,9 +64,15 @@ func (a Auth) apiPasswordRestore(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	emailContent := a.funcEmailTemplatePasswordRestore(userID, a.LinkPasswordReset(token))
+	emailContent := a.funcEmailTemplatePasswordRestore(userID, a.LinkPasswordReset(token), UserAuthOptions{
+		UserIp:    utils.IP(r),
+		UserAgent: r.UserAgent(),
+	})
 
-	errEmailSent := a.funcEmailSend(userID, "Password Restore", emailContent)
+	errEmailSent := a.funcEmailSend(userID, "Password Restore", emailContent, UserAuthOptions{
+		UserIp:    utils.IP(r),
+		UserAgent: r.UserAgent(),
+	})
 
 	log.Println(errEmailSent)
 

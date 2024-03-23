@@ -45,9 +45,15 @@ func (a Auth) authenticateViaUsername(w http.ResponseWriter, r *http.Request, us
 	var userID string
 	var errUser error
 	if a.passwordless {
-		userID, errUser = a.passwordlessFuncUserFindByEmail(username)
+		userID, errUser = a.passwordlessFuncUserFindByEmail(username, UserAuthOptions{
+			UserIp:    utils.IP(r),
+			UserAgent: r.UserAgent(),
+		})
 	} else {
-		userID, errUser = a.funcUserFindByUsername(username, firstName, lastName)
+		userID, errUser = a.funcUserFindByUsername(username, firstName, lastName, UserAuthOptions{
+			UserIp:    utils.IP(r),
+			UserAgent: r.UserAgent(),
+		})
 	}
 
 	if errUser != nil {
@@ -62,7 +68,10 @@ func (a Auth) authenticateViaUsername(w http.ResponseWriter, r *http.Request, us
 
 	token := utils.StrRandom(32)
 
-	errSession := a.funcUserStoreAuthToken(token, userID, utils.IP(r), r.UserAgent())
+	errSession := a.funcUserStoreAuthToken(token, userID, UserAuthOptions{
+		UserIp:    utils.IP(r),
+		UserAgent: r.UserAgent(),
+	})
 
 	if errSession != nil {
 		api.Respond(w, r, api.Error("token store failed. "+errSession.Error()))

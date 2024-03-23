@@ -40,7 +40,10 @@ func (a Auth) apiPasswordReset(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	errPasswordChange := a.funcUserPasswordChange(userID, password)
+	errPasswordChange := a.funcUserPasswordChange(userID, password, UserAuthOptions{
+		UserIp:    utils.IP(r),
+		UserAgent: r.UserAgent(),
+	})
 
 	if errPasswordChange != nil {
 		api.Respond(w, r, api.Error("authentication failed. "+errPasswordChange.Error()))

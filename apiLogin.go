@@ -40,9 +40,15 @@ func (a Auth) apiLoginPasswordless(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	emailContent := a.passwordlessFuncEmailTemplateLoginCode(email, verificationCode)
+	emailContent := a.passwordlessFuncEmailTemplateLoginCode(email, verificationCode, UserAuthOptions{
+		UserIp:    utils.IP(r),
+		UserAgent: r.UserAgent(),
+	})
 
-	errEmailSent := a.passwordlessFuncEmailSend(email, "Login Code", emailContent)
+	errEmailSent := a.passwordlessFuncEmailSend(email, "Login Code", emailContent, UserAuthOptions{
+		UserIp:    utils.IP(r),
+		UserAgent: r.UserAgent(),
+	})
 
 	if errEmailSent != nil {
 		log.Println(errEmailSent)

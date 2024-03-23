@@ -24,7 +24,10 @@ func (a Auth) AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		userID, err := a.funcUserFindByAuthToken(authToken, utils.IP(r), r.UserAgent())
+		userID, err := a.funcUserFindByAuthToken(authToken, UserAuthOptions{
+			UserIp:    utils.IP(r),
+			UserAgent: r.UserAgent(),
+		})
 
 		if err != nil || userID == "" {
 			if a.useCookies {

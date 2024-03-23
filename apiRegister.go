@@ -57,9 +57,15 @@ func (a Auth) apiRegisterPasswordless(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	emailContent := a.passwordlessFuncEmailTemplateRegisterCode(email, verificationCode)
+	emailContent := a.passwordlessFuncEmailTemplateRegisterCode(email, verificationCode, UserAuthOptions{
+		UserIp:    utils.IP(r),
+		UserAgent: r.UserAgent(),
+	})
 
-	errEmailSent := a.passwordlessFuncEmailSend(email, "Registration Code", emailContent)
+	errEmailSent := a.passwordlessFuncEmailSend(email, "Registration Code", emailContent, UserAuthOptions{
+		UserIp:    utils.IP(r),
+		UserAgent: r.UserAgent(),
+	})
 
 	if errEmailSent != nil {
 		log.Println(errEmailSent)
