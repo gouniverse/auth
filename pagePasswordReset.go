@@ -58,7 +58,7 @@ func (a Auth) pagePasswordResetContent(token string, errorMessage string) string
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Class("card-header").AddChild(header)
-	cardBody := hb.NewDiv().Class("card-body").AddChildren([]*hb.Tag{
+	cardBody := hb.NewDiv().Class("card-body").AddChildren([]hb.TagInterface{
 		alertGroup,
 	})
 
@@ -74,7 +74,7 @@ func (a Auth) pagePasswordResetContent(token string, errorMessage string) string
 		cardBody.AddChild(hb.NewParagraph().AddChild(hb.NewHyperlink().Href(urlRegister).Text("create a new account")))
 	}
 
-	cardFooter := hb.NewDiv().Class("card-footer").AddChildren([]*hb.Tag{
+	cardFooter := hb.NewDiv().Class("card-footer").AddChildren([]hb.TagInterface{
 		buttonLogin,
 	})
 

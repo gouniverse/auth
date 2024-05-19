@@ -35,25 +35,25 @@ func (a Auth) pageLoginPasswordlessContent() string {
 	emailLabel := hb.NewLabel().Text("E-mail Address")
 	emailInput := hb.NewInput().Class("form-control").Name("email").Placeholder("Enter e-mail address")
 	emailFormGroup := hb.NewDiv().Class("form-group mt-3").Child(emailLabel).Child(emailInput)
-	buttonLogin := hb.NewButton().Class("ButtonLogin btn btn-lg btn-success btn-block w-100").OnClick("loginFormValidate()").Children([]*hb.Tag{
+	buttonLogin := hb.NewButton().Class("ButtonLogin btn btn-lg btn-success btn-block w-100").OnClick("loginFormValidate()").Children([]hb.TagInterface{
 		icons.Icon("bi-send", 18, 18, "white").Style("margin-right:8px;margin-top:-2px;"),
 		hb.NewSpan().Text("Send me a login code"),
 		hb.NewDiv().Class("ImgLoading spinner-border spinner-border-sm text-light").Style("display:none;margin-left:10px;"),
 	})
 	buttonLoginFormGroup := hb.NewDiv().Class("form-group mt-3 mb-3").Child(buttonLogin)
-	buttonRegister := hb.NewHyperlink().Class("btn btn-info text-white float-start").Children([]*hb.Tag{
+	buttonRegister := hb.NewHyperlink().Class("btn btn-info text-white float-start").Children([]hb.TagInterface{
 		icons.Icon("bi-person-circle", 16, 16, "white").Style("margin-right:8px;margin-top:-2px;"),
 		hb.NewSpan().Text("Register"),
 	}).Href(a.LinkRegister())
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Class("card-header").Child(header)
-	cardBody := hb.NewDiv().Class("card-body").Children([]*hb.Tag{
+	cardBody := hb.NewDiv().Class("card-body").Children([]hb.TagInterface{
 		alertGroup,
 		emailFormGroup,
 		buttonLoginFormGroup,
 	})
-	cardFooter := hb.NewDiv().Class("card-footer").AddChildren([]*hb.Tag{})
+	cardFooter := hb.NewDiv().Class("card-footer").AddChildren([]hb.TagInterface{})
 	if a.enableRegistration {
 		cardFooter.AddChild(buttonRegister)
 	}
@@ -169,7 +169,7 @@ func (a Auth) pageLoginContent() string {
 
 	buttonLogin := hb.NewButton().
 		Class("ButtonLogin btn btn-lg btn-success text-white btn-block w-100").
-		Children([]*hb.Tag{
+		Children([]hb.TagInterface{
 			icons.Icon("bi-door-open", 18, 18, "white").Style("margin-right:8px;margin-top:-2px;"),
 			hb.NewSpan().
 				HTML("Log in"),
@@ -183,7 +183,7 @@ func (a Auth) pageLoginContent() string {
 
 	buttonRegister := hb.NewHyperlink().
 		Class("btn btn-info text-white float-start").
-		Children([]*hb.Tag{
+		Children([]hb.TagInterface{
 			icons.Icon("bi-person-circle", 16, 16, "white").Style("margin-right:8px;margin-top:-2px;"),
 			hb.NewSpan().Text("Register"),
 		}).
@@ -191,7 +191,7 @@ func (a Auth) pageLoginContent() string {
 
 	buttonForgotPassword := hb.NewHyperlink().
 		Class("btn btn-warning text-white float-end").
-		Children([]*hb.Tag{
+		Children([]hb.TagInterface{
 			icons.Icon("bi-pass", 16, 16, "white").Style("margin-right:8px;margin-top:-2px;"),
 			hb.NewSpan().Text("Forgot password?"),
 		}).Href(a.LinkPasswordRestore())
@@ -199,13 +199,13 @@ func (a Auth) pageLoginContent() string {
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Class("card-header").AddChild(header)
 	cardBody := hb.NewDiv().Class("card-body").
-		AddChildren([]*hb.Tag{
+		AddChildren([]hb.TagInterface{
 			alertGroup,
 			emailFormGroup,
 			passwordFormGroup,
 			buttonLoginFormGroup,
 		})
-	cardFooter := hb.NewDiv().Class("card-footer").AddChildren([]*hb.Tag{
+	cardFooter := hb.NewDiv().Class("card-footer").AddChildren([]hb.TagInterface{
 		buttonForgotPassword,
 	})
 

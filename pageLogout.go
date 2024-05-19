@@ -26,7 +26,7 @@ func (a Auth) pageLogoutContent() string {
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Class("card-header").AddChild(header)
-	cardBody := hb.NewDiv().Class("card-body").AddChildren([]*hb.Tag{
+	cardBody := hb.NewDiv().Class("card-body").AddChildren([]hb.TagInterface{
 		alertGroup,
 		buttonContinueFormGroup,
 	})

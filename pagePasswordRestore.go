@@ -54,14 +54,14 @@ func (a Auth) pagePasswordRestoreContent() string {
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Class("card-header").AddChild(header)
-	cardBody := hb.NewDiv().Class("card-body").AddChildren([]*hb.Tag{
+	cardBody := hb.NewDiv().Class("card-body").AddChildren([]hb.TagInterface{
 		alertGroup,
 		firstNameFormGroup,
 		lastNameFormGroup,
 		emailFormGroup,
 		buttonContinueFormGroup,
 	})
-	cardFooter := hb.NewDiv().Class("card-footer").AddChildren([]*hb.Tag{
+	cardFooter := hb.NewDiv().Class("card-footer").AddChildren([]hb.TagInterface{
 		buttonLogin,
 	})
 

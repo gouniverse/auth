@@ -45,28 +45,28 @@ func (a Auth) pageRegisterPasswordlessContent() string {
 	emailInput := hb.NewInput().Class("form-control").Name("email").Placeholder("Enter e-mail address")
 	emailFormGroup := hb.NewDiv().Class("form-group mt-3").AddChild(emailLabel).AddChild(emailInput)
 
-	buttonRegister := hb.NewButton().Class("btn btn-lg btn-success btn-block w-100").Children([]*hb.Tag{
+	buttonRegister := hb.NewButton().Class("btn btn-lg btn-success btn-block w-100").Children([]hb.TagInterface{
 		icons.Icon("bi-person-circle", 24, 24, "white").Style("margin-right:8px;margin-top:-2px;"),
 		hb.NewSpan().Text("Register"),
 	}).OnClick("registerFormValidate()")
 
 	buttonRegisterFormGroup := hb.NewDiv().Class("form-group mt-3 mb-3").Child(buttonRegister)
 
-	buttonLogin := hb.NewHyperlink().Class("btn btn-info text-white float-start").Children([]*hb.Tag{
+	buttonLogin := hb.NewHyperlink().Class("btn btn-info text-white float-start").Children([]hb.TagInterface{
 		icons.Icon("bi-send", 16, 16, "white").Style("margin-right:8px;margin-top:-2px;"),
 		hb.NewSpan().Text("Login"),
 	}).Href(a.LinkLogin())
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Class("card-header").AddChild(header)
-	cardBody := hb.NewDiv().Class("card-body").AddChildren([]*hb.Tag{
+	cardBody := hb.NewDiv().Class("card-body").AddChildren([]hb.TagInterface{
 		alertGroup,
 		firstNameFormGroup,
 		lastNameFormGroup,
 		emailFormGroup,
 		buttonRegisterFormGroup,
 	})
-	cardFooter := hb.NewDiv().Class("card-footer").Children([]*hb.Tag{
+	cardFooter := hb.NewDiv().Class("card-footer").Children([]hb.TagInterface{
 		buttonLogin,
 	})
 	card := hb.NewDiv().Class("card card-default").Style("margin:0 auto;max-width: 360px;")
@@ -185,7 +185,7 @@ func (a Auth) pageRegisterUsernameAndPasswordContent() string {
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Class("card-header").AddChild(header)
-	cardBody := hb.NewDiv().Class("card-body").AddChildren([]*hb.Tag{
+	cardBody := hb.NewDiv().Class("card-body").AddChildren([]hb.TagInterface{
 		alertGroup,
 		firstNameFormGroup,
 		lastNameFormGroup,
@@ -193,7 +193,7 @@ func (a Auth) pageRegisterUsernameAndPasswordContent() string {
 		passwordFormGroup,
 		buttonRegisterFormGroup,
 	})
-	cardFooter := hb.NewDiv().Class("card-footer").AddChildren([]*hb.Tag{
+	cardFooter := hb.NewDiv().Class("card-footer").AddChildren([]hb.TagInterface{
 		buttonLogin,
 		buttonForgotPassword,
 	})

@@ -34,7 +34,7 @@ func (a Auth) pageRegisterCodeVerifyContent() string {
 		Child(verificationCodeInput)
 	buttonVerify := hb.NewButton().
 		Class("btn btn-lg btn-success btn-block w-100").
-		Children([]*hb.Tag{
+		Children([]hb.TagInterface{
 			icons.Icon("bi-person-circle", 24, 24, "white").Style("margin-right:8px;margin-top:-2px;"),
 			hb.NewSpan().Text("Verify Registration"),
 		}).
@@ -42,23 +42,23 @@ func (a Auth) pageRegisterCodeVerifyContent() string {
 	buttonVerifyFormGroup := hb.NewDiv().
 		Class("form-group mt-3 mb-3").
 		AddChild(buttonVerify)
-	buttonBack := hb.NewButton().Class("btn btn-info text-white float-start").Children([]*hb.Tag{
+	buttonBack := hb.NewButton().Class("btn btn-info text-white float-start").Children([]hb.TagInterface{
 		icons.Icon("bi-chevron-left", 16, 16, "white").Style("margin-right:8px;margin-top:-2px;"),
 		hb.NewSpan().Text("Resend code"),
 	}).Href(a.LinkRegister())
 
 	// Add elements in a card
 	cardHeader := hb.NewDiv().Class("card-header").Child(header)
-	cardBody := hb.NewDiv().Class("card-body").Children([]*hb.Tag{
+	cardBody := hb.NewDiv().Class("card-body").Children([]hb.TagInterface{
 		alertGroup,
 		verificationCodeFormGroup,
 		buttonVerifyFormGroup,
 	})
-	cardFooter := hb.NewDiv().Class("card-footer").Children([]*hb.Tag{
+	cardFooter := hb.NewDiv().Class("card-footer").Children([]hb.TagInterface{
 		buttonBack,
 	})
 
-	card := hb.NewDiv().Class("card card-default").Style("margin:0 auto;max-width: 360px;").Children([]*hb.Tag{
+	card := hb.NewDiv().Class("card card-default").Style("margin:0 auto;max-width: 360px;").Children([]hb.TagInterface{
 		cardHeader,
 		cardBody,
 		cardFooter,
