@@ -20,7 +20,7 @@ import (
 func main() {
 	os.Remove(utils.Env("DB_DATABASE")) // remove database
 	log.Println("1. Initializing environment variables...")
-	utils.EnvInitialize()
+	utils.EnvInitialize(".env")
 
 	log.Println("2. Initializing database...")
 	var err error
